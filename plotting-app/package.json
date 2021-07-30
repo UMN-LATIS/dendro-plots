@@ -8,6 +8,12 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "jquery": "^3.6.0",
+    "jquery-ui": "^1.12.1",
+    "jquery-ui-dist": "^1.12.1",
+    "plotly.js": "^2.3.1",
+    "plotly.js-dist": "^2.3.1",
+    "simple-smoothing-spline": "^0.3.0",
     "vue": "^3.0.0"
   },
   "devDependencies": {
