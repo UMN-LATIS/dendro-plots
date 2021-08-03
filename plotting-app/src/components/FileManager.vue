@@ -3,7 +3,7 @@
   <p> File format instructions... </p>
 
   <input type="file" id="file-upload" multiple hidden ref="fileInput" @change="uploadFiles">
-  <label for="file-upload"> Upload File </label>
+  <label for="file-upload"> Upload Files </label>
 
   <div v-if="fileNames.length">
     <select ref="fileSelect">
@@ -13,12 +13,13 @@
     <button type="button" id="file-delete" @click="removeFile">Remove File</button>
   </div>
   <div v-if="fileNames.length">
-    <button type="button" id="load-files" @click="$emit('fileLoad', files)">Load Files</button>
+    <button type="button" id="load-files" @click="emitToParent">Load Files</button>
   </div>
 </template>
 
 <script>
   export default {
+    emits: ['fileLoad'],
     data() {
       return {
         files: [],
@@ -38,6 +39,9 @@
         let fileIndex = this.fileNames.indexOf(this.$refs.fileSelect.value)
         this.files.splice(fileIndex, 1)
         this.fileNames.splice(fileIndex, 1)
+      },
+      emitToParent() {
+        this.$emit('fileLoad', this.files)
       }
     }
   }

@@ -2,10 +2,11 @@
   <div id="wrapper">
     <div id="management-wrapper">
       <div id="file-mangement">
-        <FileManager />
+        <FileManager @fileLoad="passFiles" />
       </div>
       <div id="time-series-management">
-        <h1> Time Series Management</h1>
+        <DataManager v-if="files" :files="files" />
+        <h2 v-else> No data loaded... </h2>
       </div>
     </div>
 
@@ -21,17 +22,27 @@
 </template>
 
 <script>
-import $ from 'jquery'
-import 'jquery-ui'
-import simpleSmoothingSpline from 'simple-smoothing-spline'
-import Plotly from 'plotly.js-dist'
+  import simpleSmoothingSpline from 'simple-smoothing-spline'
+  import Plotly from 'plotly.js-dist'
 
-import FileManager from './components/FileManager.vue'
+  import FileManager from './components/FileManager.vue'
+  import DataManager from './components/DataManager.vue'
 
-export default {
-  name: 'App',
-  components: { FileManager },
-}
+  export default {
+    name: 'App',
+    components: { FileManager, DataManager },
+    data() {
+      return {
+        files: null,
+      }
+    },
+    methods: {
+      passFiles(loadedFiles) {
+        this.files = loadedFiles
+        console.log('passFiles')
+      }
+    }
+  }
 </script>
 
 <style>
@@ -47,6 +58,12 @@ export default {
 
   h1 {
     color: white;
+  }
+
+  h2 {
+    font-family: Sans-serif;
+    color: #797979;
+    margin: 0 10px;
   }
 
   #wrapper {
@@ -68,12 +85,16 @@ export default {
     width: 100%;
     height: 30%;
     overflow: auto;
+    border-bottom: 1px solid #797979;
+    border-right: 1px solid #797979;
   }
 
   #time-series-management {
-    background: #0040ff;
+    background: #f6f6f6;
     width: 100%;
     height: 70%;
+    border-top: 1px solid #797979;
+    border-right: 1px solid #797979;
   }
 
   #plot-wrapper {
