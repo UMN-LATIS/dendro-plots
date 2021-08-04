@@ -2,7 +2,7 @@
   <h2> File Management: </h2>
   <p> File format instructions... </p>
 
-  <input type="file" id="file-upload" multiple hidden ref="fileInput" @change="uploadFiles">
+  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
 
   <div style="display: block;">
@@ -45,7 +45,7 @@
         this.files.splice(fileIndex, 1)
         this.fileNames.splice(fileIndex, 1)
       },
-      emitToParent() {
+      async emitToParent() {
         this.$emit('fileLoad', this.files)
       },
     }

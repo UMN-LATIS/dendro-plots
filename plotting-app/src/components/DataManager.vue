@@ -16,10 +16,8 @@
 </template>
 
 <script>
-  import formatFileData from '../composables/formatFileData.js'
-
   export default {
-    props: ['files'],
+    props: ['files', 'formattedFiles'],
     data() {
       return {
       }

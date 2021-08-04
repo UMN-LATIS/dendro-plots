@@ -5,7 +5,7 @@
         <FileManager @fileLoad="passFiles" />
       </div>
       <div id="time-series-management">
-        <DataManager :files="files" />
+        <DataManager :files="files" :formattedFiles="formattedFiles" />
       </div>
     </div>
 
@@ -21,6 +21,8 @@
 </template>
 
 <script>
+  import formatFiles from './composables/formatFiles.js'
+
   import FileManager from './components/FileManager.vue'
   import DataManager from './components/DataManager.vue'
 
@@ -30,11 +32,14 @@
     data() {
       return {
         files: null,
+        formattedFiles: null,
       }
     },
     methods: {
-      passFiles(loadedFiles) {
+      async passFiles(loadedFiles) {
         this.files = loadedFiles.slice()
+        let formattedFiles = await formatFiles(loadedFiles)
+        this.formattedFiles = formattedFiles.slice()
       }
     }
   }
