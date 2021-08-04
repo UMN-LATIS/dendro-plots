@@ -18,6 +18,8 @@
 </template>
 
 <script>
+  import formatFiles from '../composables/formatFiles.js'
+
   export default {
     emits: ['fileLoad'],
     data() {
@@ -46,7 +48,8 @@
         this.fileNames.splice(fileIndex, 1)
       },
       async emitToParent() {
-        this.$emit('fileLoad', this.files)
+        let formattedFiles = await formatFiles(this.files)
+        this.$emit('fileLoad', { files: this.files, formatted: formattedFiles })
       },
     }
   }

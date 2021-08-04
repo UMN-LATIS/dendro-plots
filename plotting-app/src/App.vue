@@ -21,8 +21,6 @@
 </template>
 
 <script>
-  import formatFiles from './composables/formatFiles.js'
-
   import FileManager from './components/FileManager.vue'
   import DataManager from './components/DataManager.vue'
 
@@ -36,10 +34,9 @@
       }
     },
     methods: {
-      async passFiles(loadedFiles) {
-        this.files = loadedFiles.slice()
-        let formattedFiles = await formatFiles(loadedFiles)
-        this.formattedFiles = formattedFiles.slice()
+      passFiles(fileObj) {
+        this.files = fileObj.files.slice()
+        this.formattedFiles = fileObj.formatted.slice()
       }
     }
   }
