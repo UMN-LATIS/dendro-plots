@@ -5,8 +5,7 @@
         <FileManager @fileLoad="passFiles" />
       </div>
       <div id="time-series-management">
-        <DataManager v-if="files" :files="files" />
-        <h2 v-else> No data loaded... </h2>
+        <DataManager :files="files" />
       </div>
     </div>
 
@@ -22,9 +21,6 @@
 </template>
 
 <script>
-  import simpleSmoothingSpline from 'simple-smoothing-spline'
-  import Plotly from 'plotly.js-dist'
-
   import FileManager from './components/FileManager.vue'
   import DataManager from './components/DataManager.vue'
 
@@ -38,8 +34,7 @@
     },
     methods: {
       passFiles(loadedFiles) {
-        this.files = loadedFiles
-        console.log('passFiles')
+        this.files = loadedFiles.slice()
       }
     }
   }

@@ -5,14 +5,14 @@
   <input type="file" id="file-upload" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
 
-  <div v-if="fileNames.length">
+  <div style="display: block;">
     <select ref="fileSelect">
-      <option selected disabled hidden> View Files </option>
+      <option :selected="!showDefault" :disabled="showDefault" hidden> View Files </option>
       <option v-for="name in fileNames" :key="name" :value="name"> {{ name }} </option>
     </select>
     <button type="button" id="file-delete" @click="removeFile">Remove File</button>
   </div>
-  <div v-if="fileNames.length">
+  <div style="display: block;">
     <button type="button" id="load-files" @click="emitToParent">Load Files</button>
   </div>
 </template>
@@ -25,6 +25,11 @@
         files: [],
         fileNames: [],
       }
+    },
+    computed: {
+      showDefault: function () {
+        return (this.fileNames.length) ? true : false
+      },
     },
     methods: {
       uploadFiles() {
@@ -42,7 +47,7 @@
       },
       emitToParent() {
         this.$emit('fileLoad', this.files)
-      }
+      },
     }
   }
 </script>
@@ -72,22 +77,25 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin: 10px 10px 0 10px;
+    margin: 10px 10px -5px 10px;
+  }
+
+  label {
+    padding: 5px 88px;
   }
 
   button {
     border: 1px solid #797979;
   }
 
-  label {
-    padding-left: 91px;
-    padding-right: 92px;
-  }
-
   label:hover, button:hover {
     background-color: #f6f6f6;
     color: #797979;
     border: 1px solid #797979;
+  }
+
+  label:hover {
+    padding: 4px 87px;
   }
 
 </style>
