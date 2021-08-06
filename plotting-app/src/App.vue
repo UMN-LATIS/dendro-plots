@@ -2,10 +2,11 @@
   <div id="wrapper">
     <div id="management-wrapper">
       <div id="file-mangement">
-        <FileManager @fileLoad="passFiles" />
+        <FileManager @fileLoad="passFileData" />
       </div>
-      <div id="time-series-management">
-        <DataManager :files="files" :formattedFiles="formattedFiles" />
+      <h2> Table of Contents: </h2>
+      <div v-if="formattedFileData" id="time-series-management">
+        <DataManager :formattedFileData="formattedFileData" />
       </div>
     </div>
 
@@ -29,14 +30,12 @@
     components: { FileManager, DataManager },
     data() {
       return {
-        files: null,
-        formattedFiles: null,
+        formattedFileData: null,
       }
     },
     methods: {
-      passFiles(fileObj) {
-        this.files = fileObj.files.slice()
-        this.formattedFiles = fileObj.formatted.slice()
+      passFileData(data) {
+        this.formattedFileData = data.slice()
       }
     }
   }
@@ -47,6 +46,7 @@
     margin: 0;
     height: 100%;
     width: 100%;
+    background: #f6f6f6;
   }
 
   div {
@@ -71,31 +71,29 @@
   }
 
   #management-wrapper {
-    width: 30%;
+    width: 300px;
+    min-width: 300px;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
   #file-mangement {
-    background: #f6f6f6;
     width: 100%;
     height: 30%;
     overflow: auto;
-    border-bottom: 1px solid #797979;
-    border-right: 1px solid #797979;
+    border-bottom: 2px solid #797979;
   }
 
   #time-series-management {
-    background: #f6f6f6;
     width: 100%;
     height: 70%;
-    border-top: 1px solid #797979;
-    border-right: 1px solid #797979;
+    overflow-y: auto;
+    overflow-x: hidden;
   }
 
   #plot-wrapper {
-    width: 70%;
+    width: calc(100% - 290px);
     height: 100%;
     display: flex;
     flex-direction: column;

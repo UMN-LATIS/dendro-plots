@@ -1,14 +1,17 @@
 <template>
   <h2> File Management: </h2>
-  <p> File format instructions... </p>
+  <p style="font-size: 12px">
+    Must be .JSON, .CSV, .RWL, tab delimited, or space delimited. Non .JSON files must include a header
+    of their given format.
+  </p>
 
   <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
 
   <div style="display: block;">
     <select ref="fileSelect">
-      <option :selected="!showDefault" :disabled="showDefault" hidden> View Files </option>
-      <option v-for="name in fileNames" :key="name" :value="name"> {{ name }} </option>
+      <option hidden :selected="!showDefault" :disabled="showDefault"> {{ defaultText }} </option>
+      <option v-for="(name, index) in fileNames" :key="name" :value="name"> {{ index + 1 }}: {{ name }} </option>
     </select>
     <button type="button" id="file-delete" @click="removeFile">Remove File</button>
   </div>
@@ -32,6 +35,9 @@
       showDefault: function () {
         return (this.fileNames.length) ? true : false
       },
+      defaultText: function () {
+        return (this.fileNames.length) ? 'View Files' : 'No Files'
+      }
     },
     methods: {
       uploadFiles() {
@@ -44,12 +50,15 @@
       },
       removeFile() {
         let fileIndex = this.fileNames.indexOf(this.$refs.fileSelect.value)
-        this.files.splice(fileIndex, 1)
-        this.fileNames.splice(fileIndex, 1)
+        if (fileIndex >= 0) {
+          this.files.splice(fileIndex, 1)
+          this.fileNames.splice(fileIndex, 1)
+        }
       },
       async emitToParent() {
-        let formattedFiles = await formatFiles(this.files)
-        this.$emit('fileLoad', { files: this.files, formatted: formattedFiles })
+        let formattedFileData = await formatFiles(this.files)
+        // format = [[[year, data name, ...], [1900, 1.5, ...], ...], [[year, data name, ...], [1900, 1.5, ...], ...], ...]
+        this.$emit('fileLoad', formattedFileData)
       },
     }
   }
@@ -66,7 +75,7 @@
     font-family: Sans-serif;
     font-weight: bold;
     color: #797979;
-    margin: 0 0 10px 10px;
+    margin: 0 10px 10px 10px;
   }
 
   label, select, button {
@@ -99,6 +108,10 @@
 
   label:hover {
     padding: 4px 87px;
+  }
+
+  #load-files {
+    margin-bottom: 10px;
   }
 
 </style>

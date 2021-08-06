@@ -1,8 +1,7 @@
 <template>
-  <h2> Table of Contents: </h2>
-  <div class="individual-data-wrapper" v-if="files && files.length" v-for="name in fileNames" :key="name">
+  <div class="individual-data-wrapper" v-if="fileNames" v-for="name in fileNames" :key="name">
     <div class="data-names">
-      <p> {{ name }} </p>
+      <p :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
       <input type="color" @change="colorChange" :id="name">
@@ -17,17 +16,17 @@
       <div class="spline-dropdown">
         <input type="checkbox" disabled :value="name">
         <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline" :id="freq"> {{ freq }}yrs </p>
+          <p class="index-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline" :id="freq"> {{ freq }}yrs </p>
         </div>
       </div>
     </div>
   </div>
-  <p style="margin: 0px 10px;" v-else> No Data to Display </p>
+  <p style="margin: 0px 10px;" v-else> Data Error </p>
 </template>
 
 <script>
   export default {
-    props: ['files', 'formattedFiles'],
+    props: ['formattedFileData'],
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
@@ -35,12 +34,41 @@
     },
     computed: {
       fileNames: function () {
-        let fileNamesArray = ['All Data', 'Median']
-        for (let file of this.files) {
-          let formattedName = file.name.split('.')[0]
-          fileNamesArray.push(formattedName)
+        if (!this.formattedFileData) {
+          return
         }
-        return fileNamesArray
+
+        var errorFileIndices = ''
+        var dataNamesArray = ['All Data', 'Median']
+        for (let i = 0; i < this.formattedFileData.length; i++) {
+          if (!this.formattedFileData[i]) {
+            return
+          }
+          
+          let header = this.formattedFileData[i][0]
+          // check if file has header
+          if (isNaN(parseFloat(header[0])) == false) {
+            errorFileIndices += (i + 1 + ', ')
+          } else {
+            for (let j = 1; j < header.length; j++) {
+              dataNamesArray.push(header[j])
+            }
+          }
+        }
+
+        if (errorFileIndices) {
+          let errIndex = errorFileIndices.slice(0, -2)
+          let alertText = (errIndex.length > 1) ?
+              'Files ' + errIndex + ' require headers formatted as such: Year, name1, name2, ...' :
+              'File ' + errIndex + ' requires a header formatted as such: Year, name1, name2, ...'
+          alert(alertText)
+          return false
+        } else {
+          return dataNamesArray
+        }
+      },
+      dataObj: function () {
+
       },
     },
     methods: {
@@ -58,7 +86,7 @@
         let checkbox = e.target.parentElement.previousElementSibling
         if (e.target.classList.contains('active')) {
           e.target.className = e.target.className.replace(' active', '')
-          let options = document.getElementsByClassName('width-spline-options')
+          let options = document.getElementsByClassName(e.target.className)
           let remainChecked = null
           for (let p of options) {
             if (p.classList.contains('active') == true) {
@@ -116,7 +144,7 @@
     padding: 0;
     border: 1px solid #797979;
     border-radius: 5px;
-    margin: 0 10px;
+    margin: 0 5px;
     box-sizing: border-box;
   }
 
@@ -151,22 +179,22 @@
     font-family: Sans-serif;
     font-weight: bold;
     color: #797979;
-    width: calc(40% - 10px);
+    width: 100px;
     height: 18px;
-    margin-right: 10px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
   }
 
   .data-options {
-    width: calc(60% - 10px);
+    width: 60%;
     height: 18px;
   }
 
   .spline-dropdown {
     position: relative;
     display: inline-block;
+    margin: 0 5px;
   }
 
   .spline-dropdown:hover .spline-dropdown-content {
@@ -176,7 +204,7 @@
   .spline-dropdown-content {
     display: none;
     margin-top: -22px;
-    margin-left: 30px;
+    margin-left: -58px;
     position: absolute;
     background-color: #f6f6f6;
     border: 2px solid #797979;

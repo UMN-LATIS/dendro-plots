@@ -140,7 +140,6 @@ function formatSpaceDelim (data) {
     formattedData.push(splitData)
   }
 
-  console.log(formattedData)
   return formattedData
 }
 
