@@ -46,9 +46,12 @@
     methods: {
       // each checkbox's value is the data name
       colorChange(e) {
+        // id = data name
+        // value = color hex code
         console.log(e.target.id, e.target.value, 'color change')
       },
       toggleWidthPoints (e) {
+        // value = data name
         console.log(e.target.value, 'points toggled')
       },
       toggleCheckbox (e) {
@@ -70,18 +73,21 @@
           e.target.className += ' active'
           checkbox.checked = true
         }
+
+        return checkbox.value
       },
       toggleWidthSpline (e) {
-        this.toggleCheckbox(e)
-        console.log(e.target.id, 'spline toggled')
+        let dataName = this.toggleCheckbox(e)
+        console.log(dataName, e.target.id, 'spline toggled')
         // send data to plotly
       },
       toggleIndexPoints (e) {
+        // value = data name
         console.log(e.target.value, 'index toggled')
       },
       toggleIndexSpline (e) {
-        this.toggleCheckbox(e)
-        console.log(e.target.id, 'index spline toggled')
+        let dataName = this.toggleCheckbox(e)
+        console.log(dataName, e.target.id, 'spline toggled')
         // send data to plotly
       },
     },
