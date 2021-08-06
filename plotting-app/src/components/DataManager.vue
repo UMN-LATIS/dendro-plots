@@ -1,5 +1,5 @@
 <template>
-  <div class="individual-data-wrapper" v-if="fileNames" v-for="name in fileNames" :key="name">
+  <div class="individual-data-wrapper" v-if="fileNames && fileNames.length > 2" v-for="name in fileNames" :key="name">
     <div class="data-names">
       <p :title="name"> {{ name }} </p>
     </div>
@@ -21,7 +21,6 @@
       </div>
     </div>
   </div>
-  <p style="margin: 0px 10px;" v-else> Data Error </p>
 </template>
 
 <script>
@@ -44,7 +43,7 @@
           if (!this.formattedFileData[i]) {
             return
           }
-          
+
           let header = this.formattedFileData[i][0]
           // check if file has header
           if (isNaN(parseFloat(header[0])) == false) {

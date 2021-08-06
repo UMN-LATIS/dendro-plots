@@ -5,7 +5,7 @@
         <FileManager @fileLoad="passFileData" />
       </div>
       <h2> Table of Contents: </h2>
-      <div v-if="formattedFileData" id="time-series-management">
+      <div id="time-series-management">
         <DataManager :formattedFileData="formattedFileData" />
       </div>
     </div>
@@ -80,14 +80,14 @@
 
   #file-mangement {
     width: 100%;
-    height: 30%;
+    height: 190px;
     overflow: auto;
     border-bottom: 2px solid #797979;
   }
 
   #time-series-management {
     width: 100%;
-    height: 70%;
+    height: calc(100% - 190px);
     overflow-y: auto;
     overflow-x: hidden;
   }
