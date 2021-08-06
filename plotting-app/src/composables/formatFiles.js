@@ -133,6 +133,17 @@ function formatRWL (data) {
   return formattedData
 }
 
+function formatSpaceDelim (data) {
+  var formattedData = []
+  for (let array of data) {
+    let splitData = array[0].split(/[\s]+/)
+    formattedData.push(splitData)
+  }
+
+  console.log(formattedData)
+  return formattedData
+}
+
 function parseFile (file) {
   return new Promise((resolve, reject) => {
     let fr = new FileReader()
@@ -142,8 +153,15 @@ function parseFile (file) {
         // diatances format: [Year, Core Name], [1900, 1.5], [1901, 1.1], ...
       } else {
         let papaObj = Papa.parse(event.target.result, {delimitersToGuess: [',', '\t']})
-        if (papaObj.errors.length) { // rwl files
-          resolve(formatRWL(papaObj.data))
+        if (papaObj.errors.length) { // rwl or space demilited files
+          // space delimited has a years in far left column, RWL had specimen names, way to differentiate
+          var split_second_row = papaObj.data[1][0].split(/[\s]+/);
+          var test_string = split_second_row[0];
+          if (isNaN(parseFloat(test_string))) {
+            resolve(formatRWL(papaObj.data))
+          } else {
+            resolve(formatSpaceDelim(papaObj.data))
+          }
         } else { // CSV, TSV files
           resolve(papaObj.data)
         }

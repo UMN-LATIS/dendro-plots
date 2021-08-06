@@ -5,17 +5,17 @@
       <p> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="color" @change="colorChange">
-      <input type="checkbox" @change="toggleWidthPoints">
+      <input type="color" @change="colorChange" :id="name">
+      <input type="checkbox" @change="toggleWidthPoints" :value="name">
       <div class="spline-dropdown">
-        <input type="checkbox" disabled>
+        <input type="checkbox" disabled :value="name">
         <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline" :id="freq"> {{ freq }}yrs </p>
+          <p class="width-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline" :id="freq"> {{ freq }}yrs </p>
         </div>
       </div>
-      <input type="checkbox" @change="toggleIndexPoints">
+      <input type="checkbox" @change="toggleIndexPoints" :value="name">
       <div class="spline-dropdown">
-        <input type="checkbox" disabled>
+        <input type="checkbox" disabled :value="name">
         <div class="spline-dropdown-content">
           <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline" :id="freq"> {{ freq }}yrs </p>
         </div>
@@ -44,28 +44,45 @@
       },
     },
     methods: {
+      // each checkbox's value is the data name
       colorChange(e) {
-        console.log(e.target.value)
+        console.log(e.target.id, e.target.value, 'color change')
       },
       toggleWidthPoints (e) {
-        console.log(e.target.checked)
+        console.log(e.target.value, 'points toggled')
+      },
+      toggleCheckbox (e) {
+        let checkbox = e.target.parentElement.previousElementSibling
+        if (e.target.classList.contains('active')) {
+          e.target.className = e.target.className.replace(' active', '')
+          let options = document.getElementsByClassName('width-spline-options')
+          let remainChecked = null
+          for (let p of options) {
+            if (p.classList.contains('active') == true) {
+              remainChecked = true
+              break
+            } else {
+              remainChecked = false
+            }
+          }
+          checkbox.checked = (remainChecked) ? true : false
+        } else {
+          e.target.className += ' active'
+          checkbox.checked = true
+        }
       },
       toggleWidthSpline (e) {
-        if (e.target.classList.contains('active')) {
-          e.target.className = e.target.className.replace(' active', '')
-        } else {
-          e.target.className += ' active'
-        }
+        this.toggleCheckbox(e)
+        console.log(e.target.id, 'spline toggled')
+        // send data to plotly
       },
       toggleIndexPoints (e) {
-        console.log(e.target.checked)
+        console.log(e.target.value, 'index toggled')
       },
       toggleIndexSpline (e) {
-        if (e.target.classList.contains('active')) {
-          e.target.className = e.target.className.replace(' active', '')
-        } else {
-          e.target.className += ' active'
-        }
+        this.toggleCheckbox(e)
+        console.log(e.target.id, 'index spline toggled')
+        // send data to plotly
       },
     },
   }
@@ -102,7 +119,7 @@
   }
 
   input[type="checkbox"]:checked {
-    background: #b5b5b5;
+    background: #797979;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {
@@ -168,7 +185,7 @@
   }
 
   .spline-dropdown-content p:hover {
-    background: #9e9e9e;
+    background: #b5b5b5;
     color: #f6f6f6;
   }
 
