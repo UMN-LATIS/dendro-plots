@@ -5,6 +5,7 @@
         <FileManager @fileLoad="passFileData" />
       </div>
       <h2> Table of Contents: </h2>
+      <DataExample />
       <div id="time-series-management">
         <DataManager :formattedFileData="formattedFileData" />
       </div>
@@ -24,10 +25,11 @@
 <script>
   import FileManager from './components/FileManager.vue'
   import DataManager from './components/DataManager.vue'
+  import DataExample from './components/DataExample.vue'
 
   export default {
     name: 'App',
-    components: { FileManager, DataManager },
+    components: { FileManager, DataManager, DataExample },
     data() {
       return {
         formattedFileData: null,
@@ -80,14 +82,15 @@
 
   #file-mangement {
     width: 100%;
-    height: 190px;
+    height: 85px;
+    min-height: 85px;
     overflow: auto;
     border-bottom: 2px solid #797979;
   }
 
   #time-series-management {
     width: 100%;
-    height: calc(100% - 190px);
+    height: calc(100%-85px);
     overflow-y: auto;
     overflow-x: hidden;
   }

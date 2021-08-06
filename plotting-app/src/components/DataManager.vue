@@ -202,18 +202,19 @@
 
   .spline-dropdown-content {
     display: none;
-    margin-top: -22px;
-    margin-left: -58px;
     position: absolute;
     background-color: #f6f6f6;
-    border: 2px solid #797979;
-    border-radius: 5px;
-    z-index: 1;
+    border: 1px solid black;
+    border-radius: 0;
+    z-index: 999999;
   }
 
   .spline-dropdown-content p {
     display: block;
-    padding: 2px;
+    font-weight: normal;
+    font-size: 12px;
+    color: black;
+    padding: 6px;
     margin: 0;
   }
 

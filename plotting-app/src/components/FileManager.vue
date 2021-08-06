@@ -1,23 +1,12 @@
 <template>
+  <div id="info-div">
+    <img src="../assets/info-icon.png" id="info">
+    <span id="info-content"> {{ fileInfo }} </span>
+  </div>
   <h2> File Management: </h2>
-  <p style="font-size: 12px">
-    Must be .JSON, .CSV, .RWL, tab delimited, or space delimited. Non .JSON files must include a header
-    of their given format.
-  </p>
 
   <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
-
-  <div style="display: block;">
-    <select ref="fileSelect">
-      <option hidden :selected="!showDefault" :disabled="showDefault"> {{ defaultText }} </option>
-      <option v-for="(name, index) in fileNames" :key="name" :value="name"> {{ index + 1 }}: {{ name }} </option>
-    </select>
-    <button type="button" id="file-delete" @click="removeFile">Remove File</button>
-  </div>
-  <div style="display: block;">
-    <button type="button" id="load-files" @click="emitToParent">Load Files</button>
-  </div>
 </template>
 
 <script>
@@ -29,6 +18,7 @@
       return {
         files: [],
         fileNames: [],
+        fileInfo: "blah blah blah blah blah blah blah blah blah blah blah blah"
       }
     },
     computed: {
@@ -47,13 +37,7 @@
             this.fileNames.push(file.name)
           }
         }
-      },
-      removeFile() {
-        let fileIndex = this.fileNames.indexOf(this.$refs.fileSelect.value)
-        if (fileIndex >= 0) {
-          this.files.splice(fileIndex, 1)
-          this.fileNames.splice(fileIndex, 1)
-        }
+        this.emitToParent()
       },
       async emitToParent() {
         let formattedFileData = await formatFiles(this.files)
@@ -66,9 +50,10 @@
 
 <style scoped>
   h2 {
+    display: inline-block;
     font-family: Sans-serif;
     color: #797979;
-    margin: 0 10px;
+    margin: 10px;
   }
 
   p {
@@ -101,17 +86,45 @@
   }
 
   label:hover, button:hover {
-    background-color: #f6f6f6;
-    color: #797979;
-    border: 1px solid #797979;
-  }
-
-  label:hover {
-    padding: 4px 87px;
+    background-color: black;
+    color: white;
   }
 
   #load-files {
     margin-bottom: 10px;
   }
+
+  #info {
+    display: inline;
+    width: 16px;
+    height: 16px;
+    margin: 10px -5px 0 10px;
+  }
+
+  #info-div {
+    display: inline;
+  }
+
+  #info-content {
+    display: none;
+    font-weight: normal;
+    font-family: Sans-serif;
+    font-size: 12px;
+    color: black;
+    padding: 6px;
+    margin: 0;
+    position: absolute;
+    margin-left: -5px;
+    margin-top: 40px;
+    background-color: #f6f6f6;
+    border: 1px solid black;
+    border-radius: 2px;
+    z-index: 999999;
+  }
+
+  #info-div:hover #info-content {
+    display: inline;
+  }
+
 
 </style>
