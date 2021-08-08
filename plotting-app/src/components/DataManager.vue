@@ -1,5 +1,5 @@
 <template>
-  <div class="individual-data-wrapper" v-if="fileNames && fileNames.length > 2" v-for="(name, index) in fileNames" :key="name" :id="name">
+  <div class="individual-data-wrapper" v-if="dataSetNames && dataSetNames.length > 2" v-for="(name, index) in dataSetNames" :key="name" :id="name">
     <div class="data-names">
       <p class="data-name" :title="name"> {{ name }} </p>
     </div>
@@ -27,38 +27,28 @@
 </template>
 
 <script>
-  import formatDataObjArray from '../composables/formatData.js'
-
   export default {
-    props: ['formattedFileData'],
+    props: ['dataObjArray'],
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
       }
     },
     computed: {
-      fileNames: function () {
-        if (!this.formattedFileData) {
+      dataSetNames: function () {
+        if (!this.dataObjArray) {
           return
         }
 
         var dataNamesArray = ['All Data', 'Median']
-        for (let i = 0; i < this.formattedFileData.length; i++) {
-          if (!this.formattedFileData[i]) {
-            return
-          }
-
-          let header = this.formattedFileData[i][0]
-          for (let j = 1; j < header.length; j++) {
-            dataNamesArray.push(header[j])
+        for (let obj of this.dataObjArray) {
+          if (!dataNamesArray.includes(obj.name)) {
+            dataNamesArray.push(obj.name)
           }
         }
 
         return dataNamesArray
       },
-      dataObjArray: function () {
-        return formatDataObjArray(this.formattedFileData)
-      }
     },
     methods: {
       // each input's name is the datasets name
@@ -107,11 +97,12 @@
         let setDiv = document.getElementById(setName)
         setDiv.remove()
 
-        this.dataObjArray.forEach((set, i) => {
+        for (let i = this.dataObjArray.length - 1; i >= 0; i--) {
+          let set = this.dataObjArray[i]
           if (set.name == setName) {
             this.dataObjArray.splice(i, 1)
           }
-        })
+        }
       },
     },
   }

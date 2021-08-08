@@ -19,32 +19,21 @@
     data() {
       return {
         files: [],
-        fileNames: [],
         fileInfo: "blah blah blah blah blah blah blah blah blah blah blah blah"
-      }
-    },
-    computed: {
-      showDefault: function () {
-        return (this.fileNames.length) ? true : false
-      },
-      defaultText: function () {
-        return (this.fileNames.length) ? 'View Files' : 'No Files'
       }
     },
     methods: {
       uploadFiles() {
         for (let file of this.$refs.fileInput.files) {
-          if (this.fileNames.includes(file.name) == false) {
-            this.files.push(file)
-            this.fileNames.push(file.name)
-          }
+          this.files.push(file)
         }
         this.emitToParent()
+        this.$refs.fileInput.value = null
       },
       async emitToParent() {
-        let formattedFileData = await formatFiles(this.files)
+        let dataObjArray = await formatFiles(this.files)
         // format = [[[year, data name, ...], [1900, 1.5, ...], ...], [[year, data name, ...], [1900, 1.5, ...], ...], ...]
-        this.$emit('fileLoad', formattedFileData)
+        this.$emit('fileLoad', dataObjArray)
       },
     }
   }

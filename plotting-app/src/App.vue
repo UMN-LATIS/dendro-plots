@@ -7,7 +7,7 @@
       <h2> Table of Contents: </h2>
       <DataExample  id="data-example" />
       <div id="time-series-management">
-        <DataManager :formattedFileData="formattedFileData" />
+        <DataManager :dataObjArray="dataObjArray" />
       </div>
     </div>
 
@@ -32,12 +32,12 @@
     components: { FileManager, DataManager, DataExample },
     data() {
       return {
-        formattedFileData: null,
+        dataObjArray: [],
       }
     },
     methods: {
       passFileData(data) {
-        this.formattedFileData = data.slice()
+        this.dataObjArray = data.slice()
       }
     }
   }
