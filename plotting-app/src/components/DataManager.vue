@@ -1,29 +1,34 @@
 <template>
-  <div class="individual-data-wrapper" v-if="fileNames && fileNames.length > 2" v-for="name in fileNames" :key="name">
+  <div class="individual-data-wrapper" v-if="fileNames && fileNames.length > 2" v-for="(name, index) in fileNames" :key="name" :id="name">
     <div class="data-names">
-      <p :title="name"> {{ name }} </p>
+      <p class="data-name" :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="color" @change="colorChange" :id="name">
-      <input type="checkbox" @change="toggleWidthPoints" :value="name">
+      <input type="color" @change="colorChange" :name="name">
+      <input type="checkbox" @change="toggleWidthPoints" :name="name">
       <div class="spline-dropdown">
-        <input type="checkbox" disabled :value="name">
+        <input type="checkbox" disabled :name="name">
         <div class="spline-dropdown-content">
           <p class="width-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline" :id="freq"> {{ freq }}yrs </p>
         </div>
       </div>
-      <input type="checkbox" @change="toggleIndexPoints" :value="name">
+      <input type="checkbox" @change="toggleIndexPoints" :name="name">
       <div class="spline-dropdown">
-        <input type="checkbox" disabled :value="name">
+        <input type="checkbox" disabled :name="name">
         <div class="spline-dropdown-content">
           <p class="index-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline" :id="freq"> {{ freq }}yrs </p>
         </div>
+      </div>
+      <div class="delete-div" v-if="index > 1" @click="removeSet(name)">
+        <img src="../assets/delete-button.png" class="delete-img">
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import formatDataObjArray from '../composables/formatData.js'
+
   export default {
     props: ['formattedFileData'],
     data() {
@@ -37,7 +42,6 @@
           return
         }
 
-        var errorFileIndices = ''
         var dataNamesArray = ['All Data', 'Median']
         for (let i = 0; i < this.formattedFileData.length; i++) {
           if (!this.formattedFileData[i]) {
@@ -45,43 +49,26 @@
           }
 
           let header = this.formattedFileData[i][0]
-          // check if file has header
-          if (isNaN(parseFloat(header[0])) == false) {
-            errorFileIndices += (i + 1 + ', ')
-          } else {
-            for (let j = 1; j < header.length; j++) {
-              dataNamesArray.push(header[j])
-            }
+          for (let j = 1; j < header.length; j++) {
+            dataNamesArray.push(header[j])
           }
         }
 
-        if (errorFileIndices) {
-          let errIndex = errorFileIndices.slice(0, -2)
-          let alertText = (errIndex.length > 1) ?
-              'Files ' + errIndex + ' require headers formatted as such: Year, name1, name2, ...' :
-              'File ' + errIndex + ' requires a header formatted as such: Year, name1, name2, ...'
-          alert(alertText)
-          return false
-        } else {
-          return dataNamesArray
-        }
+        return dataNamesArray
       },
-      dataObj: function () {
-
-      },
+      dataObjArray: function () {
+        return formatDataObjArray(this.formattedFileData)
+      }
     },
     methods: {
-      // each checkbox's value is the data name
+      // each input's name is the datasets name
       colorChange(e) {
-        // id = data name
-        // value = color hex code
-        console.log(e.target.id, e.target.value, 'color change')
+        console.log(e.target.name, ' color change')
       },
-      toggleWidthPoints (e) {
-        // value = data name
-        console.log(e.target.value, 'points toggled')
+      toggleWidthPoints(e) {
+        console.log(e.target.name, ' points toggled')
       },
-      toggleCheckbox (e) {
+      toggleCheckbox(e) {
         let checkbox = e.target.parentElement.previousElementSibling
         if (e.target.classList.contains('active')) {
           e.target.className = e.target.className.replace(' active', '')
@@ -101,21 +88,30 @@
           checkbox.checked = true
         }
 
-        return checkbox.value
+        return checkbox.name
       },
-      toggleWidthSpline (e) {
+      toggleWidthSpline(e) {
+        let dataName = this.toggleCheckbox(e)
+        console.log(dataName, e.target.id, ' spline toggled')
+        // send data to plotly
+      },
+      toggleIndexPoints(e) {
+        console.log(e.target.name, ' index toggled')
+      },
+      toggleIndexSpline(e) {
         let dataName = this.toggleCheckbox(e)
         console.log(dataName, e.target.id, 'spline toggled')
         // send data to plotly
       },
-      toggleIndexPoints (e) {
-        // value = data name
-        console.log(e.target.value, 'index toggled')
-      },
-      toggleIndexSpline (e) {
-        let dataName = this.toggleCheckbox(e)
-        console.log(dataName, e.target.id, 'spline toggled')
-        // send data to plotly
+      removeSet(setName) {
+        let setDiv = document.getElementById(setName)
+        setDiv.remove()
+
+        this.dataObjArray.forEach((set, i) => {
+          if (set.name == setName) {
+            this.dataObjArray.splice(i, 1)
+          }
+        })
       },
     },
   }
@@ -178,6 +174,13 @@
     color: #797979;
     width: 105px;
     height: 18px;
+  }
+
+  .data-name {
+    display: inline-block;
+    width: 95px;
+    height: 18px;
+    margin: 0;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
@@ -225,6 +228,16 @@
   .spline-dropdown-content p.active {
     background: #797979;
     color: #f6f6f6;
+  }
+
+  .delete-div {
+    width: 18px;
+    height: 18px;
+  }
+
+  .delete-img {
+    width: inherit;
+    height: inherit;
   }
 
 </style>
