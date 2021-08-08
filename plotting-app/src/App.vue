@@ -5,7 +5,7 @@
         <FileManager @fileLoad="passFileData" />
       </div>
       <h2> Table of Contents: </h2>
-      <DataExample />
+      <DataExample  id="data-example" />
       <div id="time-series-management">
         <DataManager :formattedFileData="formattedFileData" />
       </div>
@@ -73,8 +73,8 @@
   }
 
   #management-wrapper {
-    width: 300px;
-    min-width: 300px;
+    width: 350px;
+    min-width: 350px;
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -84,13 +84,18 @@
     width: 100%;
     height: 85px;
     min-height: 85px;
+    margin-left: 10px;
     overflow: auto;
-    border-bottom: 2px solid #797979;
+  }
+
+  #data-example {
+    margin-left: 10px;
   }
 
   #time-series-management {
-    width: 100%;
-    height: calc(100%-85px);
+    width: calc(100% - 10px);
+    height: 100%;
+    margin-left: 10px;
     overflow-y: auto;
     overflow-x: hidden;
   }

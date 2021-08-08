@@ -5,6 +5,8 @@
   </div>
   <h2> File Management: </h2>
 
+  <br>
+
   <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
 </template>
@@ -53,7 +55,8 @@
     display: inline-block;
     font-family: Sans-serif;
     color: #797979;
-    margin: 10px;
+    margin: 0;
+    margin-bottom: 10px;
   }
 
   p {
@@ -63,46 +66,33 @@
     margin: 0 10px 10px 10px;
   }
 
-  label, select, button {
+  label {
     background-color: #797979;
     color: white;
-    width: 120px;
-    padding: 4px 6px;
+    padding: 6px 120px;
     font-family: sans-serif;
     font-size: 14px;
     font-weight: bold;
-    border: none;
     border-radius: 4px;
     cursor: pointer;
-    margin: 10px 10px -5px 10px;
+    margin: 0;
   }
 
-  label {
-    padding: 5px 88px;
-  }
-
-  button {
-    border: 1px solid #797979;
-  }
-
-  label:hover, button:hover {
+  label:hover {
     background-color: black;
     color: white;
-  }
-
-  #load-files {
-    margin-bottom: 10px;
   }
 
   #info {
     display: inline;
     width: 16px;
     height: 16px;
-    margin: 10px -5px 0 10px;
+    margin: 0;
   }
 
   #info-div {
     display: inline;
+    margin-right: 10px;
   }
 
   #info-content {
@@ -114,8 +104,8 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -5px;
-    margin-top: 40px;
+    margin-left: -10px;
+    margin-top: 28px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;

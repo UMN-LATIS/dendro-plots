@@ -1,7 +1,12 @@
 <template>
   <div>
     <p> Timeseries </p>
-    <input type="checkbox" disabled v-for="id in hoverTextID" :key="id" :id="id">
+    <div class="dropdown" v-for="(id, index) in imgID" :key="id">
+      <img src="../assets/info-icon.png" :id="id">
+      <div class="dropdown-content">
+        <span> {{ hoverText[index] }} </span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -9,7 +14,13 @@
   export default {
     data() {
       return {
-        hoverTextID: ['color', 'widthPtToggle', 'widthSplineToggle', 'indexPtToggle', 'indexSplineToggle'],
+        imgID: ['first-img', '', '', '', ''],
+        hoverText: ['hovertext hovertext hovertext hovertext hovertext',
+                    'hovertext hovertext hovertext hovertext hovertext',
+                    'hovertext hovertext hovertext hovertext hovertext',
+                    'hovertext hovertext hovertext hovertext hovertext',
+                    'hovertext hovertext hovertext hovertext hovertext'],
+
       }
     },
   }
@@ -18,7 +29,6 @@
 <style scoped>
   div {
     margin: 0;
-    margin-left: 10px;
     display: inline;
   }
 
@@ -30,24 +40,37 @@
     position: absolute;
     display: inline;
     margin: 0;
-    margin-top: 2px;
   }
 
-  input[type="checkbox"] {
-    -webkit-appearance: none;
+  img {
     width: 18px;
     height: 18px;
-    padding: 0;
-    border: 2px solid #797979;
-    border-radius: 5px;
-    margin-left: 10px;
-    margin-right: 5px;
-    box-sizing: border-box;
+    margin: 0 8px;
   }
 
-  #color {
-    background: black;
-    margin-right: 0;
+  .dropdown:hover .dropdown-content {
+    display: inline;
+  }
+
+  .dropdown-content {
+    display: none;
+    font-weight: normal;
+    font-family: Sans-serif;
+    font-size: 12px;
+    color: black;
+    padding: 6px;
+    margin: 0;
+    position: absolute;
+    margin-left: -16px;
+    margin-top: 22px;
+    background-color: #f6f6f6;
+    border: 1px solid black;
+    border-radius: 2px;
+    z-index: 999999;
+  }
+
+  #first-img {
     margin-left: 105px;
   }
+
 </style>

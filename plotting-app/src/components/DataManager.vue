@@ -123,12 +123,6 @@
 </script>
 
 <style scoped>
-  h2 {
-    font-family: Sans-serif;
-    color: #797979;
-    margin: 0 10px;
-  }
-
   p {
     font-family: Sans-serif;
     font-weight: bold;
@@ -143,12 +137,17 @@
     padding: 0;
     border: 1px solid #797979;
     border-radius: 5px;
-    margin: 0 5px;
+    margin: 0;
     box-sizing: border-box;
+  }
+
+  input[type="color"] {
+    margin-right: 16px;
   }
 
   input[type="checkbox"] {
     border: 2px solid #797979;
+    margin-right: 10px;
   }
 
   input[type="checkbox"]:checked {
@@ -171,14 +170,13 @@
 
   .individual-data-wrapper {
     width: 100%;
-    margin-left: 10px;
   }
 
   .data-names {
     font-family: Sans-serif;
     font-weight: bold;
     color: #797979;
-    width: 100px;
+    width: 105px;
     height: 18px;
     text-overflow: ellipsis;
     overflow: hidden;
@@ -193,7 +191,7 @@
   .spline-dropdown {
     position: relative;
     display: inline-block;
-    margin: 0 5px;
+    margin: 0 6px;
   }
 
   .spline-dropdown:hover .spline-dropdown-content {
@@ -203,6 +201,7 @@
   .spline-dropdown-content {
     display: none;
     position: absolute;
+    margin-left: 10px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 0;
