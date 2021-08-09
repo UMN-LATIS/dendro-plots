@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import formatFiles from '../composables/formatFiles.js'
+  import formatFileData from '../composables/formatFileData.js'
 
   export default {
     emits: ['fileLoad'],
@@ -31,7 +31,7 @@
         this.$refs.fileInput.value = null
       },
       async emitToParent() {
-        let dataObjArray = await formatFiles(this.files)
+        let dataObjArray = await formatFileData(this.files)
         // format = [[[year, data name, ...], [1900, 1.5, ...], ...], [[year, data name, ...], [1900, 1.5, ...], ...], ...]
         this.$emit('fileLoad', dataObjArray)
       },

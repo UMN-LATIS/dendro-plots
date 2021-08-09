@@ -4,21 +4,16 @@
       <p class="data-name" :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="color" @change="colorChange" :name="name">
-      <input type="checkbox" @change="toggleWidthPoints" :name="name">
-      <div class="spline-dropdown">
+      <input type="color" class="color-input" @change="colorChange($event, name)">
+      <input type="checkbox" class="toggle-width-pts" @change="toggleWidthPoints($event, name)">
+
+      <div class="spline-dropdown" v-for="(func, index) in splineFunctions" :key="index">
         <input type="checkbox" disabled :name="name">
         <div class="spline-dropdown-content">
-          <p class="width-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline" :id="freq"> {{ freq }}yrs </p>
+          <p v-for="freq in splineYearFreq" :key="freq" @click="func($event, freq, name)"> {{ freq }}yrs </p>
         </div>
       </div>
-      <input type="checkbox" @change="toggleIndexPoints" :name="name">
-      <div class="spline-dropdown">
-        <input type="checkbox" disabled :name="name">
-        <div class="spline-dropdown-content">
-          <p class="index-spline-options" v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline" :id="freq"> {{ freq }}yrs </p>
-        </div>
-      </div>
+
       <div class="delete-div" v-if="index > 1" @click="removeSet(name)">
         <img src="../assets/delete-button.png" class="delete-img">
       </div>
@@ -27,11 +22,15 @@
 </template>
 
 <script>
+  import median from '../composables/median.js'
+
   export default {
     props: ['dataObjArray'],
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
+        splineFunctions: [this.toggleWidthSpline, this.toggleIndexPoints, this.toggleIndexSpline],
+        shownDataArray: [],
       }
     },
     computed: {
@@ -51,28 +50,84 @@
       },
     },
     methods: {
-      // each input's name is the datasets name
-      colorChange(e) {
-        console.log(e.target.name, ' color change')
+      addTrace(color, name) {
+        let trace
+
+        if (name == 'Median') {
+          trace = median(this.shownDataArray)
+        } else if (name == 'All Data') {
+          this.shownDataArray = []
+          this.dataObjArray.map(e => {
+            let trace = new Object ()
+            trace.x = e.x.slice()
+            trace.y = e.y.slice()
+            trace.name = e.name
+            trace.line = { 'color': color }
+            trace.mode = 'lines+markers'
+            trace.type = 'scattergl'
+            this.shownDataArray.push(trace)
+          })
+          trace = null // prevent if statement below
+        } else {
+          this.dataObjArray.map(e => {
+            if (e.name == name) {
+              trace = new Object()
+              trace.x = e.x.slice()
+              trace.y = e.y.slice()
+            }
+          })
+        }
+
+        if (trace) {
+          trace.name = name
+          trace.line = { 'color': color }
+          trace.mode = 'lines+markers'
+          trace.type = 'scattergl'
+          this.shownDataArray.push(trace)
+        }
       },
-      toggleWidthPoints(e) {
-        console.log(e.target.name, ' points toggled')
+      removeTrace(name) {
+        if (name == 'All Data') {
+          this.shownDataArray = []
+        }
+
+        this.shownDataArray.map((e, i) => {
+          if (e.name == name) {
+            this.shownDataArray.splice(i, 1)
+          }
+        })
+      },
+      // each input's name is the datasets name
+      colorChange(e, name) {
+        this.shownDataArray.map(o => {
+          if (o.name == name || name == 'All Data') {
+            o.line.color = e.target.value
+          }
+        })
+
+      },
+      toggleWidthPoints(e, name) {
+        let color = e.target.parentElement.getElementsByClassName('color-input')[0].value
+        if (e.target.checked) {
+          this.addTrace(color, name)
+        } else {
+          this.removeTrace(name)
+        }
+
+        if (name == 'All Data') {
+          let cBoxs = document.getElementsByClassName('toggle-width-pts')
+          for (let i = 2; i < cBoxs.length; i++) {
+            cBoxs[i].checked = e.target.checked
+          }
+        }
+
       },
       toggleCheckbox(e) {
         let checkbox = e.target.parentElement.previousElementSibling
         if (e.target.classList.contains('active')) {
           e.target.className = e.target.className.replace(' active', '')
-          let options = document.getElementsByClassName(e.target.className)
-          let remainChecked = null
-          for (let p of options) {
-            if (p.classList.contains('active') == true) {
-              remainChecked = true
-              break
-            } else {
-              remainChecked = false
-            }
-          }
-          checkbox.checked = (remainChecked) ? true : false
+          let activeOptions = e.target.parentElement.getElementsByClassName('active')
+          checkbox.checked = (activeOptions.length > 0) ? true : false
         } else {
           e.target.className += ' active'
           checkbox.checked = true
@@ -80,26 +135,28 @@
 
         return checkbox.name
       },
-      toggleWidthSpline(e) {
-        let dataName = this.toggleCheckbox(e)
-        console.log(dataName, e.target.id, ' spline toggled')
+      // id = spline year frequency
+      toggleWidthSpline(e, freq, name) {
+        this.toggleCheckbox(e)
+        console.log(name, freq, ' spline toggled')
         // send data to plotly
       },
-      toggleIndexPoints(e) {
-        console.log(e.target.name, ' index toggled')
+      toggleIndexPoints(e, freq, name) {
+        this.toggleCheckbox(e)
+        console.log(name, freq, ' index toggled')
       },
-      toggleIndexSpline(e) {
-        let dataName = this.toggleCheckbox(e)
-        console.log(dataName, e.target.id, 'spline toggled')
+      toggleIndexSpline(e, freq, name) {
+        this.toggleCheckbox(e)
+        console.log(name, freq, 'spline toggled')
         // send data to plotly
       },
-      removeSet(setName) {
-        let setDiv = document.getElementById(setName)
+      removeSet(name) {
+        let setDiv = document.getElementById(name)
         setDiv.remove()
 
         for (let i = this.dataObjArray.length - 1; i >= 0; i--) {
           let set = this.dataObjArray[i]
-          if (set.name == setName) {
+          if (set.name == name) {
             this.dataObjArray.splice(i, 1)
           }
         }
@@ -185,7 +242,7 @@
   .spline-dropdown {
     position: relative;
     display: inline-block;
-    margin: 0 6px;
+    margin: 0 0 0 6px;
   }
 
   .spline-dropdown:hover .spline-dropdown-content {

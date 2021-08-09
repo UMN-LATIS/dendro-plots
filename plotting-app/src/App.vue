@@ -37,7 +37,7 @@
     },
     methods: {
       passFileData(data) {
-        this.dataObjArray = data.slice()
+        this.dataObjArray = data
       }
     }
   }

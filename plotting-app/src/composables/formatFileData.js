@@ -182,7 +182,7 @@ async function parseFiles(files) {
   return parsedFiles
 }
 
-const formatFiles = async function (files) {
+const formatFileData = async function (files) {
   var fileDataArray = await parseFiles(files)
 
   var arr = new Array()
@@ -232,4 +232,4 @@ const formatFiles = async function (files) {
   return arr
 }
 
-export default formatFiles
+export default formatFileData
