@@ -4,8 +4,7 @@
       <p class="data-name" :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="color" class="color-input" @change="colorChange($event, name)">
-      <input type="checkbox" class="toggle-width-pts" @change="toggleWidthPoints($event, name)">
+      <input type="checkbox" class="toggle-width-pts" :id="'twp_' + index" @change="toggleWidthPoints($event, name)">
 
       <div class="spline-dropdown" v-for="(func, index) in splineFunctions" :key="index">
         <input type="checkbox" disabled :name="name">
@@ -14,8 +13,10 @@
         </div>
       </div>
 
-      <div class="delete-div" v-if="index > 1" @click="removeSet(name)">
-        <img src="../assets/delete-button.png" class="delete-img">
+      <input type="color" class="color-input" @change="colorChange($event, name)">
+
+      <div class="delete-div" v-if="index > 1" @click="deleteSet(name)">
+        <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
       </div>
     </div>
   </div>
@@ -25,16 +26,23 @@
   import median from '../composables/median.js'
 
   export default {
+    inject: ['store'],
     props: ['dataObjArray'],
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
         splineFunctions: [this.toggleWidthSpline, this.toggleIndexPoints, this.toggleIndexSpline],
-        shownDataArray: [],
+      }
+    },
+    watch: {
+      'this.store.state.currentShownData'() {
+        console.log('data change')
       }
     },
     computed: {
       dataSetNames: function () {
+        console.log('computed names')
+
         if (!this.dataObjArray) {
           return
         }
@@ -50,14 +58,14 @@
       },
     },
     methods: {
-      addTrace(color, name) {
-        let trace
+      addTrace(color, name, data) {
+        let trace, arr
 
         if (name == 'Median') {
-          trace = median(this.shownDataArray)
+          trace = median(this.store.state.currentShownData)
         } else if (name == 'All Data') {
-          this.shownDataArray = []
-          this.dataObjArray.map(e => {
+          arr = new Array()
+          data.map(e => {
             let trace = new Object ()
             trace.x = e.x.slice()
             trace.y = e.y.slice()
@@ -65,11 +73,11 @@
             trace.line = { 'color': color }
             trace.mode = 'lines+markers'
             trace.type = 'scattergl'
-            this.shownDataArray.push(trace)
+            arr.push(trace)
           })
           trace = null // prevent if statement below
         } else {
-          this.dataObjArray.map(e => {
+          data.map(e => {
             if (e.name == name) {
               trace = new Object()
               trace.x = e.x.slice()
@@ -79,38 +87,39 @@
         }
 
         if (trace) {
+          arr = this.store.state.currentShownData.slice()
           trace.name = name
           trace.line = { 'color': color }
           trace.mode = 'lines+markers'
           trace.type = 'scattergl'
-          this.shownDataArray.push(trace)
+          arr.push(trace)
         }
+
+        this.store.methods.newCurrent(arr)
       },
       removeTrace(name) {
         if (name == 'All Data') {
-          this.shownDataArray = []
+          this.store.methods.newCurrent([])
         }
 
-        this.shownDataArray.map((e, i) => {
+        this.store.state.currentShownData.map((e, i) => {
           if (e.name == name) {
-            this.shownDataArray.splice(i, 1)
+            let copy = this.store.state.currentShownData.slice()
+            copy.splice(i, 1)
+            this.store.methods.newCurrent(copy)
           }
         })
       },
       // each input's name is the datasets name
-      colorChange(e, name) {
-        this.shownDataArray.map(o => {
-          if (o.name == name || name == 'All Data') {
-            o.line.color = e.target.value
-          }
-        })
-
-      },
+      // trace = plotly object in this.store.state.currentShownData
       toggleWidthPoints(e, name) {
         let color = e.target.parentElement.getElementsByClassName('color-input')[0].value
         if (e.target.checked) {
-          this.addTrace(color, name)
+          this.addTrace(color, name, this.dataObjArray)
         } else {
+          // uncheck "All Data"
+          let allData_cBox = document.getElementById('twp_0')
+          allData_cBox.checked = false
           this.removeTrace(name)
         }
 
@@ -120,7 +129,6 @@
             cBoxs[i].checked = e.target.checked
           }
         }
-
       },
       toggleCheckbox(e) {
         let checkbox = e.target.parentElement.previousElementSibling
@@ -150,16 +158,31 @@
         console.log(name, freq, 'spline toggled')
         // send data to plotly
       },
-      removeSet(name) {
+      colorChange(e, name) {
+        store.state.currentShownData.map(o => {
+          if (o.name == name || name == 'All Data') {
+            o.line.color = e.target.value
+          }
+        })
+      },
+      deleteSet(name) {
         let setDiv = document.getElementById(name)
         setDiv.remove()
 
-        for (let i = this.dataObjArray.length - 1; i >= 0; i--) {
-          let set = this.dataObjArray[i]
-          if (set.name == name) {
-            this.dataObjArray.splice(i, 1)
+        function removeLoop (arr) {
+          for (let i = arr.length - 1; i >= 0; i--) {
+            let set = arr[i]
+            if (set.name == name) {
+              arr.splice(i, 1)
+            }
           }
+
+          return arr
         }
+
+        removeLoop(this.dataObjArray)
+        let copy = removeLoop(this.store.state.currentShownData.slice())
+        this.store.methods.newCurrent(copy)
       },
     },
   }
@@ -186,7 +209,8 @@
   }
 
   input[type="color"] {
-    margin-right: 16px;
+    margin-left: 6px;
+    margin-right: 10px;
   }
 
   input[type="checkbox"] {
@@ -284,8 +308,8 @@
   }
 
   .delete-img {
-    width: inherit;
-    height: inherit;
+    width: 12px;
+    height: 12px;
   }
 
 </style>

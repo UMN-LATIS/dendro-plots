@@ -4,8 +4,7 @@
       <div id="file-mangement">
         <FileManager @fileLoad="passFileData" />
       </div>
-      <h2> Table of Contents: </h2>
-      <DataExample  id="data-example" />
+      <DataHeader id="data-header"/>
       <div id="time-series-management">
         <DataManager :dataObjArray="dataObjArray" />
       </div>
@@ -25,14 +24,18 @@
 <script>
   import FileManager from './components/FileManager.vue'
   import DataManager from './components/DataManager.vue'
-  import DataExample from './components/DataExample.vue'
+  import DataHeader from './components/DataHeader.vue'
+
+  import store from './composables/store.js'
 
   export default {
     name: 'App',
-    components: { FileManager, DataManager, DataExample },
+    provide: { store },
+    components: { FileManager, DataManager, DataHeader },
     data() {
       return {
         dataObjArray: [],
+        newState: null,
       }
     },
     methods: {
@@ -88,7 +91,7 @@
     overflow: auto;
   }
 
-  #data-example {
+  #data-header {
     margin-left: 10px;
   }
 
