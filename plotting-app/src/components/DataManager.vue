@@ -38,6 +38,7 @@
 
 <script>
   import median from '../composables/median.js'
+  import simpleSmoothingSpline from 'simple-smoothing-spline'
 
   export default {
     inject: ['store'],
@@ -46,6 +47,7 @@
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
         splineFunctions: [this.toggleWidthSpline, this.toggleIndexPoints, this.toggleIndexSpline],
+        splineCache: [],
       }
     },
     computed: {
@@ -66,12 +68,12 @@
     },
     methods: {
       checkCB(name) {
-        if (this.store.state.currentShownData.length >= this.dataObjArray.length && name == "All Data") {
+        if (this.store.state.dataCount >= this.dataObjArray.length && name == "All Data") {
           return true
         }
 
         for (let obj of this.store.state.currentShownData) {
-          if (obj.name == name) {
+          if (obj.name == name && !obj.spline) {
             return true
           }
         }
@@ -100,7 +102,12 @@
             trace.y = e.y.slice()
             trace.name = e.name
             trace.line = { 'color': color }
-            trace.mode = 'lines+markers'
+            if (e.freq) { // only splines have freq
+              trace.mode = 'lines'
+              trace.spline = true
+            } else {
+              trace.mode = 'lines+markers'
+            }
             trace.type = 'scattergl'
             arr.push(trace)
           })
@@ -111,6 +118,12 @@
               trace = new Object()
               trace.x = e.x.slice()
               trace.y = e.y.slice()
+              if (e.freq) { // only splines have freq
+                trace.mode = 'lines'
+                trace.spline = true
+              } else {
+                trace.mode = 'lines+markers'
+              }
             }
           })
         }
@@ -119,7 +132,6 @@
           arr = this.store.state.currentShownData.slice()
           trace.name = name
           trace.line = { 'color': color }
-          trace.mode = 'lines+markers'
           trace.type = 'scattergl'
           arr.push(trace)
         }
@@ -149,7 +161,7 @@
           this.removeTrace(name)
         }
       },
-      toggleCheckbox(e) {
+      toggleSplineCheckbox(e) {
         let checkbox = e.target.parentElement.previousElementSibling
         if (e.target.classList.contains('active')) {
           e.target.className = e.target.className.replace(' active', '')
@@ -162,7 +174,7 @@
 
         return checkbox.name
       },
-      enableColorSwatch(e) {
+      toggleColorSwatch(e) {
         let swatch = e.target.parentElement.previousElementSibling
         let pTag = e.target
         if (pTag.classList.contains('active')) {
@@ -182,18 +194,69 @@
           swatch.disabled = false
         }
       },
-      // id = spline year frequency
+      saveSpline(freq, name) {
+        let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975)
+        let dataObj
+
+        for (let obj of this.dataObjArray) {
+          if (obj.name == name) {
+            dataObj = obj
+            break
+          }
+        }
+
+        let data = []
+        for (let i = 0; i < dataObj.x.length; i++) {
+          let x = dataObj.x[i]
+          let y = dataObj.y[i]
+          let pairObj = new Object()
+          pairObj.x = x
+          pairObj.y = y
+          data.push(pairObj)
+        }
+
+        const spline = simpleSmoothingSpline(data, { 'lambda': lambda })
+
+        let xArr = []
+        let yArr = []
+        for (let obj of spline.points) {
+          xArr.push(obj.x)
+          yArr.push(obj.y)
+        }
+
+        let newSplineObj = new Object()
+        newSplineObj.name = name
+        newSplineObj.freq = freq
+        newSplineObj.x = xArr
+        newSplineObj.y = yArr
+
+        this.splineCache.push(newSplineObj)
+
+        console.log('spline cache', this.splineCache)
+      },
       toggleWidthSpline(e, freq, name) {
-        this.enableColorSwatch(e)
-        console.log(name, freq, ' spline toggled')
+        this.toggleColorSwatch(e)
+        let color = e.target.parentElement.previousElementSibling.value
+        for (let obj of this.splineCache) {
+          if (obj.name == name && obj.freq == freq) {
+            this.addTrace(color, name, this.splineCache)
+            return
+          }
+        }
+
+        this.saveSpline(freq, name)
+        this.addTrace(color, name, this.splineCache)
+
+        console.log(name, freq, 'spline toggled')
         // send data to plotly
       },
       toggleIndexPoints(e, freq, name) {
-        this.toggleCheckbox(e)
-        console.log(name, freq, ' index toggled')
+        this.toggleSplineCheckbox(e)
+        console.log(name, freq, 'index toggled')
+        this.saveSpline(freq, name)
       },
       toggleIndexSpline(e, freq, name) {
-        this.enableColorSwatch(e)
+        this.toggleColorSwatch(e)
         console.log(name, freq, 'spline toggled')
         // send data to plotly
       },
