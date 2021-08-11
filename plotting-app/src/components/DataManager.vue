@@ -4,12 +4,26 @@
       <p class="data-name" :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="checkbox" class="toggle-width-pts" :id="'twp_' + index" :checked="checkCB(name)" @change="toggleWidthPoints($event, name)">
+      <input type="checkbox" class="toggle-width-pts" :checked="checkCB(name)" @change="toggleWidthPoints($event, name)">
 
-      <div class="spline-dropdown" v-for="(func, index) in splineFunctions" :key="index">
-        <input type="checkbox" disabled :name="name">
+      <div class="spline-dropdown">
+        <input type="color" disabled value="#ffffff">
         <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="func($event, freq, name)"> {{ freq }}yrs </p>
+          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline($event, freq, name)"> {{ freq }}yrs </p>
+        </div>
+      </div>
+
+      <div class="spline-dropdown">
+        <input type="checkbox" class="toggle-width-pts">
+        <div class="spline-dropdown-content">
+          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexPoints($event, freq, name)"> {{ freq }}yrs </p>
+        </div>
+      </div>
+
+      <div class="spline-dropdown">
+        <input type="color" disabled value="#ffffff">
+        <div class="spline-dropdown-content">
+          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline($event, freq, name)"> {{ freq }}yrs </p>
         </div>
       </div>
 
@@ -128,23 +142,11 @@
       // each input's name is the datasets name
       // trace = plotly object in this.store.state.currentShownData
       toggleWidthPoints(e, name) {
-        console.log('toggled')
-
         let color = e.target.parentElement.getElementsByClassName('color-input')[0].value
         if (e.target.checked) {
           this.addTrace(color, name, this.dataObjArray)
         } else {
-          // uncheck "All Data"
-          let allData_cBox = document.getElementById('twp_0')
-          allData_cBox.checked = false
           this.removeTrace(name)
-        }
-
-        if (name == 'All Data') {
-          let cBoxs = document.getElementsByClassName('toggle-width-pts')
-          for (let i = 2; i < cBoxs.length; i++) {
-            cBoxs[i].checked = e.target.checked
-          }
         }
       },
       toggleCheckbox(e) {
@@ -160,9 +162,29 @@
 
         return checkbox.name
       },
+      enableColorSwatch(e) {
+        let swatch = e.target.parentElement.previousElementSibling
+        let pTag = e.target
+        if (pTag.classList.contains('active')) {
+          pTag.className = pTag.className.replace(' active', '')
+          let activeOptions = pTag.parentElement.getElementsByClassName('active')
+          swatch.disabled = (activeOptions.length > 0) ? false : true
+          if (activeOptions.length <= 0) {
+            swatch.value = '#ffffff'
+          }
+        } else {
+          e.target.className += ' active'
+          // if disabled (no color selected), change color to black (show it is active)
+          // else, do nothing (maintain user selected color)
+          if (swatch.disabled) {
+            swatch.value = '#000000'
+          }
+          swatch.disabled = false
+        }
+      },
       // id = spline year frequency
       toggleWidthSpline(e, freq, name) {
-        this.toggleCheckbox(e)
+        this.enableColorSwatch(e)
         console.log(name, freq, ' spline toggled')
         // send data to plotly
       },
@@ -171,7 +193,7 @@
         console.log(name, freq, ' index toggled')
       },
       toggleIndexSpline(e, freq, name) {
-        this.toggleCheckbox(e)
+        this.enableColorSwatch(e)
         console.log(name, freq, 'spline toggled')
         // send data to plotly
       },
@@ -228,13 +250,13 @@
   }
 
   input[type="color"] {
-    margin-left: 6px;
-    margin-right: 10px;
+    margin: 0;
+    margin-right: 16px;
   }
 
   input[type="checkbox"] {
     border: 2px solid #797979;
-    margin-right: 10px;
+    margin-right: 16px;
   }
 
   input[type="checkbox"]:checked {
@@ -247,12 +269,16 @@
 
   input[type="color"]::-webkit-color-swatch {
   	border: 1px solid #797979;
-    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
   }
 
   input[type="color"]::-moz-color-swatch {
     border: 1px solid #797979;
-    border-radius: 5px;
+    padding: 0;
+    margin: 0;
+    border-radius: 4px;
   }
 
   .individual-data-wrapper {
@@ -285,7 +311,7 @@
   .spline-dropdown {
     position: relative;
     display: inline-block;
-    margin: 0 0 0 6px;
+    margin: 0;
   }
 
   .spline-dropdown:hover .spline-dropdown-content {

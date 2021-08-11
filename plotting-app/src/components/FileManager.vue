@@ -1,14 +1,14 @@
 <template>
-  <div id="info-div">
-    <img src="../assets/info-icon.png" id="info">
-    <span id="info-content"> {{ fileInfo }} </span>
+  <div>
+    <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
+    <label for="file-upload"> Upload Files </label>
+    <div id="info-div">
+      <img src="../assets/info-icon.png" id="info">
+      <div id="info-content">
+        <span v-for="info in fileInfo" :key="info"> {{ info }} <br> </span>
+      </div>
+    </div>
   </div>
-  <h2> File Management: </h2>
-
-  <br>
-
-  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
-  <label for="file-upload"> Upload Files </label>
 </template>
 
 <script>
@@ -19,7 +19,9 @@
     data() {
       return {
         files: [],
-        fileInfo: "blah blah blah blah blah blah blah blah blah blah blah blah"
+        fileInfo: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
+                   'Accepts multiple files with multiple series in upload sequence.',
+                   'Click to download example datasets with correctly formatted headers.']
       }
     },
     methods: {
@@ -40,14 +42,6 @@
 </script>
 
 <style scoped>
-  h2 {
-    display: inline-block;
-    font-family: Sans-serif;
-    color: #797979;
-    margin: 0;
-    margin-bottom: 10px;
-  }
-
   p {
     font-family: Sans-serif;
     font-weight: bold;
@@ -58,7 +52,7 @@
   label {
     background-color: #797979;
     color: white;
-    padding: 6px 120px;
+    padding: 6px 100px;
     font-family: sans-serif;
     font-size: 14px;
     font-weight: bold;
@@ -72,16 +66,20 @@
     color: white;
   }
 
+  div {
+    margin-top: 20px;
+  }
+
+  #info-div {
+    position: absolute;
+    margin-top: 2px;
+    margin-left: 10px;
+  }
+
   #info {
     display: inline;
     width: 16px;
     height: 16px;
-    margin: 0;
-  }
-
-  #info-div {
-    display: inline;
-    margin-right: 10px;
   }
 
   #info-content {
@@ -94,7 +92,7 @@
     margin: 0;
     position: absolute;
     margin-left: -10px;
-    margin-top: 28px;
+    margin-top: 20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -103,6 +101,7 @@
 
   #info-div:hover #info-content {
     display: inline;
+    width: 380px;
   }
 
 

@@ -84,9 +84,9 @@
   }
 
   #file-mangement {
-    width: 100%;
-    height: 85px;
-    min-height: 85px;
+    width: calc(100% - 10px);
+    height: 60px;
+    min-height: 60px;
     margin-left: 10px;
     overflow: auto;
   }
