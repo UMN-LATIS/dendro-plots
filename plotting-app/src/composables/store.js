@@ -35,6 +35,7 @@ const methods = {
     state.currentShownData = data.slice()
 
     console.log('current', state.currentShownData)
+    console.log('past', state.pastShownData)
   }
 }
 

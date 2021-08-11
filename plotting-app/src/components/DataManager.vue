@@ -1,10 +1,10 @@
 <template>
-  <div class="individual-data-wrapper" v-if="dataSetNames && dataSetNames.length > 2" v-for="(name, index) in dataSetNames" :key="name" :id="name">
+  <div class="individual-data-wrapper" v-if="dataNames && dataNames.length > 2" v-for="(name, index) in dataNames" :key="name">
     <div class="data-names">
       <p class="data-name" :title="name"> {{ name }} </p>
     </div>
     <div class="data-options">
-      <input type="checkbox" class="toggle-width-pts" :id="'twp_' + index" @change="toggleWidthPoints($event, name)">
+      <input type="checkbox" class="toggle-width-pts" :id="'twp_' + index" :checked="checkCB(name)" @change="toggleWidthPoints($event, name)">
 
       <div class="spline-dropdown" v-for="(func, index) in splineFunctions" :key="index">
         <input type="checkbox" disabled :name="name">
@@ -13,7 +13,7 @@
         </div>
       </div>
 
-      <input type="color" class="color-input" @change="colorChange($event, name)">
+      <input type="color" class="color-input" :value="colorVal(name)" @change="colorChange($event, name)">
 
       <div class="delete-div" v-if="index > 1" @click="deleteSet(name)">
         <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
@@ -34,30 +34,45 @@
         splineFunctions: [this.toggleWidthSpline, this.toggleIndexPoints, this.toggleIndexSpline],
       }
     },
-    watch: {
-      'this.store.state.currentShownData'() {
-        console.log('data change')
-      }
-    },
     computed: {
-      dataSetNames: function () {
-        console.log('computed names')
-
+      dataNames: function () {
         if (!this.dataObjArray) {
           return
         }
 
-        var dataNamesArray = ['All Data', 'Median']
+        let names = ['All Data', 'Median']
         for (let obj of this.dataObjArray) {
-          if (!dataNamesArray.includes(obj.name)) {
-            dataNamesArray.push(obj.name)
+          if (!names.includes(obj.name)) {
+            names.push(obj.name)
           }
         }
 
-        return dataNamesArray
+        return names
       },
     },
     methods: {
+      checkCB(name) {
+        if (this.store.state.currentShownData.length >= this.dataObjArray.length && name == "All Data") {
+          return true
+        }
+
+        for (let obj of this.store.state.currentShownData) {
+          if (obj.name == name) {
+            return true
+          }
+        }
+
+        return false
+      },
+      colorVal(name) {
+        for (let obj of this.store.state.currentShownData) {
+          if (obj.name == name) {
+            return obj.line.color
+          }
+        }
+
+        return '#000000'
+      },
       addTrace(color, name, data) {
         let trace, arr
 
@@ -113,6 +128,8 @@
       // each input's name is the datasets name
       // trace = plotly object in this.store.state.currentShownData
       toggleWidthPoints(e, name) {
+        console.log('toggled')
+
         let color = e.target.parentElement.getElementsByClassName('color-input')[0].value
         if (e.target.checked) {
           this.addTrace(color, name, this.dataObjArray)
@@ -159,9 +176,11 @@
         // send data to plotly
       },
       colorChange(e, name) {
-        store.state.currentShownData.map(o => {
-          if (o.name == name || name == 'All Data') {
-            o.line.color = e.target.value
+        let copy = JSON.parse(JSON.stringify(this.store.state.currentShownData))
+        copy.map(obj => {
+          if (obj.name == name || name == 'All Data') {
+            obj.line.color = e.target.value
+            this.store.methods.newCurrent(copy)
           }
         })
       },
