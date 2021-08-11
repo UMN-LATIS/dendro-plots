@@ -66,7 +66,7 @@
       },
       colorVal(name) {
         for (let obj of this.store.state.currentShownData) {
-          if (obj.name == name) {
+          if (obj.name == name || name == "All Data") {
             return obj.line.color
           }
         }
