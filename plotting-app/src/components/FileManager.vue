@@ -15,27 +15,19 @@
   import formatFileData from '../modules/formatFileData.js'
 
   export default {
-    emits: ['fileLoad'],
+    inject: ['store'],
     data() {
       return {
-        files: [],
         fileInfo: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
                    'Accepts multiple files with multiple series in upload sequence.',
                    'Click to download example datasets with correctly formatted headers.']
       }
     },
     methods: {
-      uploadFiles() {
-        for (let file of this.$refs.fileInput.files) {
-          this.files.push(file)
-        }
-        this.emitToParent()
+      async uploadFiles() {
+        let data = await formatFileData(this.$refs.fileInput.files)
+        this.store.methods.loadData(data)
         this.$refs.fileInput.value = null
-      },
-      async emitToParent() {
-        let dataObjArray = await formatFileData(this.files)
-        // format = [[[year, data name, ...], [1900, 1.5, ...], ...], [[year, data name, ...], [1900, 1.5, ...], ...], ...]
-        this.$emit('fileLoad', dataObjArray)
       },
     }
   }

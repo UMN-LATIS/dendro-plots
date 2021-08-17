@@ -176,6 +176,18 @@ async function parseFiles(files) {
 
   for (let file of files) {
     let parsedFile = await parseFile(file)
+    if (parsedFile.tw) {
+      parsedFile.tw.fileName = file.name
+      if (parsedFile.ew && parsedFile.lw) {
+        parsedFile.ew.fileName = file.name
+        parsedFile.lw.fileName = file.name
+      }
+    } else {
+      let fileObj = new Object();
+      fileObj.fileName = file.name
+      fileObj.data = parsedFile
+      parsedFile = fileObj
+    }
     parsedFiles.push(parsedFile)
   }
 
@@ -209,26 +221,26 @@ const formatFileData = async function (files) {
         ...
       }
     */
-    for (let col = 1; col < fileData[0].length; col++) {
+    for (let col = 1; col < fileData.data[0].length; col++) {
       var yearArray = []
       var widthArray = []
-      for (let row = 1; row < fileData.length; row++) {
-        let year = fileData[row][0]
-        let width = fileData[row][col]
+      for (let row = 1; row < fileData.data.length; row++) {
+        let year = fileData.data[row][0]
+        let width = fileData.data[row][col]
         if (width >= 0) {
           yearArray.push(parseInt(year))
           widthArray.push(parseFloat(width))
         }
       }
       var obj = new Object()
-      obj.name = fileData[0][col]
+      obj.name = fileData.data[0][col]
+      obj.fileName = fileData.fileName
       obj.x = yearArray
       obj.y = widthArray
 
       arr.push(obj)
     }
   }
-
   return arr
 }
 

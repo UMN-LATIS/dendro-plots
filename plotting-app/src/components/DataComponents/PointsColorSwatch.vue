@@ -1,15 +1,23 @@
 <template>
-  <input type="color" class="color-input" :value="color" @change="change">
+  <input type="color" class="color-input" :value="value" @change="change">
 </template>
 
 <script>
   export default {
     inject: ['store'],
-    props: ['name', 'color'],
-    emits: ['colorchange'],
+    props: ['id'],
+    computed: {
+      value: function () {
+        for (const obj of this.store.state.currentData) {
+          if (obj.id == this.id && obj.color) {
+            return obj.color
+          }
+        }
+      },
+    },
     methods: {
       change(e) {
-        this.$emit('colorchange', { name: this.name, color: e.target.value})
+        this.store.methods.newCurrent(this.id, 'color', e.target.value)
       }
     },
   }

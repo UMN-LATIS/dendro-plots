@@ -1,11 +1,13 @@
 <template>
-  <div class="individual-data-wrapper" v-for="(meta, index) in metaData" :key="meta.name">
+  <div class="individual-data-wrapper" v-for="obj in store.state.currentData" :key="obj.id">
     <div class="data-names">
-      <p class="data-name" :title="meta.name"> {{ meta.name }} </p>
+      <p class="data-name" :title="obj.name + ' from ' + obj.file"> {{ obj.name }} </p>
     </div>
     <div class="data-options">
-      <WidthPointsToggle :name="meta.name"
-                         @widthtoggle="widthPtToggle"
+      <Toggle :id="obj.id"
+              :toggleProperty="'widthActive'"
+              :toggleChecked="obj.widthActive"
+              :disableValue="1"
       />
 
       <div class="spline-dropdown">
@@ -15,12 +17,11 @@
         </div>
       </div>
 
-      <div class="spline-dropdown">
-        <input type="checkbox" class="toggle-width-pts">
-        <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexPoints($event, freq, name)"> {{ freq }}yrs </p>
-        </div>
-      </div>
+      <Toggle :id="obj.id"
+              :toggleProperty="'indexActive'"
+              :toggleChecked="obj.indexActive"
+              :disableValue="obj.indexSplineFreqActive"
+      />
 
       <div class="spline-dropdown">
         <input type="color" disabled value="#ffffff">
@@ -29,10 +30,7 @@
         </div>
       </div>
 
-      <PointsColorSwatch :name="meta.name"
-                         :color="meta.color"
-                         @colorchange="colorValChange"
-      />
+      <PointsColorSwatch :id="obj.id" />
 
       <div class="delete-div" @click="deleteSet(name)">
         <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
@@ -42,17 +40,12 @@
 </template>
 
 <script>
-  import WidthPointsToggle from './DataComponents/WidthPointsToggle.vue'
+  import Toggle from './DataComponents/Toggle.vue'
   import PointsColorSwatch from './DataComponents/PointsColorSwatch.vue'
-
-  import traces from '../modules/traces.js'
-  import median from '../modules/median.js'
-  import simpleSmoothingSpline from 'simple-smoothing-spline'
 
   export default {
     inject: ['store'],
-    props: ['seriesData'],
-    components: { WidthPointsToggle, PointsColorSwatch },
+    components: { Toggle, PointsColorSwatch },
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
@@ -60,53 +53,9 @@
         splineCache: [],
       }
     },
-    computed: {
-      metaData: function () {
-        return this.seriesData.map(e => {
-          let metaObj = new Object()
-          metaObj.name = e.name
-          metaObj.color = '#000000'
-          metaObj.spline20 = []
-          metaObj.spline30 = []
-          metaObj.spline50 = []
-          metaObj.spline100 = []
-          metaObj.spline200 = []
-          return metaObj
-        })
-      },
-    },
     methods: {
       test(i) {
         console.log('test')
-      },
-      colorValChange(info) {
-        let name = info.name
-        let data = this.seriesData.find(obj => obj.name == name)
-        let color = info.color
-        let mode = 'lines+markers'
-
-        // update meta data w/ new color value
-        this.metaData.find(obj => obj.name == name).color = color
-
-        let newTrace = traces.methods.createTrace(data, color, mode)
-        let newCurrentData = traces.methods.addTrace(newTrace, this.store.state.currentShownData.slice())
-        this.store.methods.newCurrent(newCurrentData)
-      },
-      widthPtToggle(info) {
-        let name = info.name
-        let data = this.seriesData.find(obj => obj.name == name)
-        let color = this.metaData.find(obj => obj.name == name).color
-        let mode = 'lines+markers'
-
-        let toggleOn = info.toggleOn
-        let newCurrentData
-        if (toggleOn) {
-          let newTrace = traces.methods.createTrace(data, color, mode)
-          newCurrentData = traces.methods.addTrace(newTrace, this.store.state.currentShownData.slice())
-        } else {
-          newCurrentData = traces.methods.addTrace(name, this.store.state.currentShownData.slice())
-        }
-        this.store.methods.newCurrent(newCurrentData)
       },
       // each input's name is the datasets name
       toggleSplineCheckbox(e) {
@@ -245,6 +194,7 @@
   p {
     font-family: Sans-serif;
     font-weight: bold;
+    font-size: 14px;
     color: #797979;
     display: inline;
   }

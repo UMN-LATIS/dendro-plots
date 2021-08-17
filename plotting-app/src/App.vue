@@ -2,11 +2,11 @@
   <div id="wrapper">
     <div id="management-wrapper">
       <div id="file-mangement">
-        <FileManager @fileLoad="passFileData" />
+        <FileManager />
       </div>
       <DataHeader id="data-header"/>
       <div id="time-series-management">
-        <DataManager :seriesData="seriesData" />
+        <DataManager />
       </div>
     </div>
 
@@ -34,15 +34,8 @@
     components: { FileManager, DataManager, DataHeader },
     data() {
       return {
-        seriesData: [],
-        newState: null,
       }
     },
-    methods: {
-      passFileData(data) {
-        this.seriesData = data
-      }
-    }
   }
 </script>
 
