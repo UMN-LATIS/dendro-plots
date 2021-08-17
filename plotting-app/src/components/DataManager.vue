@@ -1,10 +1,12 @@
 <template>
-  <div class="individual-data-wrapper" v-if="dataNames && dataNames.length > 2" v-for="(name, index) in dataNames" :key="name">
+  <div class="individual-data-wrapper" v-for="(meta, index) in metaData" :key="meta.name">
     <div class="data-names">
-      <p class="data-name" :title="name"> {{ name }} </p>
+      <p class="data-name" :title="meta.name"> {{ meta.name }} </p>
     </div>
     <div class="data-options">
-      <input type="checkbox" class="toggle-width-pts" :checked="checkCB(name)" @change="toggleWidthPoints($event, name)">
+      <WidthPointsToggle :name="meta.name"
+                         @widthtoggle="widthPtToggle"
+      />
 
       <div class="spline-dropdown">
         <input type="color" disabled value="#ffffff">
@@ -27,9 +29,12 @@
         </div>
       </div>
 
-      <input type="color" class="color-input" :value="colorVal(name)" @change="colorChange($event, name)">
+      <PointsColorSwatch :name="meta.name"
+                         :color="meta.color"
+                         @colorchange="colorValChange"
+      />
 
-      <div class="delete-div" v-if="index > 1" @click="deleteSet(name)">
+      <div class="delete-div" @click="deleteSet(name)">
         <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
       </div>
     </div>
@@ -37,12 +42,17 @@
 </template>
 
 <script>
-  import median from '../composables/median.js'
+  import WidthPointsToggle from './DataComponents/WidthPointsToggle.vue'
+  import PointsColorSwatch from './DataComponents/PointsColorSwatch.vue'
+
+  import traces from '../modules/traces.js'
+  import median from '../modules/median.js'
   import simpleSmoothingSpline from 'simple-smoothing-spline'
 
   export default {
     inject: ['store'],
-    props: ['dataObjArray'],
+    props: ['seriesData'],
+    components: { WidthPointsToggle, PointsColorSwatch },
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
@@ -51,116 +61,54 @@
       }
     },
     computed: {
-      dataNames: function () {
-        if (!this.dataObjArray) {
-          return
-        }
-
-        let names = ['All Data', 'Median']
-        for (let obj of this.dataObjArray) {
-          if (!names.includes(obj.name)) {
-            names.push(obj.name)
-          }
-        }
-
-        return names
+      metaData: function () {
+        return this.seriesData.map(e => {
+          let metaObj = new Object()
+          metaObj.name = e.name
+          metaObj.color = '#000000'
+          metaObj.spline20 = []
+          metaObj.spline30 = []
+          metaObj.spline50 = []
+          metaObj.spline100 = []
+          metaObj.spline200 = []
+          return metaObj
+        })
       },
     },
     methods: {
-      checkCB(name) {
-        if (this.store.state.dataCount >= this.dataObjArray.length && name == "All Data") {
-          return true
-        }
-
-        for (let obj of this.store.state.currentShownData) {
-          if (obj.name == name && !obj.spline) {
-            return true
-          }
-        }
-
-        return false
+      test(i) {
+        console.log('test')
       },
-      colorVal(name) {
-        for (let obj of this.store.state.currentShownData) {
-          if (obj.name == name || name == "All Data") {
-            return obj.line.color
-          }
-        }
+      colorValChange(info) {
+        let name = info.name
+        let data = this.seriesData.find(obj => obj.name == name)
+        let color = info.color
+        let mode = 'lines+markers'
 
-        return '#000000'
+        // update meta data w/ new color value
+        this.metaData.find(obj => obj.name == name).color = color
+
+        let newTrace = traces.methods.createTrace(data, color, mode)
+        let newCurrentData = traces.methods.addTrace(newTrace, this.store.state.currentShownData.slice())
+        this.store.methods.newCurrent(newCurrentData)
       },
-      addTrace(color, name, data) {
-        let trace, arr
+      widthPtToggle(info) {
+        let name = info.name
+        let data = this.seriesData.find(obj => obj.name == name)
+        let color = this.metaData.find(obj => obj.name == name).color
+        let mode = 'lines+markers'
 
-        if (name == 'Median') {
-          trace = median(this.store.state.currentShownData)
-        } else if (name == 'All Data') {
-          arr = new Array()
-          data.map(e => {
-            let trace = new Object ()
-            trace.x = e.x.slice()
-            trace.y = e.y.slice()
-            trace.name = e.name
-            trace.line = { 'color': color }
-            if (e.freq) { // only splines have freq
-              trace.mode = 'lines'
-              trace.spline = true
-            } else {
-              trace.mode = 'lines+markers'
-            }
-            trace.type = 'scattergl'
-            arr.push(trace)
-          })
-          trace = null // prevent if statement below
+        let toggleOn = info.toggleOn
+        let newCurrentData
+        if (toggleOn) {
+          let newTrace = traces.methods.createTrace(data, color, mode)
+          newCurrentData = traces.methods.addTrace(newTrace, this.store.state.currentShownData.slice())
         } else {
-          data.map(e => {
-            if (e.name == name) {
-              trace = new Object()
-              trace.x = e.x.slice()
-              trace.y = e.y.slice()
-              if (e.freq) { // only splines have freq
-                trace.mode = 'lines'
-                trace.spline = true
-              } else {
-                trace.mode = 'lines+markers'
-              }
-            }
-          })
+          newCurrentData = traces.methods.addTrace(name, this.store.state.currentShownData.slice())
         }
-
-        if (trace) {
-          arr = this.store.state.currentShownData.slice()
-          trace.name = name
-          trace.line = { 'color': color }
-          trace.type = 'scattergl'
-          arr.push(trace)
-        }
-
-        this.store.methods.newCurrent(arr)
-      },
-      removeTrace(name) {
-        if (name == 'All Data') {
-          this.store.methods.newCurrent([])
-        }
-
-        this.store.state.currentShownData.map((e, i) => {
-          if (e.name == name) {
-            let copy = this.store.state.currentShownData.slice()
-            copy.splice(i, 1)
-            this.store.methods.newCurrent(copy)
-          }
-        })
+        this.store.methods.newCurrent(newCurrentData)
       },
       // each input's name is the datasets name
-      // trace = plotly object in this.store.state.currentShownData
-      toggleWidthPoints(e, name) {
-        let color = e.target.parentElement.getElementsByClassName('color-input')[0].value
-        if (e.target.checked) {
-          this.addTrace(color, name, this.dataObjArray)
-        } else {
-          this.removeTrace(name)
-        }
-      },
       toggleSplineCheckbox(e) {
         let checkbox = e.target.parentElement.previousElementSibling
         if (e.target.classList.contains('active')) {
@@ -198,7 +146,7 @@
         let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975)
         let dataObj
 
-        for (let obj of this.dataObjArray) {
+        for (let obj of this.seriesData) {
           if (obj.name == name) {
             dataObj = obj
             break
@@ -284,7 +232,7 @@
           return arr
         }
 
-        removeLoop(this.dataObjArray)
+        removeLoop(this.seriesData)
         let copy = removeLoop(this.store.state.currentShownData.slice())
         this.store.methods.newCurrent(copy)
       },

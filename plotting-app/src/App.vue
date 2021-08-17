@@ -6,7 +6,7 @@
       </div>
       <DataHeader id="data-header"/>
       <div id="time-series-management">
-        <DataManager :dataObjArray="dataObjArray" />
+        <DataManager :seriesData="seriesData" />
       </div>
     </div>
 
@@ -26,7 +26,7 @@
   import DataManager from './components/DataManager.vue'
   import DataHeader from './components/DataHeader.vue'
 
-  import store from './composables/store.js'
+  import store from './modules/store.js'
 
   export default {
     name: 'App',
@@ -34,13 +34,13 @@
     components: { FileManager, DataManager, DataHeader },
     data() {
       return {
-        dataObjArray: [],
+        seriesData: [],
         newState: null,
       }
     },
     methods: {
       passFileData(data) {
-        this.dataObjArray = data
+        this.seriesData = data
       }
     }
   }

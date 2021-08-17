@@ -12,7 +12,7 @@
 </template>
 
 <script>
-  import formatFileData from '../composables/formatFileData.js'
+  import formatFileData from '../modules/formatFileData.js'
 
   export default {
     emits: ['fileLoad'],
