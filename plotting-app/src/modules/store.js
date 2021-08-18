@@ -31,10 +31,10 @@ const saved = {
 }
 
 const methods = {
-  addSpline: function (freq) {
+  addSpline: function(freq) {
 
   },
-  loadData: function (data) {
+  loadData: function(data) {
     for (const set of data) {
       let existingSet = states.currentData.find(obj => obj.name == set.name)
       if (existingSet) {
@@ -68,28 +68,32 @@ const methods = {
       saved.loadSequence.push(newSet.id)
     }
   },
-  addTo: function (data, property) {
+  addTo: function(data, property) {
     states[property].push(data)
   },
-  undo: function () {
+  undo: function() {
     let recentState = states.pastData[states.pastData.length - 1]
     states.pastData.pop()
     this.addTo(states.currentData, 'futureData')
     states.currentData = recentState
   },
-  redo: function () {
+  redo: function() {
     let recentState = states.futureData[states.futureData.length - 1]
     states.futureData.pop()
     this.addTo(states.currentData, 'pastData')
     states.currentData = recentState
   },
-  newCurrent: function (id, property, data) {
+  newCurrent: function(id, property, data) {
     states.futureData = []
     let currentCopy = JSON.parse(JSON.stringify(states.currentData))
     states.pastData.push(currentCopy)
     let currentSet = states.currentData.find(obj => obj.id == id)
     currentSet[property] = data
-  }
+  },
+  modifyCurrent: function(id, property, data) {
+    let currentSet = states.currentData.find(obj => obj.id == id)
+    currentSet[property] = data
+  },
 }
 
 export default {

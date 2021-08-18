@@ -2,15 +2,23 @@
   <div class="dropdown">
     <input type="color" :disabled="isDisabled" :value="isValue" @change="change">
     <div class="dropdown-content">
-      <p v-for="freq in frequencies" :key="freq" :class="{ active: isActive(freq) }" :data-freq="freq" @click="click"> {{ freq }}yrs </p>
+      <DropdownOptions v-for="freq in frequencies" :key="freq"
+                       :id="id"
+                       :freq="freq"
+                       :freqProperty="freqProperty"
+                       :activeProperty="activeProperty"
+      />
     </div>
   </div>
 </template>
 
 <script>
+  import DropdownOptions from './DropdownOptions.vue'
+
   export default {
     inject: ['store'],
     props: ['id', 'pointColor', 'colorProperty', 'activeProperty', 'freqProperty'],
+    components: { DropdownOptions },
     data() {
       return {
         frequencies: [20, 30, 50, 100, 200],
@@ -21,7 +29,7 @@
       isValue: function() {
         for (const obj of this.store.states.currentData) {
           if (obj.id == this.id && obj[this.colorProperty]) {
-            this.userSetSplineColor = ''
+            obj[this.colorProperty] = this.shadeColor(this.pointColor, -50)
             return obj[this.colorProperty]
           }
         }
@@ -37,14 +45,6 @@
       },
     },
     methods: {
-      isActive: function(freq) {
-        for (const obj of this.store.states.currentData) {
-          if (obj.id == this.id && obj[this.freqProperty] == freq) {
-            return true
-          }
-        }
-        return false
-      },
       shadeColor: function(color, percent) {
         var r = parseInt(color.substring(1,3),16)
         var g = parseInt(color.substring(3,5),16)
@@ -67,40 +67,6 @@
       change(e) {
         this.userSetSplineColor = e.target.value
         this.store.methods.newCurrent(this.id, this.colorProperty, e.target.value)
-      },
-      click: function(e) {
-        var activate = (e.target.classList.contains('active')) ? false : true
-
-        // deselect all options
-        let activeOptions = e.target.parentElement.getElementsByClassName('active')
-        for (const pbtn of activeOptions) {
-          pbtn.className = pbtn.className.replace(' active', '')
-          let swatch = pbtn.parentElement.previousElementSibling
-          swatch.disabled = true
-          swatch.value = '#ffffff'
-        }
-
-        // select clicked option if not previously active
-        // save spline frequency
-        if (activate) {
-          this.store.states.currentData.find(obj => obj.id = this.id)[this.freqProperty] = parseInt(e.target.dataset.freq)
-        } else {
-          this.store.states.currentData.find(obj => obj.id = this.id)[this.freqProperty] = 0
-        }
-        this.store.methods.newCurrent(this.id, this.activeProperty, activate)
-
-        if (activate) {
-          let pbtn = e.target
-          let swatch = e.target.parentElement.previousElementSibling
-          pbtn.className += ' active'
-          swatch.disabled = false
-          if (!this.userSetSplineColor) {
-            swatch.value = this.shadeColor(this.pointColor, -50)
-          } else {
-            swatch.value = this.userSetSplineColor
-          }
-          this.store.methods.newCurrent(this.id, this.colorProperty, swatch.value)
-        }
       },
     }
   }
@@ -155,24 +121,5 @@
     border: 1px solid black;
     border-radius: 0;
     z-index: 999999;
-  }
-
-  .dropdown-content p {
-    display: block;
-    font-weight: normal;
-    font-size: 12px;
-    color: black;
-    padding: 6px;
-    margin: 0;
-  }
-
-  .dropdown-content p:hover {
-    background: #b5b5b5;
-    color: #f6f6f6;
-  }
-
-  .dropdown-content p.active {
-    background: #797979;
-    color: #f6f6f6;
   }
 </style>
