@@ -1,13 +1,13 @@
 <template>
   <div>
-    <p> Timeseries </p>
-    <div class="dropdown">
-      <img style="margin-left: 105px;" src="../assets/info-icon.png">
+    <p> Data </p>
+    <img style="margin-left: 75px;" src="../assets/sort-button.png" class="hide" :class="{ show: store.saved.loadSequence.length > 1 }" :title="sortText[sortType]" @click="sort">
+    <div class="dropdown" v-if="store.saved.loadSequence.length" v-for="(text, index) in infoText" :key="index">
+      <img :class="infoID[index]" :src="infoPNG[index]">
       <div class="dropdown-content">
-        <span> {{ infoText }} </span>
+        <span> {{ text }} </span>
       </div>
     </div>
-    <img src="../assets/sort-button.png" v-if="store.saved.loadSequence.length" :title="sortText[sortType]" @click="sort">
     <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastData.length }" title="Undo" @click="store.methods.undo()">
     <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureData.length }" title="Redo" @click="store.methods.redo()">
   </div>
@@ -20,9 +20,16 @@
     inject: ['store'],
     data() {
       return {
-        infoText: 'text text text text text text text text text text text text',
+        infoID: ['first', 'second', 'third', 'fourth', 'fifth'],
+        infoPNG: ['../assets/toggle-icon.png', '', '../assets/toggle-icon.png', '', ''],
+        infoText: ['Show in width plot',
+                    'Spline for detrending',
+                    'Show in index plot',
+                    'Spline for index plot',
+                    'Change line color'],
         sortType: 0,
-        sortText: ['Sort A -> Z', 'Sort Z -> A', 'Sort by load sequence']
+        sortText: ['Sort A -> Z', 'Sort Z -> A', 'Sort by load sequence'],
+        showAdjustment: true,
       }
     },
     methods: {
@@ -82,7 +89,7 @@
     color: #797979;
     height: 18px;
     position: absolute;
-    display: inline;
+    display: block;
     margin: 0;
   }
 
@@ -119,11 +126,16 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: 110px;
+    margin-left: -16px;
+    margin-top: 22px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
+  }
+
+  .first {
+    margin-left: 5px;
   }
 
 </style>

@@ -64,14 +64,14 @@
 
   #info-div {
     position: absolute;
-    margin-top: 2px;
+    margin-top: 0;
     margin-left: 10px;
   }
 
   #info {
     display: inline;
-    width: 16px;
-    height: 16px;
+    width: 20px;
+    height: 20px;
   }
 
   #info-content {
