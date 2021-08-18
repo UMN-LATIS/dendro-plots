@@ -1,36 +1,37 @@
 <template>
-  <div class="individual-data-wrapper" v-for="obj in store.state.currentData" :key="obj.id">
-    <div class="data-names">
-      <p class="data-name" :title="obj.name + ' from ' + obj.file"> {{ obj.name }} </p>
-    </div>
+  <div class="individual-data-wrapper" v-for="obj in store.states.currentData" :key="obj.id">
+    <Name :name="obj.name"
+          :file="obj.file"
+    />
+
     <div class="data-options">
       <Toggle :id="obj.id"
-              :toggleProperty="'widthActive'"
-              :toggleChecked="obj.widthActive"
-              :disableValue="1"
+              :toggleProperty="'widthPointsActive'"
+              :toggleChecked="obj.widthPointsActive"
+              :toggleDisable="false"
       />
 
-      <div class="spline-dropdown">
-        <input type="color" disabled value="#ffffff">
-        <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleWidthSpline($event, freq, name)"> {{ freq }}yrs </p>
-        </div>
-      </div>
+      <Dropdown :id="obj.id"
+                :pointColor="obj.pointColor"
+                :colorProperty="'widthSplineColor'"
+                :activeProperty="'widthSplineActive'"
+                :freqProperty="'widthSplineFreq'"
+      />
 
       <Toggle :id="obj.id"
-              :toggleProperty="'indexActive'"
-              :toggleChecked="obj.indexActive"
-              :disableValue="obj.indexSplineFreqActive"
+              :toggleProperty="'indexPointsActive'"
+              :toggleChecked="obj.indexPointsActive"
+              :toggleDisable="!obj.widthSplineActive"
       />
 
-      <div class="spline-dropdown">
-        <input type="color" disabled value="#ffffff">
-        <div class="spline-dropdown-content">
-          <p v-for="freq in splineYearFreq" :key="freq" @click="toggleIndexSpline($event, freq, name)"> {{ freq }}yrs </p>
-        </div>
-      </div>
+      <Dropdown :id="obj.id"
+                :pointColor="obj.pointColor"
+                :colorProperty="'indexSplineColor'"
+                :activeProperty="'indexSplineActive'"
+                :freqProperty="'indexSplineFreq'"
+      />
 
-      <PointsColorSwatch :id="obj.id" />
+      <ColorSwatch :id="obj.id" />
 
       <div class="delete-div" @click="deleteSet(name)">
         <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
@@ -40,12 +41,14 @@
 </template>
 
 <script>
+  import Name from './DataComponents/Name.vue'
   import Toggle from './DataComponents/Toggle.vue'
-  import PointsColorSwatch from './DataComponents/PointsColorSwatch.vue'
+  import Dropdown from './DataComponents/Dropdown.vue'
+  import ColorSwatch from './DataComponents/ColorSwatch.vue'
 
   export default {
     inject: ['store'],
-    components: { Toggle, PointsColorSwatch },
+    components: { Name, Toggle, Dropdown, ColorSwatch },
     data() {
       return {
         splineYearFreq: [20, 30, 50, 100, 200],
@@ -191,121 +194,13 @@
 </script>
 
 <style scoped>
-  p {
-    font-family: Sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    color: #797979;
-    display: inline;
-  }
-
-  input[type="color"], input[type="checkbox"] {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    padding: 0;
-    border: 1px solid #797979;
-    border-radius: 5px;
-    margin: 0;
-    box-sizing: border-box;
-  }
-
-  input[type="color"] {
-    margin: 0;
-    margin-right: 16px;
-  }
-
-  input[type="checkbox"] {
-    border: 2px solid #797979;
-    margin-right: 16px;
-  }
-
-  input[type="checkbox"]:checked {
-    background: #797979;
-  }
-
-  input[type="color"]::-webkit-color-swatch-wrapper {
-  	padding: 0;
-  }
-
-  input[type="color"]::-webkit-color-swatch {
-  	border: 1px solid #797979;
-    padding: 0;
-    margin: 0;
-    border-radius: 4px;
-  }
-
-  input[type="color"]::-moz-color-swatch {
-    border: 1px solid #797979;
-    padding: 0;
-    margin: 0;
-    border-radius: 4px;
-  }
-
   .individual-data-wrapper {
     width: 100%;
-  }
-
-  .data-names {
-    font-family: Sans-serif;
-    font-weight: bold;
-    color: #797979;
-    width: 105px;
-    height: 18px;
-  }
-
-  .data-name {
-    display: inline-block;
-    width: 95px;
-    height: 18px;
-    margin: 0;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
   }
 
   .data-options {
     width: 60%;
     height: 18px;
-  }
-
-  .spline-dropdown {
-    position: relative;
-    display: inline-block;
-    margin: 0;
-  }
-
-  .spline-dropdown:hover .spline-dropdown-content {
-    display: block;
-  }
-
-  .spline-dropdown-content {
-    display: none;
-    position: absolute;
-    margin-left: 10px;
-    background-color: #f6f6f6;
-    border: 1px solid black;
-    border-radius: 0;
-    z-index: 999999;
-  }
-
-  .spline-dropdown-content p {
-    display: block;
-    font-weight: normal;
-    font-size: 12px;
-    color: black;
-    padding: 6px;
-    margin: 0;
-  }
-
-  .spline-dropdown-content p:hover {
-    background: #b5b5b5;
-    color: #f6f6f6;
-  }
-
-  .spline-dropdown-content p.active {
-    background: #797979;
-    color: #f6f6f6;
   }
 
   .delete-div {

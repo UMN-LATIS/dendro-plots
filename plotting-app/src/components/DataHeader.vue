@@ -8,8 +8,8 @@
         <span> {{ hoverText[index] }} </span>
       </div>
     </div>
-    <img src="../assets/undo-button.png" class="hide" :class="{ show: store.state.pastData.length }" title="Undo" @click="store.methods.undo()">
-    <img src="../assets/redo-button.png" class="hide" :class="{ show: store.state.futureData.length }" title="Redo" @click="store.methods.redo()">
+    <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastData.length }" title="Undo" @click="store.methods.undo()">
+    <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureData.length }" title="Redo" @click="store.methods.redo()">
   </div>
 </template>
 
@@ -45,6 +45,7 @@
   p {
     font-family: Sans-serif;
     font-weight: bold;
+    font-size: 18px;
     color: #797979;
     height: 18px;
     position: absolute;

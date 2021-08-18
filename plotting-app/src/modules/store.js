@@ -1,33 +1,44 @@
 import { reactive } from 'vue'
+import { simpleSmoothingSpline } from 'simple-smoothing-spline'
 
 /*
-  States stored as objects. When current state changes, a Plotly trace is created & rendered.
+  States stored as objects. When current states changes, a Plotly trace is created & rendered.
   State attributes:
     * name: string
     * file: string
-    * color: string
-    * widthActive: boolean
-    * widthSplineFreqActive: number
-    * indexActive: boolean
-    * indexSplineFreqActive: number
+    * pointColor: string
+    * widthSplineColor: string
+    * indexSplineColor: string
+    * widthPointsActive: boolean
+    * widthSplineActive: boolean
+    * widthSplineFreq: number
+    * indexPointsActive: boolean
+    * indexSplineActive: boolean
+    * indexSplineFreq: number
     * x: array
     * y: array
-    * splines: array of objects { freq: number, y: array }
 */
 
-const state = reactive({
-  loadSequence: [],
+const states = reactive({
   pastData: [],
   currentData: [],
   futureData: [],
 })
 
+const saved = {
+  splineCache: [],
+  loadSequence: [],
+}
+
 const methods = {
+  addSpline: function (freq) {
+
+  },
   loadData: function (data) {
     for (const set of data) {
-      let existingSet = state.currentData.find(obj => obj.name == set.name)
+      let existingSet = states.currentData.find(obj => obj.name == set.name)
       if (existingSet) {
-        let n = state.currentData.filter(obj => obj.name.split(' (')[0] == set.name).length
+        let n = states.currentData.filter(obj => obj.name.split(' (')[0] == set.name).length
         set.name = set.name + ' (' + n + ')'
       }
 
@@ -38,46 +49,51 @@ const methods = {
       newSet.id = id
       newSet.name = set.name
       newSet.file = set.fileName
-      newSet.color = '#000000'
-      newSet.widthActive = false
-      newSet.widthSplineFreqActive = 0
-      newSet.indexActive = false
-      newSet.indexSplineFreqActive = 0
+      newSet.pointColor = '#000000'
+      newSet.widthSplineColor = ''
+      newSet.indexSplineColor = ''
+      newSet.widthPointsActive = false
+      newSet.widthSplineActive = false
+      newSet.widthSplineFreq = 0
+      newSet.indexPointsActive = false
+      newSet.indexSplineActive = false
+      newSet.indexSplineFreq = 0
       newSet.x = set.x
       newSet.y = set.y
       newSet.splines = []
 
-      state.currentData.push(newSet)
+      states.currentData.push(newSet)
 
       // establish default load sequence
-      state.loadSequence.push(newSet.id)
+      saved.loadSequence.push(newSet.id)
     }
   },
   addTo: function (data, property) {
-    state[property].push(data)
+    states[property].push(data)
   },
   undo: function () {
-    let recentState = state.pastData[state.pastData.length - 1]
-    state.pastData.pop()
-    this.addTo(state.currentData, 'futureData')
-    state.currentData = recentState
+    let recentState = states.pastData[states.pastData.length - 1]
+    states.pastData.pop()
+    this.addTo(states.currentData, 'futureData')
+    states.currentData = recentState
   },
   redo: function () {
-    let recentState = state.futureData[state.futureData.length - 1]
-    state.futureData.pop()
-    this.addTo(state.currentData, 'pastData')
-    state.currentData = recentState
+    let recentState = states.futureData[states.futureData.length - 1]
+    states.futureData.pop()
+    this.addTo(states.currentData, 'pastData')
+    states.currentData = recentState
   },
   newCurrent: function (id, property, data) {
-    state.futureData = []
-    let currentCopy = JSON.parse(JSON.stringify(state.currentData))
-    state.pastData.push(currentCopy)
-    let currentSet = state.currentData.find(obj => obj.id == id)
+    states.futureData = []
+    let currentCopy = JSON.parse(JSON.stringify(states.currentData))
+    states.pastData.push(currentCopy)
+    let currentSet = states.currentData.find(obj => obj.id == id)
     currentSet[property] = data
   }
 }
 
 export default {
-  state,
+  states,
+  saved,
   methods
 }
