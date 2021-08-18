@@ -25,14 +25,14 @@ const states = reactive({
   futureData: [],
 })
 
-const saved = {
+const saved = reactive({
   splineCache: [],
   loadSequence: [],
-}
+})
 
 const methods = {
+  // TODO: adding & checking spline functions
   addSpline: function(freq) {
-
   },
   loadData: function(data) {
     for (const set of data) {
@@ -83,12 +83,16 @@ const methods = {
     this.addTo(states.currentData, 'pastData')
     states.currentData = recentState
   },
-  newCurrent: function(id, property, data) {
+  newCurrent: function(data, id, property) {
     states.futureData = []
     let currentCopy = JSON.parse(JSON.stringify(states.currentData))
     states.pastData.push(currentCopy)
-    let currentSet = states.currentData.find(obj => obj.id == id)
-    currentSet[property] = data
+    if (id && property) {
+      let currentSet = states.currentData.find(obj => obj.id == id)
+      currentSet[property] = data
+    } else {
+      states.currentData = data
+    }
   },
   modifyCurrent: function(id, property, data) {
     let currentSet = states.currentData.find(obj => obj.id == id)

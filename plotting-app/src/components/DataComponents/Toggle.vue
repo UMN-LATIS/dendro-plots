@@ -8,7 +8,7 @@
     props: ['id', 'toggleProperty', 'toggleChecked', 'toggleDisable'],
     methods: {
       toggle(e) {
-        this.store.methods.newCurrent(this.id, this.toggleProperty, e.target.checked)
+        this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProperty)
       },
     }
   }

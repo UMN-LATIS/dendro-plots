@@ -8,7 +8,7 @@
     props: ['id'],
     computed: {
       value: function () {
-        obj[this.activeProperty] && obj[this.freqProperty] == this.freq
+        const obj = this.store.states.currentData.find(o => o.id == this.id)
         if (obj && obj.pointColor) {
           return obj.pointColor
         }
@@ -16,7 +16,7 @@
     },
     methods: {
       change: function(e) {
-        this.store.methods.newCurrent(this.id, 'pointColor', e.target.value)
+        this.store.methods.newCurrent(e.target.value, this.id, 'pointColor')
       }
     },
   }

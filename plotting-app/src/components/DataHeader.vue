@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h2> Table of Contents: </h2>
     <p> Timeseries </p>
-    <div class="dropdown" v-for="(id, index) in imgID" :key="id">
-      <img src="../assets/info-icon.png" :id="id">
+    <div class="dropdown">
+      <img style="margin-left: 105px;" src="../assets/info-icon.png">
       <div class="dropdown-content">
-        <span> {{ hoverText[index] }} </span>
+        <span> {{ infoText }} </span>
       </div>
     </div>
+    <img src="../assets/sort-button.png" v-if="store.saved.loadSequence.length" :title="sortText[sortType]" @click="sort">
     <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastData.length }" title="Undo" @click="store.methods.undo()">
     <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureData.length }" title="Redo" @click="store.methods.redo()">
   </div>
@@ -20,13 +20,50 @@
     inject: ['store'],
     data() {
       return {
-        imgID: ['first-img', '', '', '', ''],
-        hoverText: ['Show in width plot',
-                    'Spline for detrending',
-                    'Show in index plot',
-                    'Spline for index plot',
-                    'Change line color'],
+        infoText: 'text text text text text text text text text text text text',
+        sortType: 0,
+        sortText: ['Sort A -> Z', 'Sort Z -> A', 'Sort by load sequence']
+      }
+    },
+    methods: {
+      alphaNumeric: function(arr, returnA, returnB) {
+        return arr.sort((objA, objB) => {
+                let nameA = objA.name.toUpperCase()
+                let nameB = objB.name.toUpperCase()
+                if (nameA < nameB) {
+                  return returnA;
+                } else if (nameA > nameB) {
+                  return returnB;
+                }
+                return 0;
+              })
+      },
+      sort: function() {
+        /*
+          Sorting type code:
+            1 = A -> Z
+            2 = Z -> A
+            3 = load order
+        */
+        let currentCopy = JSON.parse(JSON.stringify(this.store.states.currentData))
+        if (this.sortType == 0) {
+          this.alphaNumeric(currentCopy, -1, 1)
+        } else if (this.sortType == 1) {
+          this.alphaNumeric(currentCopy, 1, -1)
+        } else if (this.sortType == 2) {
+          let arr = new Array()
+          for (const id of this.store.saved.loadSequence) {
+            const obj = currentCopy.find(o => o.id == id)
+            arr.push(obj)
+          }
+          currentCopy = arr
+        }
+        this.store.methods.newCurrent(currentCopy)
 
+        this.sortType ++
+        if (this.sortType > 2) {
+          this.sortType = 0
+        }
       }
     },
   }
@@ -36,10 +73,6 @@
   div {
     margin: 0;
     display: inline;
-  }
-
-  h2 {
-    margin-left: 0;
   }
 
   p {
@@ -74,7 +107,7 @@
   }
 
   .dropdown:hover .dropdown-content {
-    display: inline;
+    display: block;
   }
 
   .dropdown-content {
@@ -86,16 +119,11 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -16px;
-    margin-top: 22px;
+    margin-left: 110px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
-  }
-
-  #first-img {
-    margin-left: 105px;
   }
 
 </style>
