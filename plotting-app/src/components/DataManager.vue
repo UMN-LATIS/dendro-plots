@@ -12,8 +12,6 @@
       />
 
       <Dropdown :id="obj.id"
-                :pointColor="obj.pointColor"
-                :colorProperty="'widthSplineColor'"
                 :activeProperty="'widthSplineActive'"
                 :freqProperty="'widthSplineFreq'"
       />
@@ -25,8 +23,6 @@
       />
 
       <Dropdown :id="obj.id"
-                :pointColor="obj.pointColor"
-                :colorProperty="'indexSplineColor'"
                 :activeProperty="'indexSplineActive'"
                 :freqProperty="'indexSplineFreq'"
       />
@@ -51,48 +47,11 @@
     components: { Name, Toggle, Dropdown, ColorSwatch },
     data() {
       return {
-        splineYearFreq: [20, 30, 50, 100, 200],
-        splineFunctions: [this.toggleWidthSpline, this.toggleIndexPoints, this.toggleIndexSpline],
-        splineCache: [],
       }
     },
     methods: {
       test(i) {
         console.log('test')
-      },
-      // each input's name is the datasets name
-      toggleSplineCheckbox(e) {
-        let checkbox = e.target.parentElement.previousElementSibling
-        if (e.target.classList.contains('active')) {
-          e.target.className = e.target.className.replace(' active', '')
-          let activeOptions = e.target.parentElement.getElementsByClassName('active')
-          checkbox.checked = (activeOptions.length > 0) ? true : false
-        } else {
-          e.target.className += ' active'
-          checkbox.checked = true
-        }
-
-        return checkbox.name
-      },
-      toggleColorSwatch(e) {
-        let swatch = e.target.parentElement.previousElementSibling
-        let pTag = e.target
-        if (pTag.classList.contains('active')) {
-          pTag.className = pTag.className.replace(' active', '')
-          let activeOptions = pTag.parentElement.getElementsByClassName('active')
-          swatch.disabled = (activeOptions.length > 0) ? false : true
-          if (activeOptions.length <= 0) {
-            swatch.value = '#ffffff'
-          }
-        } else {
-          e.target.className += ' active'
-          // if disabled (no color selected), change color to black (show it is active)
-          // else, do nothing (maintain user selected color)
-          if (swatch.disabled) {
-            swatch.value = '#000000'
-          }
-          swatch.disabled = false
-        }
       },
       saveSpline(freq, name) {
         let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975)
@@ -133,41 +92,6 @@
         this.splineCache.push(newSplineObj)
 
         console.log('spline cache', this.splineCache)
-      },
-      toggleWidthSpline(e, freq, name) {
-        this.toggleColorSwatch(e)
-        let color = e.target.parentElement.previousElementSibling.value
-        for (let obj of this.splineCache) {
-          if (obj.name == name && obj.freq == freq) {
-            this.addTrace(color, name, this.splineCache)
-            return
-          }
-        }
-
-        this.saveSpline(freq, name)
-        this.addTrace(color, name, this.splineCache)
-
-        console.log(name, freq, 'spline toggled')
-        // send data to plotly
-      },
-      toggleIndexPoints(e, freq, name) {
-        this.toggleSplineCheckbox(e)
-        console.log(name, freq, 'index toggled')
-        this.saveSpline(freq, name)
-      },
-      toggleIndexSpline(e, freq, name) {
-        this.toggleColorSwatch(e)
-        console.log(name, freq, 'spline toggled')
-        // send data to plotly
-      },
-      colorChange(e, name) {
-        let copy = JSON.parse(JSON.stringify(this.store.state.currentShownData))
-        copy.map(obj => {
-          if (obj.name == name || name == 'All Data') {
-            obj.line.color = e.target.value
-            this.store.methods.newCurrent(copy)
-          }
-        })
       },
       deleteSet(name) {
         let setDiv = document.getElementById(name)

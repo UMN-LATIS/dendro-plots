@@ -1,6 +1,6 @@
 <template>
   <div class="dropdown">
-    <input type="color" :disabled="isDisabled" :value="isValue" @change="change">
+    <input type="checkbox" disabled :checked="isChecked" @change="change">
     <div class="dropdown-content">
       <DropdownOptions v-for="freq in frequencies" :key="freq"
                        :id="id"
@@ -17,58 +17,22 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'pointColor', 'colorProperty', 'activeProperty', 'freqProperty'],
+    props: ['id', 'activeProperty', 'freqProperty'],
     components: { DropdownOptions },
     data() {
       return {
         frequencies: [20, 30, 50, 100, 200],
-        userSetSplineColor: '',
       }
     },
     computed: {
-      isValue: function() {
-        for (const obj of this.store.states.currentData) {
-          if (obj.id == this.id && obj[this.colorProperty]) {
-            obj[this.colorProperty] = this.shadeColor(this.pointColor, -50)
-            return obj[this.colorProperty]
-          }
+      isChecked: function() {
+        const obj = this.store.states.currentData.find(o => o.id == this.id)
+        if (obj && obj[this.activeProperty]) {
+          return true
         }
-        return '#ffffff'
-      },
-      isDisabled: function() {
-        for (const obj of this.store.states.currentData) {
-          if (obj.id == this.id && obj[this.activeProperty]) {
-            return false
-          }
-        }
-        return true
+        return false
       },
     },
-    methods: {
-      shadeColor: function(color, percent) {
-        var r = parseInt(color.substring(1,3),16)
-        var g = parseInt(color.substring(3,5),16)
-        var b = parseInt(color.substring(5,7),16)
-
-        r = parseInt(r * (100 + percent) / 100)
-        g = parseInt(g * (100 + percent) / 100)
-        b = parseInt(b * (100 + percent) / 100)
-
-        r = (r<255)?r:255
-        g = (g<255)?g:255
-        b = (b<255)?b:255
-
-        var rr = ((r.toString(16).length==1)?"0"+r.toString(16):r.toString(16))
-        var gg = ((g.toString(16).length==1)?"0"+g.toString(16):g.toString(16))
-        var bb = ((b.toString(16).length==1)?"0"+b.toString(16):b.toString(16))
-
-        return "#"+rr+gg+bb
-      },
-      change(e) {
-        this.userSetSplineColor = e.target.value
-        this.store.methods.newCurrent(this.id, this.colorProperty, e.target.value)
-      },
-    }
   }
 </script>
 

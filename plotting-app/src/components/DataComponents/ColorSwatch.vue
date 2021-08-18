@@ -8,10 +8,9 @@
     props: ['id'],
     computed: {
       value: function () {
-        for (const obj of this.store.states.currentData) {
-          if (obj.id == this.id && obj.pointColor) {
-            return obj.pointColor
-          }
+        obj[this.activeProperty] && obj[this.freqProperty] == this.freq
+        if (obj && obj.pointColor) {
+          return obj.pointColor
         }
       },
     },

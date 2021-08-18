@@ -13,10 +13,9 @@
     },
     computed: {
       isActive: function() {
-        for (const obj of this.store.states.currentData) {
-          if (obj.id == this.id && obj[this.activeProperty] && obj[this.freqProperty] == this.freq) {
-            return true
-          }
+        const obj = this.store.states.currentData.find(o => o.id == this.id)
+        if (obj && obj[this.activeProperty] && obj[this.freqProperty] == this.freq) {
+          return true
         }
         return false
       }
