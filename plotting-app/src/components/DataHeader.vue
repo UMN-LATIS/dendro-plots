@@ -1,7 +1,12 @@
 <template>
   <div>
-    <p> Data </p>
-    <img style="margin-left: 75px;" src="../assets/sort-button.png" class="hide" :class="{ show: store.saved.loadSequence.length > 1 }" :title="sortText[sortType]" @click="sort">
+    <p v-if="store.saved.loadSequence.length"> Data </p>
+    <div class="dropdown">
+      <img style="margin-left: 75px;" src="../assets/sort-button.png" class="hide" :class="{ show: store.saved.loadSequence.length > 1 }" @click="sort">
+      <div class="dropdown-content">
+        <span> {{ sortText[sortType] }} </span>
+      </div>
+    </div>
     <div class="dropdown" v-if="store.saved.loadSequence.length" v-for="(text, index) in infoText" :key="index">
       <img :class="infoID[index]" :src="infoPNG[index]">
       <div class="dropdown-content">
@@ -21,12 +26,16 @@
     data() {
       return {
         infoID: ['first', 'second', 'third', 'fourth', 'fifth'],
-        infoPNG: ['../assets/toggle-icon.png', '', '../assets/toggle-icon.png', '', ''],
-        infoText: ['Show in width plot',
-                    'Spline for detrending',
-                    'Show in index plot',
-                    'Spline for index plot',
-                    'Change line color'],
+        infoPNG: [require('../assets/width-toggle-icon.png'),
+                  require('../assets/width-spline-icon.png'),
+                  require('../assets/index-toggle-icon.png'),
+                  require('../assets/index-spline-icon.png'),
+                  require('../assets/color-icon.png')],
+        infoText: ['Show raw data',
+                   'Spline for detrending',
+                   'Show index of data',
+                   'Spline for index',
+                   'Change line color'],
         sortType: 0,
         sortText: ['Sort A -> Z', 'Sort Z -> A', 'Sort by load sequence'],
         showAdjustment: true,
@@ -104,7 +113,7 @@
     pointer-events: auto !important;
   }
 
-  .show:hover {
+  .dropdown, .show:hover {
     cursor: pointer;
   }
 
@@ -114,7 +123,7 @@
   }
 
   .dropdown:hover .dropdown-content {
-    display: block;
+    display: inline;
   }
 
   .dropdown-content {

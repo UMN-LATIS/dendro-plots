@@ -41,11 +41,13 @@
 <style scoped>
   p {
     display: block;
+    font-family: sans-serif;
     font-weight: normal;
     font-size: 12px;
     color: black;
     padding: 6px;
     margin: 0;
+    cursor: pointer;
   }
 
   p:hover {

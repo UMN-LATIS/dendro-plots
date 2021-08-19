@@ -15,14 +15,6 @@
 </script>
 
 <style>
-  p {
-    font-family: Sans-serif;
-    font-weight: bold;
-    font-size: 14px;
-    color: #797979;
-    display: inline;
-  }
-
    input[type="checkbox"] {
     -webkit-appearance: none;
     width: 18px;
@@ -33,6 +25,7 @@
     margin: 0;
     margin-right: 16px;
     box-sizing: border-box;
+    cursor: pointer;
   }
 
   input[type="checkbox"]:checked {

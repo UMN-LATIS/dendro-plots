@@ -63,6 +63,7 @@
   }
 
   #info-div {
+    cursor: pointer;
     position: absolute;
     margin-top: 0;
     margin-left: 10px;

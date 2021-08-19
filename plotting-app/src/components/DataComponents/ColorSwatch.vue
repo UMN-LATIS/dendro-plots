@@ -28,11 +28,11 @@
     width: 18px;
     height: 18px;
     padding: 0;
-    border: 1px solid #797979;
-    border-radius: 5px;
+    border: none;
     margin: 0;
     margin-right: 16px;
     box-sizing: border-box;
+    cursor: pointer;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {
@@ -40,16 +40,16 @@
   }
 
   input[type="color"]::-webkit-color-swatch {
-    border: 1px solid #797979;
+    border: 2px solid #797979;
     padding: 0;
     margin: 0;
-    border-radius: 4px;
+    border-radius: 5px;
   }
 
   input[type="color"]::-moz-color-swatch {
-    border: 1px solid #797979;
+    border: 2px solid #797979;
     padding: 0;
     margin: 0;
-    border-radius: 4px;
+    border-radius: 5px;
   }
 </style>
