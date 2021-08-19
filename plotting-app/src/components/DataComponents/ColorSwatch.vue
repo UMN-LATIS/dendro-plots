@@ -1,19 +1,11 @@
 <template>
-  <input type="color" class="color-input" :value="value" @change="change">
+  <input type="color" class="color-input" :value="color" @change="change">
 </template>
 
 <script>
   export default {
     inject: ['store'],
-    props: ['id'],
-    computed: {
-      value: function () {
-        const obj = this.store.states.currentData.find(o => o.id == this.id)
-        if (obj && obj.color) {
-          return obj.color
-        }
-      },
-    },
+    props: ['id', 'color'],
     methods: {
       change: function(e) {
         this.store.methods.newCurrent(e.target.value, this.id, 'color')

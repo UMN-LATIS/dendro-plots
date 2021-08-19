@@ -1,20 +1,20 @@
 <template>
   <div>
-    <p v-if="store.saved.loadSequence.length"> Data </p>
+    <p v-if="store.cache.loadSequence.length"> Data </p>
     <div class="dropdown">
-      <img style="margin-left: 75px;" src="../assets/sort-button.png" class="hide" :class="{ show: store.saved.loadSequence.length > 1 }" @click="sort">
+      <img style="margin-left: 75px;" src="../assets/sort-button.png" class="hide" :class="{ show: store.cache.loadSequence.length > 1 }" @click="sort">
       <div class="dropdown-content">
         <span> {{ sortText[sortType] }} </span>
       </div>
     </div>
-    <div class="dropdown" v-if="store.saved.loadSequence.length" v-for="(text, index) in infoText" :key="index">
+    <div class="dropdown" v-if="store.cache.loadSequence.length" v-for="(text, index) in infoText" :key="index">
       <img class="info-icons" :class="infoID[index]" :src="infoPNG[index]">
       <div class="dropdown-content">
         <span> {{ text }} </span>
       </div>
     </div>
-    <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastData.length }" title="Undo" @click="store.methods.undo()">
-    <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureData.length }" title="Redo" @click="store.methods.redo()">
+    <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastStates.length }" title="Undo" @click="store.methods.undo()">
+    <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureStates.length }" title="Redo" @click="store.methods.redo()">
   </div>
 </template>
 
@@ -61,14 +61,14 @@
             2 = Z -> A
             3 = load order
         */
-        let currentCopy = JSON.parse(JSON.stringify(this.store.states.currentData))
+        let currentCopy = JSON.parse(JSON.stringify(this.store.states.currentStates))
         if (this.sortType == 0) {
           this.alphaNumeric(currentCopy, -1, 1)
         } else if (this.sortType == 1) {
           this.alphaNumeric(currentCopy, 1, -1)
         } else if (this.sortType == 2) {
           let arr = new Array()
-          for (const id of this.store.saved.loadSequence) {
+          for (const id of this.store.cache.loadSequence) {
             const obj = currentCopy.find(o => o.id == id)
             if (obj) {
               arr.push(obj)

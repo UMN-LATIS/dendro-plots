@@ -5,10 +5,10 @@
 <script>
   export default {
     inject: ['store'],
-    props: ['id', 'toggleProperty', 'toggleChecked', 'toggleDisable'],
+    props: ['id', 'activeProperty', 'toggleChecked', 'toggleDisable'],
     methods: {
-      toggle(e) {
-        this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProperty)
+      toggle: function(e) {
+        this.store.methods.newCurrent(e.target.checked, this.id, this.activeProperty)
       },
     }
   }

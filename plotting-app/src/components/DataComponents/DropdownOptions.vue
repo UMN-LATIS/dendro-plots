@@ -5,7 +5,7 @@
 <script>
   export default {
     inject: ['store'],
-    props: ['id', 'freq', 'freqProperty', 'activeProperty'],
+    props: ['id', 'freq', 'storedFreq', 'freqProperty', 'activeBool', 'activeProperty'],
     data() {
       return {
         active: false,
@@ -13,8 +13,7 @@
     },
     computed: {
       isActive: function() {
-        const obj = this.store.states.currentData.find(o => o.id == this.id)
-        if (obj && obj[this.activeProperty] && obj[this.freqProperty] == this.freq) {
+        if (this.activeBool && this.storedFreq == this.freq) {
           return true
         }
         return false
@@ -22,9 +21,8 @@
     },
     methods: {
       click: function(e) {
-        let currentFreq = this.store.states.currentData.find(obj => obj.id = this.id)[this.freqProperty]
         let active, newFreq
-        if (currentFreq == this.freq) {
+        if (this.storedFreq == this.freq) {
           active = false
           newFreq = 0
         } else {

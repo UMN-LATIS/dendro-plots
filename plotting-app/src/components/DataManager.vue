@@ -1,37 +1,44 @@
 <template>
-  <div class="individual-data-wrapper" v-for="obj in store.states.currentData" :key="obj.id">
+  <div class="individual-data-wrapper" v-for="obj in store.states.currentStates" :key="obj.id">
     <Name :name="obj.name"
           :file="obj.file"
     />
 
     <div class="data-options">
       <Toggle :id="obj.id"
-              :toggleProperty="'dataPointsActive'"
+              :activeProperty="'dataPointsActive'"
               :toggleChecked="obj.dataPointsActive"
               :toggleDisable="false"
       />
 
       <Dropdown :id="obj.id"
-                :activeProperty="'dataSplineActive'"
+                :storedFreq="obj.dataSplineFreq"
                 :freqProperty="'dataSplineFreq'"
+                :activeBool="obj.dataSplineActive"
+                :activeProperty="'dataSplineActive'"
       />
 
       <Toggle :id="obj.id"
-              :toggleProperty="'indexPointsActive'"
+              :activeProperty="'indexPointsActive'"
               :toggleChecked="obj.indexPointsActive"
-              :toggleDisable="!obj.widthSplineActive"
+              :toggleDisable="!obj.dataSplineActive"
       />
 
       <Dropdown :id="obj.id"
-                :activeProperty="'indexSplineActive'"
+                :storedFreq="obj.indexSplineFreq"
                 :freqProperty="'indexSplineFreq'"
+                :activeBool="obj.indexSplineActive"
+                :activeProperty="'indexSplineActive'"
       />
 
-      <ColorSwatch :id="obj.id" />
+      <ColorSwatch :id="obj.id"
+                   :color="obj.color"
+      />
 
       <ColorSwap :id="obj.id"
                  :swapState="obj.colorState"
-                 :color="obj.color"/>
+                 :color="obj.color"
+      />
 
       <Remove :id="obj.id" />
 

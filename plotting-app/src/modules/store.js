@@ -19,98 +19,105 @@ import { simpleSmoothingSpline } from 'simple-smoothing-spline'
 */
 
 const states = reactive({
-  pastData: [],
-  currentData: [],
-  futureData: [],
+  pastStates: [],
+  currentStates: [],
+  futureStates: [],
 })
 
-const saved = reactive({
+const cache = reactive({
   splineCache: [],
+  dataCache: [],
+  indexCache: [],
   loadSequence: [],
 })
 
 const methods = {
-  // TODO: adding & checking spline functions
-  addSpline: function(freq) {
+  checkSpline: function(id, freq) {
+  },
+  newSpline: function(id, freq) {
   },
   loadData: function(data) {
     this.saveCurrent()
 
     for (const set of data) {
-      let existingSet = states.currentData.find(obj => obj.name == set.name)
+      let existingSet = states.currentStates.find(obj => obj.name == set.name)
       if (existingSet) {
-        let n = states.currentData.filter(obj => obj.name.split(' (')[0] == set.name).length
+        let n = states.currentStates.filter(obj => obj.name.split(' (')[0] == set.name).length
         set.name = set.name + ' (' + n + ')'
       }
 
-      let newSet = new Object()
+      let newState = new Object()
       // set IDs are random 5 digit numbers
       let id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
 
-      // default data values
-      newSet.id = id
-      newSet.name = set.name
-      newSet.file = set.fileName
-      newSet.color = '#000000'
-      newSet.colorState = true
-      newSet.dataPointsActive = false
-      newSet.dataSplineActive = false
-      newSet.dataSplineFreq = 0
-      newSet.indexPointsActive = false
-      newSet.indexSplineActive = false
-      newSet.indexSplineFreq = 0
-      newSet.x = set.x
-      newSet.y = set.y
-      newSet.splines = []
+      // default state values
+      newState.id = id
+      newState.name = set.name
+      newState.file = set.fileName
+      newState.color = '#000000'
+      newState.colorState = true
+      newState.dataPointsActive = false
+      newState.dataSplineActive = false
+      newState.dataSplineFreq = 0
+      newState.indexPointsActive = false
+      newState.indexSplineActive = false
+      newState.indexSplineFreq = 0
+      newState.splines = []
+      states.currentStates.push(newState)
 
-      states.currentData.push(newSet)
+      // store known data
+      let newData = new Object()
+      newData.id
+      newData.x = set.x
+      newData.y = set.y
+      cache.dataCache
 
       // establish default load sequence
-      saved.loadSequence.push(newSet.id)
+      cache.loadSequence.push(newState.id)
     }
   },
   addTo: function(data, property) {
     states[property].push(data)
   },
   undo: function() {
-    let recentState = states.pastData[states.pastData.length - 1]
-    states.pastData.pop()
-    this.addTo(states.currentData, 'futureData')
-    states.currentData = recentState
+    let recentState = states.pastStates[states.pastStates.length - 1]
+    states.pastStates.pop()
+    this.addTo(states.currentStates, 'futureStates')
+    states.currentStates = recentState
   },
   redo: function() {
-    let recentState = states.futureData[states.futureData.length - 1]
-    states.futureData.pop()
-    this.addTo(states.currentData, 'pastData')
-    states.currentData = recentState
+    let recentState = states.futureStates[states.futureStates.length - 1]
+    states.futureStates.pop()
+    this.addTo(states.currentStates, 'pastStates')
+    states.currentStates = recentState
   },
   saveCurrent: function() {
-    states.futureData = []
-    let currentCopy = JSON.parse(JSON.stringify(states.currentData))
-    states.pastData.push(currentCopy)
+    states.futureStates = []
+    let currentCopy = JSON.parse(JSON.stringify(states.currentStates))
+    states.pastStates.push(currentCopy)
   },
   newCurrent: function(data, id, property) {
     this.saveCurrent()
     if (id && property) {
-      let currentSet = states.currentData.find(obj => obj.id == id)
+      let currentSet = states.currentStates.find(obj => obj.id == id)
       currentSet[property] = data
     } else {
-      states.currentData = data
+      states.currentStates = data
     }
   },
   modifyCurrent: function(data, id, property) {
-    let currentSet = states.currentData.find(obj => obj.id == id)
+    let currentSet = states.currentStates.find(obj => obj.id == id)
     currentSet[property] = data
   },
   removeCurrent: function(id) {
     this.saveCurrent()
-    let setIndex = states.currentData.findIndex(obj => obj.id == id)
-    states.currentData.splice(setIndex, 1)
+    let setIndex = states.currentStates.findIndex(obj => obj.id == id)
+    states.currentStates.splice(setIndex, 1)
   }
 }
 
 export default {
   states,
-  saved,
+  cache,
   methods
 }
