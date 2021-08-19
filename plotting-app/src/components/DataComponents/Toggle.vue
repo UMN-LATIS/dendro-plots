@@ -22,8 +22,7 @@
     padding: 0;
     border: 2px solid #797979;
     border-radius: 5px;
-    margin: 0;
-    margin-right: 16px;
+    margin: 0 6px;
     box-sizing: border-box;
     cursor: pointer;
   }

@@ -62,8 +62,12 @@
     margin-top: 20px;
   }
 
+  img {
+    cursor: help;
+  }
+
   #info-div {
-    cursor: pointer;
+    cursor: help;
     position: absolute;
     margin-top: 0;
     margin-left: 10px;
@@ -90,11 +94,13 @@
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
+    cursor: help;
   }
 
   #info-div:hover #info-content {
     display: inline;
     width: 380px;
+    cursor: help;
   }
 
 

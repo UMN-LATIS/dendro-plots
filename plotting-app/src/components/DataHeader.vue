@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="dropdown" v-if="store.saved.loadSequence.length" v-for="(text, index) in infoText" :key="index">
-      <img :class="infoID[index]" :src="infoPNG[index]">
+      <img class="info-icons" :class="infoID[index]" :src="infoPNG[index]">
       <div class="dropdown-content">
         <span> {{ text }} </span>
       </div>
@@ -107,7 +107,12 @@
   img {
     width: 18px;
     height: 18px;
-    margin: 0 8px;
+    margin: 0 6px;
+    cursor: pointer;
+  }
+
+  .info-icons {
+    cursor: help;
   }
 
   .show {
@@ -116,7 +121,7 @@
   }
 
   .dropdown, .show:hover {
-    cursor: pointer;
+    cursor: normal;
   }
 
   .hide {

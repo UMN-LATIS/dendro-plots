@@ -6,14 +6,14 @@
 
     <div class="data-options">
       <Toggle :id="obj.id"
-              :toggleProperty="'widthPointsActive'"
-              :toggleChecked="obj.widthPointsActive"
+              :toggleProperty="'dataPointsActive'"
+              :toggleChecked="obj.dataPointsActive"
               :toggleDisable="false"
       />
 
       <Dropdown :id="obj.id"
-                :activeProperty="'widthSplineActive'"
-                :freqProperty="'widthSplineFreq'"
+                :activeProperty="'dataSplineActive'"
+                :freqProperty="'dataSplineFreq'"
       />
 
       <Toggle :id="obj.id"
@@ -29,8 +29,12 @@
 
       <ColorSwatch :id="obj.id" />
 
+      <ColorSwap :id="obj.id"
+                 :swapState="obj.colorState"
+                 :color="obj.color"/>
+
       <Remove :id="obj.id" />
-      
+
     </div>
   </div>
 </template>
@@ -40,11 +44,12 @@
   import Toggle from './DataComponents/Toggle.vue'
   import Dropdown from './DataComponents/Dropdown.vue'
   import ColorSwatch from './DataComponents/ColorSwatch.vue'
+  import ColorSwap from './DataComponents/ColorSwap.vue'
   import Remove from './DataComponents/Remove.vue'
 
   export default {
     inject: ['store'],
-    components: { Name, Toggle, Dropdown, ColorSwatch, Remove },
+    components: { Name, Toggle, Dropdown, ColorSwatch, ColorSwap, Remove },
     data() {
       return {
       }
@@ -123,8 +128,8 @@
   }
 
   .data-options {
-    width: 60%;
-    height: 18px;
+    width: 218px;
+    height: 20px;
   }
 
   .delete-div {

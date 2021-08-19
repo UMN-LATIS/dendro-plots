@@ -9,14 +9,14 @@
     computed: {
       value: function () {
         const obj = this.store.states.currentData.find(o => o.id == this.id)
-        if (obj && obj.pointColor) {
-          return obj.pointColor
+        if (obj && obj.color) {
+          return obj.color
         }
       },
     },
     methods: {
       change: function(e) {
-        this.store.methods.newCurrent(e.target.value, this.id, 'pointColor')
+        this.store.methods.newCurrent(e.target.value, this.id, 'color')
       }
     },
   }
@@ -29,8 +29,7 @@
     height: 18px;
     padding: 0;
     border: none;
-    margin: 0;
-    margin-right: 16px;
+    margin: 0 6px;
     box-sizing: border-box;
     cursor: pointer;
   }

@@ -6,12 +6,11 @@ import { simpleSmoothingSpline } from 'simple-smoothing-spline'
   State attributes:
     * name: string
     * file: string
-    * pointColor: string
-    * widthSplineColor: string
-    * indexSplineColor: string
-    * widthPointsActive: boolean
-    * widthSplineActive: boolean
-    * widthSplineFreq: number
+    * color: string
+    * colorState: boolean
+    * dataPointsActive: boolean
+    * dataSplineActive: boolean
+    * dataSplineFreq: number
     * indexPointsActive: boolean
     * indexSplineActive: boolean
     * indexSplineFreq: number
@@ -52,12 +51,11 @@ const methods = {
       newSet.id = id
       newSet.name = set.name
       newSet.file = set.fileName
-      newSet.pointColor = '#000000'
-      newSet.widthSplineColor = ''
-      newSet.indexSplineColor = ''
-      newSet.widthPointsActive = false
-      newSet.widthSplineActive = false
-      newSet.widthSplineFreq = 0
+      newSet.color = '#000000'
+      newSet.colorState = true
+      newSet.dataPointsActive = false
+      newSet.dataSplineActive = false
+      newSet.dataSplineFreq = 0
       newSet.indexPointsActive = false
       newSet.indexSplineActive = false
       newSet.indexSplineFreq = 0

@@ -13,7 +13,7 @@
 
 <style scoped>
   div {
-    width: 105px;
+    width: 96px;
     height: 18px;
   }
 
