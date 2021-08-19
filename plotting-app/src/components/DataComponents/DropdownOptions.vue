@@ -32,7 +32,7 @@
           newFreq = this.freq
         }
         this.store.methods.newCurrent(active, this.id, this.activeProperty)
-        this.store.methods.modifyCurrent(this.id, this.freqProperty, newFreq)
+        this.store.methods.modifyCurrent(newFreq, this.id, this.freqProperty)
       },
     }
   }

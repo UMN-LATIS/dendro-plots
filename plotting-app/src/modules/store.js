@@ -35,6 +35,8 @@ const methods = {
   addSpline: function(freq) {
   },
   loadData: function(data) {
+    this.saveCurrent()
+
     for (const set of data) {
       let existingSet = states.currentData.find(obj => obj.name == set.name)
       if (existingSet) {
@@ -43,6 +45,7 @@ const methods = {
       }
 
       let newSet = new Object()
+      // set IDs are random 5 digit numbers
       let id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
 
       // default data values
@@ -83,10 +86,13 @@ const methods = {
     this.addTo(states.currentData, 'pastData')
     states.currentData = recentState
   },
-  newCurrent: function(data, id, property) {
+  saveCurrent: function() {
     states.futureData = []
     let currentCopy = JSON.parse(JSON.stringify(states.currentData))
     states.pastData.push(currentCopy)
+  },
+  newCurrent: function(data, id, property) {
+    this.saveCurrent()
     if (id && property) {
       let currentSet = states.currentData.find(obj => obj.id == id)
       currentSet[property] = data
@@ -94,10 +100,15 @@ const methods = {
       states.currentData = data
     }
   },
-  modifyCurrent: function(id, property, data) {
+  modifyCurrent: function(data, id, property) {
     let currentSet = states.currentData.find(obj => obj.id == id)
     currentSet[property] = data
   },
+  removeCurrent: function(id) {
+    this.saveCurrent()
+    let setIndex = states.currentData.findIndex(obj => obj.id == id)
+    states.currentData.splice(setIndex, 1)
+  }
 }
 
 export default {

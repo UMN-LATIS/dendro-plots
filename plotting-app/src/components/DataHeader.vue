@@ -70,7 +70,9 @@
           let arr = new Array()
           for (const id of this.store.saved.loadSequence) {
             const obj = currentCopy.find(o => o.id == id)
-            arr.push(obj)
+            if (obj) {
+              arr.push(obj)
+            }
           }
           currentCopy = arr
         }

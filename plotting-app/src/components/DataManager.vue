@@ -29,9 +29,8 @@
 
       <ColorSwatch :id="obj.id" />
 
-      <div class="delete-div" @click="deleteSet(name)">
-        <img src="../assets/delete-button.png" class="delete-img" title="Remove series">
-      </div>
+      <Remove :id="obj.id" />
+      
     </div>
   </div>
 </template>
@@ -41,10 +40,11 @@
   import Toggle from './DataComponents/Toggle.vue'
   import Dropdown from './DataComponents/Dropdown.vue'
   import ColorSwatch from './DataComponents/ColorSwatch.vue'
+  import Remove from './DataComponents/Remove.vue'
 
   export default {
     inject: ['store'],
-    components: { Name, Toggle, Dropdown, ColorSwatch },
+    components: { Name, Toggle, Dropdown, ColorSwatch, Remove },
     data() {
       return {
       }
