@@ -16,9 +16,10 @@
 <style scoped>
   img {
     width: 24px;
-    height: 24px;
+    height: 20px;
     margin: 0;
-    margin-left: 16px;
+    margin-left: 12px;
+    cursor: pointer;
   }
 
   .show {
