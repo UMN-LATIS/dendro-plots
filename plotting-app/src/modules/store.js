@@ -24,6 +24,38 @@ const states = reactive({
   futureStates: [],
 })
 
+/*
+  caches are an array of objects which do not change when undo/redo triggered
+    * splineCache: [
+                    {
+                      id: 12345,
+                      20: {
+                            x: [...],
+                            y: [...]
+                          },
+                      30: {...},
+                      ...
+                    },
+                    ...
+                  ]
+    * dataCache: [
+                  {
+                    id: 12345,
+                    x: [...],
+                    y: [...],
+                  },
+                  ...
+                ]
+    * indexCache: [
+                  {
+                    id: 12345,
+                    x: [...],
+                    y: [...],
+                  },
+                  ...
+                ]
+*/
+
 const cache = reactive({
   splineCache: [],
   dataCache: [],
@@ -32,9 +64,60 @@ const cache = reactive({
 })
 
 const methods = {
-  checkSpline: function(id, freq) {
+  addSpline: function(id, freq, data) {
+    let splineObj = cache.splineCache.find(obj => obj.id == id)
+    if (splineObj) {
+      splineObj[freq] = data
+    } else {
+      splineObj = new Object()
+      splineObj.id = id
+      splineObj[freq] = data
+      cache.splineCache.push(splineObj)
+    }
+  },
+  getSpline: function(id, freq) {
+    let spline = this.checkSplines(id, freq)
+    if (!spline) {
+      spline = this.newSpline(id, freq)
+    }
+    return spline
+  },
+  checkSplines: function(id, freq) {
+    let splineObj = cache.splineCache.find(obj => obj.id == id)
+    if (splineObj) {
+      let splinePts = splineObj[freq]
+      if (splinePts) {
+        return splinePts
+      }
+    }
+    return undefined
   },
   newSpline: function(id, freq) {
+    // convert data to spline format
+    let dataObj = cached.dataCache.find(obj => obj.id == id)
+    let data = dataObj.x.map((e, i) => {
+                  let pair = new Object()
+                  pair.x = e
+                  pair.y = dataObj.y[i]
+                  return pair
+                })
+
+    let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975)
+    const spline = simpleSmoothingSpline(data, { 'lambda': lambda })
+
+    // convert spline to Plotly format
+    let xArr = []
+    let yArr = []
+    for (const obj of spline.points) {
+      xArr.push(obj.x)
+      yArr.push(obj.y)
+    }
+
+    let splineObj = new Object()
+    splineObj.x = xArr
+    splineObj.y = yArr
+
+    this.addSpline(id, freq, splineObj)
   },
   loadData: function(data) {
     this.saveCurrent()
