@@ -10,15 +10,6 @@
     <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
     <label for="file-upload"> Upload Files </label>
   </div>
-
-  <div id="state-div">
-    <img src="../assets/undo-button.png" class="undo-redo-button hide"
-         :class="{ show: store.states.pastStates.length }"
-         @click="store.methods.undo()">
-    <img src="../assets/redo-button.png" class="undo-redo-button hide"
-         :class="{ show: store.states.futureStates.length }"
-         @click="store.methods.redo()">
- </div>
 </template>
 
 <script>
@@ -78,31 +69,8 @@
     cursor: help;
   }
 
-  .undo-redo-button {
-    width: 24px;
-    height: 24px;
-    margin: 0;
-    margin-left: 10px;
-  }
-
-  .show {
-    opacity: 1 !important;
-    pointer-events: auto !important;
-  }
-
-  .hide {
-    opacity: 0;
-    pointer-events: none;
-  }
-
   #file-div {
     margin-top: 5px;
-  }
-
-  #state-div {
-    display: block;
-    margin-top: 10px;
-    margin-left: 36px;
   }
 
   #info-div {

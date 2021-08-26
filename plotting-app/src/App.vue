@@ -4,6 +4,9 @@
       <div id="file-mangement">
         <FileManager />
       </div>
+      <div id="undo-redo-buttons">
+        <UndoRedoButtons />
+      </div>
       <DataHeader id="data-header"/>
       <div id="time-series-management">
         <DataManager />
@@ -23,6 +26,7 @@
 
 <script>
   import FileManager from './components/FileManager.vue'
+  import UndoRedoButtons from './components/UndoRedoButtons.vue'
   import DataManager from './components/DataManager.vue'
   import DataHeader from './components/DataHeader.vue'
 
@@ -31,7 +35,7 @@
   export default {
     name: 'App',
     provide: { store },
-    components: { FileManager, DataManager, DataHeader },
+    components: { FileManager, UndoRedoButtons, DataManager, DataHeader },
     data() {
       return {
       }
@@ -62,9 +66,10 @@
   }
 
   #wrapper {
-    width: 100%;
+    width: calc(100% - 10px);
     height: 100%;
     display: flex;
+    margin-left: 10px;
     flex-flow: nowrap;
   }
 
@@ -77,21 +82,23 @@
   }
 
   #file-mangement {
-    width: calc(100% - 10px);
-    height: 62px;
-    min-height: 60px;
-    margin-left: 10px;
+    width: 100%;
+    height: 32px;
+    min-height: 32px;
     overflow: auto;
   }
 
+  #undo-redo-buttons {
+    margin-left: 26px;
+    height: 26px;
+  }
+
   #data-header {
-    margin-left: 10px;
   }
 
   #time-series-management {
     width: calc(100% - 10px);
     height: 100%;
-    margin-left: 10px;
     overflow-y: auto;
     overflow-x: hidden;
   }
