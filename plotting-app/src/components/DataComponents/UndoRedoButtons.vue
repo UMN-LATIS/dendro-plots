@@ -1,8 +1,8 @@
 <template>
-  <img src="../assets/undo-button.png" class="hide"
+  <img src="../../assets/undo-button.png" class="hide"
        :class="{ show: store.states.pastStates.length }"
        @click="store.methods.undo()">
-  <img src="../assets/redo-button.png" class="hide"
+  <img src="../../assets/redo-button.png" class="hide"
        :class="{ show: store.states.futureStates.length }"
        @click="store.methods.redo()">
 </template>
@@ -15,11 +15,11 @@
 
 <style scoped>
   img {
-    width: 24px;
-    height: 20px;
+    width: 18px;
+    height: 14px;
     margin: 0;
-    margin-left: 12px;
     cursor: pointer;
+    margin-left: 4px;
   }
 
   .show {

@@ -4,9 +4,6 @@
       <div id="file-mangement">
         <FileManager />
       </div>
-      <div id="undo-redo-buttons">
-        <UndoRedoButtons />
-      </div>
       <DataHeader id="data-header"/>
       <div id="time-series-management">
         <DataManager />
@@ -26,7 +23,6 @@
 
 <script>
   import FileManager from './components/FileManager.vue'
-  import UndoRedoButtons from './components/UndoRedoButtons.vue'
   import DataManager from './components/DataManager.vue'
   import DataHeader from './components/DataHeader.vue'
 
@@ -35,7 +31,7 @@
   export default {
     name: 'App',
     provide: { store },
-    components: { FileManager, UndoRedoButtons, DataManager, DataHeader },
+    components: { FileManager, DataManager, DataHeader },
     data() {
       return {
       }
@@ -43,9 +39,10 @@
   }
 </script>
 
-<style scoped>
+<style>
   #app, body, html {
     margin: 0;
+    padding: 0;
     height: 100%;
     width: 100%;
     background: #f6f6f6;
@@ -66,45 +63,38 @@
   }
 
   #wrapper {
-    width: calc(100% - 10px);
+    width: 100%;
     height: 100%;
     display: flex;
-    margin-left: 10px;
     flex-flow: nowrap;
   }
 
   #management-wrapper {
-    width: 350px;
-    min-width: 350px;
+    width: 140px;
+    min-width: 140px;
     height: 100%;
     display: flex;
     flex-direction: column;
   }
 
   #file-mangement {
-    width: 100%;
+    width: inherit;
     height: 24px;
     min-height: 24px;
-    overflow: auto;
-  }
-
-  #undo-redo-buttons {
-    margin-left: 26px;
-    height: 26px;
-  }
-
-  #data-header {
+    overflow: hidden;
+    margin-top: 5px;
+    margin-bottom: 5px;
   }
 
   #time-series-management {
-    width: calc(100% - 10px);
+    width: inherit;
     height: 100%;
-    overflow-y: auto;
+    overflow-y: visible;
     overflow-x: hidden;
   }
 
   #plot-wrapper {
-    width: calc(100% - 290px);
+    width: calc(100% - 140px);
     height: 100%;
     display: flex;
     flex-direction: column;

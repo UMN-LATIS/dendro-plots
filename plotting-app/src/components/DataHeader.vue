@@ -1,12 +1,19 @@
 <template>
   <div v-if="store.cache.loadSequence.length">
-    <div id="info-text">
+    <div id="info">
       <Info :info="[]"
             :width="20" />
     </div>
-    <p> Data </p>
-    <Sort />
 
+    <p> Data </p>
+
+    <div id="sort">
+      <Sort />
+    </div>
+
+    <div id="undo-redo-buttons">
+      <UndoRedoButtons />
+    </div>
     <!--
     <div class="dropdown" v-if="store.cache.loadSequence.length" v-for="(text, index) in infoText" :key="index">
       <img class="info-icons" :class="infoID[index]" :src="infoPNG[index]">
@@ -21,10 +28,11 @@
 <script>
   import Info from './DataComponents/Info.vue'
   import Sort from './DataComponents/Sort.vue'
+  import UndoRedoButtons from './DataComponents/UndoRedoButtons.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort },
+    components: { Info, Sort, UndoRedoButtons },
     data() {
       return {
         infoID: ['first', 'second', 'third', 'fourth', 'fifth'],
@@ -53,11 +61,11 @@
     font-family: Sans-serif;
     font-weight: bold;
     font-size: 18px;
-    color: #797979;
+    color: black;
     height: 18px;
     display: inline;
     margin: 0;
-    margin-left: 25px;
+    margin-left: 22px;
   }
 
   img {
@@ -100,10 +108,14 @@
     margin-left: 5px;
   }
 
-  #info-text {
+  #info {
     width: 20px;
     height: 20px;
     position: absolute;
+  }
+
+  #sort {
+    margin-left: 6px;
   }
 
 </style>

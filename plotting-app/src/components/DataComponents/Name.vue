@@ -15,11 +15,12 @@
   div {
     width: 96px;
     height: 18px;
+    display: inline;
   }
 
   p {
     display: inline-block;
-    width: 100px;
+    width: 94px;
     height: 16px;
     margin: 1px 0;
     text-overflow: ellipsis;
@@ -28,6 +29,6 @@
     font-family: Sans-serif;
     font-weight: normal;
     font-size: 14px;
-    color: #797979;
+    color: black;
   }
 </style>

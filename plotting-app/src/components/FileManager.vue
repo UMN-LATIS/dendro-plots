@@ -1,5 +1,5 @@
 <template>
-  <div id="info-text">
+  <div id="info">
     <Info :info="fileInfo"
           :width="370" />
   </div>
@@ -40,9 +40,9 @@
   }
 
   label {
-    background-color: #797979;
+    background-color: black;
     color: white;
-    padding: 4px;
+    padding: 4px 14px;
     font-family: sans-serif;
     font-size: 14px;
     font-weight: bold;
@@ -50,15 +50,15 @@
     cursor: pointer;
     margin: 0;
     display: inline-block;
-    margin-left: 25px;
+    margin-left: 22px;
   }
 
   label:hover {
-    background-color: black;
+    background-color: #797979;
     color: white;
   }
 
-  #info-text {
+  #info {
     width: 20px;
     height: 20px;
     margin-top: 1px;
