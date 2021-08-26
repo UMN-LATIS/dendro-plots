@@ -39,7 +39,7 @@
   }
 </script>
 
-<style>
+<style scoped>
   #app, body, html {
     margin: 0;
     height: 100%;
@@ -78,7 +78,7 @@
 
   #file-mangement {
     width: calc(100% - 10px);
-    height: 60px;
+    height: 62px;
     min-height: 60px;
     margin-left: 10px;
     overflow: auto;

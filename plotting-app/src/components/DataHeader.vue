@@ -13,8 +13,6 @@
         <span> {{ text }} </span>
       </div>
     </div>
-    <img src="../assets/undo-button.png" class="hide" :class="{ show: store.states.pastStates.length }" title="Undo" @click="store.methods.undo()">
-    <img src="../assets/redo-button.png" class="hide" :class="{ show: store.states.futureStates.length }" title="Redo" @click="store.methods.redo()">
   </div>
 </template>
 
@@ -120,13 +118,13 @@
     pointer-events: auto !important;
   }
 
-  .dropdown, .show:hover {
-    cursor: normal;
-  }
-
   .hide {
     opacity: 0;
     pointer-events: none;
+  }
+
+  .dropdown, .show:hover {
+    cursor: normal;
   }
 
   .dropdown:hover .dropdown-content {

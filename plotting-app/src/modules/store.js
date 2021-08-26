@@ -14,8 +14,6 @@ import { simpleSmoothingSpline } from 'simple-smoothing-spline'
     * indexPointsActive: boolean
     * indexSplineActive: boolean
     * indexSplineFreq: number
-    * x: array
-    * y: array
 */
 
 const states = reactive({
@@ -139,13 +137,17 @@ const methods = {
       newState.file = set.fileName
       newState.color = '#000000'
       newState.colorState = true
+
       newState.dataPointsActive = false
       newState.dataSplineActive = false
       newState.dataSplineFreq = 0
+      newState.dataPlotLocation = 1
+
       newState.indexPointsActive = false
       newState.indexSplineActive = false
       newState.indexSplineFreq = 0
-      newState.splines = []
+      newState.indexPlotLocation = 1
+
       states.currentStates.push(newState)
 
       // store known data
