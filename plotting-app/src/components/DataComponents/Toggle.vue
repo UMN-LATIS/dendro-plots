@@ -17,17 +17,18 @@
 <style>
    input[type="checkbox"] {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     padding: 0;
     border: 2px solid #797979;
     border-radius: 5px;
-    margin: 0 6px;
+    margin: 2px 6px;
     box-sizing: border-box;
     cursor: pointer;
+    display: inline-block;
   }
 
   input[type="checkbox"]:checked {
-    background: #797979;
+    background: #bdbdbd;
   }
 </style>

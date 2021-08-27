@@ -1,6 +1,8 @@
 <template>
   <div>
-    <img src="../../assets/delete-button.png" @click="click">
+    <img src="../../assets/delete-button.png"
+         @click="click"
+    >
   </div>
 </template>
 

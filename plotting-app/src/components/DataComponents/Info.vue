@@ -1,38 +1,44 @@
 <template>
-  <div class="dropdown">
-    <img src="../../assets/info-icon.png">
-    <div class="dropdown-content"
-         :style=" { width: width + 'px' } ">
-      <span v-for="blurb in info" :key="blurb"> {{ blurb }} <br> </span>
+  <div class="dropdown"
+       :style="{ width: width + 'px', height: + 'px' }"
+  >
+    <img src="../../assets/info-icon.png"
+         :style="{ width: width + 'px', height: + 'px' }"
+    >
+    <div class="dropdown-content">
+      <p v-for="blurb in info" :key="blurb"> {{ blurb }} </p>
     </div>
   </div>
 </template>
 
 <script>
   export default {
-    props: ['info', 'width'],
+    props: ['info', 'width', 'height'],
   }
 </script>
 
 <style scoped>
   img {
-    width: 20px;
-    height: 20px;
     cursor: help;
   }
 
+  p {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    width: max-content;
+  }
+
   .dropdown {
-    width: 20px;
-    height: 20px;
     display: inline-block;
+    border: none;
   }
 
   .dropdown-content {
     display: none;
-    font-weight: normal;
-    font-family: Sans-serif;
-    font-size: 12px;
-    color: black;
     padding: 6px;
     margin: 0;
     position: absolute;

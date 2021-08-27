@@ -21,7 +21,7 @@
   p {
     display: inline-block;
     width: 94px;
-    height: 16px;
+    height: 18px;
     margin: 1px 0;
     text-overflow: ellipsis;
     overflow: hidden;

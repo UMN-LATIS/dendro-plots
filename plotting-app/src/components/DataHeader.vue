@@ -1,8 +1,10 @@
 <template>
   <div v-if="store.cache.loadSequence.length">
     <div id="info">
-      <Info :info="[]"
-            :width="20" />
+      <Info :info="info"
+            :width="20"
+            :height="20"
+      />
     </div>
 
     <p> Data </p>
@@ -35,17 +37,7 @@
     components: { Info, Sort, UndoRedoButtons },
     data() {
       return {
-        infoID: ['first', 'second', 'third', 'fourth', 'fifth'],
-        infoPNG: [require('../assets/width-toggle-icon.png'),
-                  require('../assets/width-spline-icon.png'),
-                  require('../assets/index-toggle-icon.png'),
-                  require('../assets/index-spline-icon.png'),
-                  require('../assets/color-icon.png')],
-        infoText: ['Show raw data',
-                   'Spline for detrending',
-                   'Show index of data',
-                   'Spline for index',
-                   'Change line color'],
+        info: ['Click to show/hide options.']
       }
     },
   }

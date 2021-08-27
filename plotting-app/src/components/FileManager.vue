@@ -1,7 +1,9 @@
 <template>
   <div id="info">
-    <Info :info="fileInfo"
-          :width="370" />
+    <Info :info="info"
+          :width="20"
+          :height="20"
+    />
   </div>
 
   <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
@@ -18,7 +20,7 @@
     components: { Info },
     data() {
       return {
-        fileInfo: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
+        info: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
                    'Accepts multiple files with multiple series in upload sequence.',
                    'Click to download example datasets with correctly formatted headers.']
       }
