@@ -27,6 +27,7 @@
     cursor: pointer;
     width: 20px;
     height: 20px;
-    margin: 0 4px;
+    margin: 0;
+    margin-right: 5px;
   }
 </style>

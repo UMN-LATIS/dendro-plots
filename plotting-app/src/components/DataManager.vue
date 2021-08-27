@@ -70,4 +70,8 @@
     background-color: #bdbdbd !important;
   }
 
+  .remove {
+    float: right;
+  }
+
 </style>

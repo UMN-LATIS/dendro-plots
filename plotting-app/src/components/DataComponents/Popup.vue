@@ -46,7 +46,7 @@
   #wrapper {
     position: absolute;
     margin-left: 118px;
-    margin-top: -24px;
+    margin-top: -25px;
     height: 20px;
     background: #f6f6f6;
     border-top-right-radius: 2px;

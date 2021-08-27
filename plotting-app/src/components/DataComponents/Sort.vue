@@ -15,7 +15,7 @@
     data() {
       return {
         sortType: 0,
-        sortText: ['Sort A -> Z', 'Sort Z -> A', 'Sort by load sequence'],
+        sortText: ['Sorting by load sequence', 'Sorting A -> Z', 'Sorting Z -> A'],
       }
     },
     methods: {
@@ -72,7 +72,7 @@
   }
 
   .dropdown, .show:hover {
-    cursor: help;
+    cursor: pointer;
   }
 
   .dropdown:hover .dropdown-content {

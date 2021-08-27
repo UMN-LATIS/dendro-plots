@@ -22,7 +22,8 @@
     display: inline-block;
     width: 94px;
     height: 18px;
-    margin: 1px 0;
+    margin: 0;
+    margin-top: 3px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
