@@ -1,9 +1,9 @@
 <template>
   <img src="../../assets/undo-button.png" class="hide"
-       :class="{ show: store.states.pastStates.length }"
+       :class="{ show: store.states.past.length }"
        @click="store.methods.undo()">
   <img src="../../assets/redo-button.png" class="hide"
-       :class="{ show: store.states.futureStates.length }"
+       :class="{ show: store.states.future.length }"
        @click="store.methods.redo()">
 </template>
 

@@ -17,9 +17,9 @@ import { simpleSmoothingSpline } from 'simple-smoothing-spline'
 */
 
 const states = reactive({
-  pastStates: [],
-  currentStates: [],
-  futureStates: [],
+  past: [],
+  current: [],
+  future: [],
 })
 
 /*
@@ -58,6 +58,7 @@ const cache = reactive({
   splineCache: [],
   dataCache: [],
   indexCache: [],
+  modalCache: [],
   loadSequence: [],
 })
 
@@ -121,9 +122,9 @@ const methods = {
     this.saveCurrent()
 
     for (const set of data) {
-      let existingSet = states.currentStates.find(obj => obj.name == set.name)
+      let existingSet = states.current.find(obj => obj.name == set.name)
       if (existingSet) {
-        let n = states.currentStates.filter(obj => obj.name.split(' (')[0] == set.name).length
+        let n = states.current.filter(obj => obj.name.split(' (')[0] == set.name).length
         set.name = set.name + ' (' + n + ')'
       }
 
@@ -148,14 +149,22 @@ const methods = {
       newState.indexSplineFreq = 0
       newState.indexPlotLocation = 1
 
-      states.currentStates.push(newState)
+      states.current.push(newState)
 
-      // store known data
+      // cache data
       let newData = new Object()
-      newData.id
+      newData.id = id
       newData.x = set.x
       newData.y = set.y
-      cache.dataCache
+      cache.dataCache.push(newData)
+
+      // default active cache values
+      let newModal = new Object()
+      newModal.id = id
+      newModal.active = false
+      newModal.top = 0
+      newModal.outOfBounds = false
+      cache.modalCache.push(newModal)
 
       // establish default load sequence
       cache.loadSequence.push(newState.id)
@@ -165,39 +174,43 @@ const methods = {
     states[property].push(data)
   },
   undo: function() {
-    let recentState = states.pastStates[states.pastStates.length - 1]
-    states.pastStates.pop()
-    this.addTo(states.currentStates, 'futureStates')
-    states.currentStates = recentState
+    let recentState = states.past[states.past.length - 1]
+    states.past.pop()
+    this.addTo(states.current, 'future')
+    states.current = recentState
   },
   redo: function() {
-    let recentState = states.futureStates[states.futureStates.length - 1]
-    states.futureStates.pop()
-    this.addTo(states.currentStates, 'pastStates')
-    states.currentStates = recentState
+    let recentState = states.future[states.future.length - 1]
+    states.future.pop()
+    this.addTo(states.current, 'past')
+    states.current = recentState
   },
   saveCurrent: function() {
-    states.futureStates = []
-    let currentCopy = JSON.parse(JSON.stringify(states.currentStates))
-    states.pastStates.push(currentCopy)
+    states.future = []
+    let currentCopy = JSON.parse(JSON.stringify(states.current))
+    states.past.push(currentCopy)
   },
   newCurrent: function(data, id, property) {
     this.saveCurrent()
     if (id && property) {
-      let currentSet = states.currentStates.find(obj => obj.id == id)
+      let currentSet = states.current.find(obj => obj.id == id)
       currentSet[property] = data
     } else {
-      states.currentStates = data
+      states.current = data
     }
   },
   modifyCurrent: function(data, id, property) {
-    let currentSet = states.currentStates.find(obj => obj.id == id)
+    let currentSet = states.current.find(obj => obj.id == id)
     currentSet[property] = data
   },
   removeCurrent: function(id) {
     this.saveCurrent()
-    let setIndex = states.currentStates.findIndex(obj => obj.id == id)
-    states.currentStates.splice(setIndex, 1)
+    let setIndex = states.current.findIndex(obj => obj.id == id)
+    states.current.splice(setIndex, 1)
+  },
+  updateCache: function(name, id, prop, data) {
+    let obj = cache[name].find(o => o.id == id)
+    obj[prop] = data
   }
 }
 

@@ -1,8 +1,10 @@
 <template>
-  <div class="individual-wrapper"
-       v-for="(obj, index) in store.states.currentStates"
+  <div class="data-entry-wrapper"
+       v-for="obj in pairs"
        :key="obj.id"
-       @click="click($event, index)"
+       :class="{ active: obj.active }"
+       :id="obj.id"
+       @click="click($event, obj.id, obj.active)"
   >
 
     <Name :name="obj.name"
@@ -11,58 +13,83 @@
 
     <Remove class="remove"
             :id="obj.id"
-            @click="remove(index)"
     />
 
-    <Popup class="popup"
+    <Modal class="modal"
            :id="obj.id"
-           v-if="shownIndices.includes(index)" />
+           :top="obj.top"
+           v-if="obj.active && !obj.outOfBounds" />
   </div>
 </template>
 
 <script>
   import Name from './DataComponents/Name.vue'
   import Remove from './DataComponents/Remove.vue'
-  import Popup from './DataComponents/Popup.vue'
+  import Modal from './DataComponents/Modal.vue'
 
   export default {
     inject: ['store'],
-    components: { Name, Remove, Popup },
-    data() {
-      return {
-        shownIndices: [],
+    components: { Name, Remove, Modal },
+    computed: {
+      pairs: function() {
+        // combine state & cache info so it can be used as props
+        return this.store.states.current.map(stateObj => {
+          let modalObj = this.store.cache.modalCache.find(o => o.id == stateObj.id)
+          let pairObj = new Object()
+          pairObj.id = stateObj.id
+          pairObj.name = stateObj.name
+          pairObj.file = stateObj.file
+          pairObj.active = modalObj.active
+          pairObj.top = modalObj.top
+          pairObj.outOfBounds = modalObj.outOfBounds
+          return pairObj
+        })
       }
     },
     methods: {
-      click: function(e, i) {
-        if (e.target.closest('.remove') || e.target.closest('.popup')) {
+      click: function(e, id, active) {
+        //console.log(e.target.getBoundingClientRect())
+
+        if (e.target.closest('.remove') || e.target.closest('.modal')) {
           return
         }
+        this.store.methods.updateCache('modalCache', id, 'active', !active)
+      },
+      onScroll: function() {
+        let dataEntries = document.getElementsByClassName('data-entry-wrapper')
+        for (const e of dataEntries) {
+          let modalObj = this.store.cache.modalCache.find(o => o.id == e.id)
+          if (e.getBoundingClientRect().top > 54) {
+            modalObj.top = e.getBoundingClientRect().top
+            modalObj.outOfBounds = false
+          } else {
+            modalObj.outOfBounds = true
+          }
+        }
+      },
+    },
+    updated() {
+      this.onScroll()
 
-        let wrapper = document.getElementsByClassName('individual-wrapper')[i]
-        wrapper.classList.contains('active') ? (wrapper.classList.remove('active'),
-                                                this.shownIndices = this.shownIndices.filter(n => n != i))
-                                             : (wrapper.classList.add('active'),
-                                                this.shownIndices.push(i))
-      },
-      remove: function(i) {
-        this.shownIndices = this.shownIndices.filter(n => n != i)
-        console.log(this.shownIndices)
-      },
-    }
+      document.getElementById('data-management').addEventListener('scroll', this.onScroll)
+    },
+    beforeDestroy() {
+      document.getElementById('data-management').removeEventListener('scroll', this.onScroll)
+    },
   }
 
 </script>
 
 <style scoped>
-  .individual-wrapper {
+  .data-entry-wrapper {
     width: 100%;
     height: 20px;
+    padding: 0;
     padding-left: 5px;
     margin: 0;
   }
 
-  .individual-wrapper:hover {
+  .data-entry-wrapper:hover {
     background-color: #d9d9d9;
   }
 

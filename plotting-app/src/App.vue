@@ -5,7 +5,7 @@
         <FileManager />
       </div>
       <DataHeader id="data-header"/>
-      <div id="time-series-management">
+      <div id="data-management">
         <DataManager />
       </div>
     </div>
@@ -32,10 +32,6 @@
     name: 'App',
     provide: { store },
     components: { FileManager, DataManager, DataHeader },
-    data() {
-      return {
-      }
-    },
   }
 </script>
 
@@ -86,7 +82,7 @@
     margin-bottom: 5px;
   }
 
-  #time-series-management {
+  #data-management {
     width: inherit;
     height: 100%;
     overflow-y: visible;

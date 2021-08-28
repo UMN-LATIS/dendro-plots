@@ -38,7 +38,7 @@
             2 = Z -> A
             3 = load order
         */
-        let currentCopy = JSON.parse(JSON.stringify(this.store.states.currentStates))
+        let currentCopy = JSON.parse(JSON.stringify(this.store.states.current))
         if (this.sortType == 0) {
           this.alphaNumeric(currentCopy, -1, 1)
         } else if (this.sortType == 1) {

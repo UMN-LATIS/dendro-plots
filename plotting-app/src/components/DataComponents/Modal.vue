@@ -1,15 +1,19 @@
 <template>
-  <div id="wrapper">
+  <div class="modal-wrapper"
+       :style=" { top: top + 'px' } "
+  >
+
     <Info :info="info"
           :width="20"
           :height="20"
     />
 
     <div class="rd-options">
-      <Toggle :id="id" />
-      <Toggle :id="id" />
-      <Toggle :id="id" />
+      <Toggle :id="id"
+              :toggleProp="'dataPointsActive'"
+      />
     </div>
+
   </div>
 </template>
 
@@ -18,39 +22,30 @@
   import Toggle from './Toggle.vue'
 
   export default {
-    props: ['id'],
+    inject: ['store'],
+    props: ['id', 'top'],
     components: { Info, Toggle },
     data() {
       return {
-        info: ['options info']
+        info: ['options info'],
       }
     },
-    methods: {
-      click: function() {
-        console.log('clicked')
-      }
-    }
   }
 </script>
 
 <style scoped>
-  p {
-    color: red;
-    margin: 0;
-    padding: 0;
-  }
-
   .rd-options {
+    margin-left: 5px;
   }
 
-  #wrapper {
-    position: absolute;
-    margin-left: 118px;
-    margin-top: -25px;
+  .modal-wrapper {
+    position: fixed;
+    left: 120px;
+    z-index: 999999;
     height: 20px;
     background: #f6f6f6;
     border-top-right-radius: 2px;
     border-bottom-right-radius: 2px;
-    width:auto;
+    width: auto;
   }
 </style>

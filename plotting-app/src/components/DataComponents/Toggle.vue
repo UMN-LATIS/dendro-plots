@@ -1,14 +1,19 @@
 <template>
-  <input type="checkbox" :checked="toggleChecked" :disabled="toggleDisable" @change="toggle">
+  <input type="checkbox" :checked="checked" @change="toggle">
 </template>
 
 <script>
   export default {
     inject: ['store'],
-    props: ['id', 'activeProperty', 'toggleChecked', 'toggleDisable'],
+    props: ['id', 'toggleProp'],
+    computed: {
+      checked: function() {
+        return this.store.states.current.find(o => o.id == this.id)[this.toggleProp]
+      },
+    },
     methods: {
       toggle: function(e) {
-        this.store.methods.newCurrent(e.target.checked, this.id, this.activeProperty)
+        this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
       },
     }
   }
@@ -22,7 +27,7 @@
     padding: 0;
     border: 2px solid #797979;
     border-radius: 5px;
-    margin: 2px 6px;
+    margin: 2px;
     box-sizing: border-box;
     cursor: pointer;
     display: inline-block;
