@@ -3,17 +3,6 @@ import { simpleSmoothingSpline } from 'simple-smoothing-spline'
 
 /*
   States stored as objects. When current states changes, a Plotly trace is created & rendered.
-  State attributes:
-    * name: string
-    * file: string
-    * color: string
-    * colorState: boolean
-    * dataPointsActive: boolean
-    * dataSplineActive: boolean
-    * dataSplineFreq: number
-    * indexPointsActive: boolean
-    * indexSplineActive: boolean
-    * indexSplineFreq: number
 */
 
 const states = reactive({
@@ -24,7 +13,7 @@ const states = reactive({
 
 /*
   caches are an array of objects which do not change when undo/redo triggered
-    * splineCache: [
+    * splines: [
                     {
                       id: 12345,
                       20: {
@@ -36,7 +25,7 @@ const states = reactive({
                     },
                     ...
                   ]
-    * dataCache: [
+    * data: [
                   {
                     id: 12345,
                     x: [...],
@@ -44,7 +33,7 @@ const states = reactive({
                   },
                   ...
                 ]
-    * indexCache: [
+    * indices: [
                   {
                     id: 12345,
                     x: [...],
@@ -55,23 +44,24 @@ const states = reactive({
 */
 
 const cache = reactive({
-  splineCache: [],
-  dataCache: [],
-  indexCache: [],
-  modalCache: [],
+  splines: [],
+  data: [],
+  indices: [],
+  modals: [],
+  plots: [{ value: 1, name: 'Plot 1' }, { value: 2, name: 'Plot 2' }],
   loadSequence: [],
 })
 
 const methods = {
   addSpline: function(id, freq, data) {
-    let splineObj = cache.splineCache.find(obj => obj.id == id)
+    let splineObj = cache.splines.find(obj => obj.id == id)
     if (splineObj) {
       splineObj[freq] = data
     } else {
       splineObj = new Object()
       splineObj.id = id
       splineObj[freq] = data
-      cache.splineCache.push(splineObj)
+      cache.splines.push(splineObj)
     }
   },
   getSpline: function(id, freq) {
@@ -82,7 +72,7 @@ const methods = {
     return spline
   },
   checkSplines: function(id, freq) {
-    let splineObj = cache.splineCache.find(obj => obj.id == id)
+    let splineObj = cache.splines.find(obj => obj.id == id)
     if (splineObj) {
       let splinePts = splineObj[freq]
       if (splinePts) {
@@ -93,7 +83,7 @@ const methods = {
   },
   newSpline: function(id, freq) {
     // convert data to spline format
-    let dataObj = cached.dataCache.find(obj => obj.id == id)
+    let dataObj = cached.data.find(obj => obj.id == id)
     let data = dataObj.x.map((e, i) => {
                   let pair = new Object()
                   pair.x = e
@@ -136,17 +126,15 @@ const methods = {
       newState.id = id
       newState.name = set.name
       newState.file = set.fileName
-      newState.color = '#000000'
+      newState.color = '#FF0000'
       newState.colorState = true
 
       newState.dataPointsActive = false
-      newState.dataSplineActive = false
-      newState.dataSplineFreq = 0
+      newState.dataSplineFreq = false
       newState.dataPlotLocation = 1
 
-      newState.indexPointsActive = false
-      newState.indexSplineActive = false
-      newState.indexSplineFreq = 0
+      newState.indexPointsFreq = false
+      newState.indexSplineFreq = false
       newState.indexPlotLocation = 1
 
       states.current.push(newState)
@@ -156,7 +144,7 @@ const methods = {
       newData.id = id
       newData.x = set.x
       newData.y = set.y
-      cache.dataCache.push(newData)
+      cache.data.push(newData)
 
       // default active cache values
       let newModal = new Object()
@@ -164,7 +152,7 @@ const methods = {
       newModal.active = false
       newModal.top = 0
       newModal.outOfBounds = false
-      cache.modalCache.push(newModal)
+      cache.modals.push(newModal)
 
       // establish default load sequence
       cache.loadSequence.push(newState.id)

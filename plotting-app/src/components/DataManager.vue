@@ -34,7 +34,7 @@
       pairs: function() {
         // combine state & cache info so it can be used as props
         return this.store.states.current.map(stateObj => {
-          let modalObj = this.store.cache.modalCache.find(o => o.id == stateObj.id)
+          let modalObj = this.store.cache.modals.find(o => o.id == stateObj.id)
           let pairObj = new Object()
           pairObj.id = stateObj.id
           pairObj.name = stateObj.name
@@ -48,17 +48,15 @@
     },
     methods: {
       click: function(e, id, active) {
-        //console.log(e.target.getBoundingClientRect())
-
         if (e.target.closest('.remove') || e.target.closest('.modal')) {
           return
         }
-        this.store.methods.updateCache('modalCache', id, 'active', !active)
+        this.store.methods.updateCache('modals', id, 'active', !active)
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
         for (const e of dataEntries) {
-          let modalObj = this.store.cache.modalCache.find(o => o.id == e.id)
+          let modalObj = this.store.cache.modals.find(o => o.id == e.id)
           if (e.getBoundingClientRect().top > 54) {
             modalObj.top = e.getBoundingClientRect().top
             modalObj.outOfBounds = false

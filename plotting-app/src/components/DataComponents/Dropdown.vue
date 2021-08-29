@@ -1,17 +1,13 @@
 <template>
-  <div class="dropdown">
-    <input type="checkbox" disabled :checked="activeBool" @change="change">
-    <div class="dropdown-content">
-      <DropdownOptions v-for="freq in frequencies" :key="freq"
-                       :id="id"
-                       :freq="freq"
-                       :storedFreq="storedFreq"
-                       :freqProperty="freqProperty"
-                       :activeBool="activeBool"
-                       :activeProperty="activeProperty"
-      />
-    </div>
-  </div>
+  <select @change="onChange">
+    <DropdownOptions v-for="obj in options"
+                     :key="obj.value"
+                     :id="id"
+                     :name="obj.name"
+                     :value="obj.value"
+                     :dropdownProp="dropdownProp"
+    />
+  </select>
 </template>
 
 <script>
@@ -19,35 +15,29 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'storedFreq', 'freqProperty', 'activeBool', 'activeProperty'],
+    props: ['id', 'options', 'dropdownProp'],
     components: { DropdownOptions },
-    data() {
-      return {
-        frequencies: [20, 30, 50, 100, 200],
+    methods: {
+      onChange: function(e) {
+        this.store.methods.newCurrent(e.target.value, this.id, this.dropdownProp)
       }
-    },
+    }
   }
 </script>
 
 <style scoped>
-  .dropdown {
-    cursor: pointer;
-    position: relative;
-    display: inline-block;
-    margin: 0;
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: block;
-  }
-
-  .dropdown-content {
-    display: none;
-    position: absolute;
-    margin-left: 10px;
-    background-color: #f6f6f6;
+  select {
+    font-family: Sans-serif;
+    font-weight: normal;
+    font-size: 12px;
+    color: black;
+    height: 16px;
     border: 1px solid black;
-    border-radius: 0;
-    z-index: 999999;
+    border-radius: 2px;
+    position: absolute;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
   }
+
 </style>

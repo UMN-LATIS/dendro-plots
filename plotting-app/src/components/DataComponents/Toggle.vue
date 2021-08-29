@@ -1,5 +1,5 @@
 <template>
-  <input type="checkbox" :checked="checked" @change="toggle">
+  <input type="checkbox" :checked="isChecked" @change="onToggle">
 </template>
 
 <script>
@@ -7,12 +7,12 @@
     inject: ['store'],
     props: ['id', 'toggleProp'],
     computed: {
-      checked: function() {
+      isChecked: function() {
         return this.store.states.current.find(o => o.id == this.id)[this.toggleProp]
       },
     },
     methods: {
-      toggle: function(e) {
+      onToggle: function(e) {
         this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
       },
     }
@@ -25,7 +25,7 @@
     width: 16px;
     height: 16px;
     padding: 0;
-    border: 2px solid #797979;
+    border: 1px solid black;
     border-radius: 5px;
     margin: 2px;
     box-sizing: border-box;
@@ -34,6 +34,6 @@
   }
 
   input[type="checkbox"]:checked {
-    background: #bdbdbd;
+    background: #797979;
   }
 </style>

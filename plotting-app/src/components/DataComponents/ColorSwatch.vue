@@ -1,13 +1,18 @@
 <template>
-  <input type="color" class="color-input" :value="color" @change="change">
+  <input type="color" class="color-input" :value="colorValue" @change="onChange">
 </template>
 
 <script>
   export default {
     inject: ['store'],
-    props: ['id', 'color'],
+    props: ['id'],
+    computed: {
+      colorValue: function() {
+        return this.store.states.current.find(o => o.id == this.id).color
+      }
+    },
     methods: {
-      change: function(e) {
+      onChange: function(e) {
         this.store.methods.newCurrent(e.target.value, this.id, 'color')
       }
     },
@@ -17,13 +22,15 @@
 <style scoped>
   input[type="color"] {
     -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
+    width: 16px;
+    height: 16px;
     padding: 0;
     border: none;
-    margin: 0 6px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     box-sizing: border-box;
     cursor: pointer;
+    position: fixed;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {
@@ -31,14 +38,15 @@
   }
 
   input[type="color"]::-webkit-color-swatch {
-    border: 2px solid #797979;
+    border: 1px solid black;
+    border-radius: 5px;
     padding: 0;
     margin: 0;
-    border-radius: 5px;
   }
 
   input[type="color"]::-moz-color-swatch {
-    border: 2px solid #797979;
+    border: 1px solid black;
+    border-radius: 5px;
     padding: 0;
     margin: 0;
     border-radius: 5px;
