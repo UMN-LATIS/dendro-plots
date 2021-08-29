@@ -2,7 +2,7 @@
   <div class="dropdown">
     <img src="../../assets/sort-button.png"
          v-if="store.cache.loadSequence.length > 1"
-         @click="sort">
+         @click="onClick">
     <div class="dropdown-content">
       <span> {{ sortText[sortType] }} </span>
     </div>
@@ -31,7 +31,7 @@
                 return 0;
               })
       },
-      sort: function() {
+      onClick: function() {
         /*
           Sorting type code:
             1 = A -> Z

@@ -1,7 +1,7 @@
 <template>
   <div>
     <img src="../../assets/delete-button.png"
-         @click="click"
+         @click="onClick"
     >
   </div>
 </template>
@@ -11,7 +11,7 @@
     inject: ['store'],
     props: ['id'],
     methods: {
-      click: function() {
+      onClick: function() {
         this.store.methods.removeCurrent(this.id)
       }
     }
