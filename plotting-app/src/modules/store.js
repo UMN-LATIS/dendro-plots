@@ -48,7 +48,9 @@ const cache = reactive({
   data: [],
   indices: [],
   modals: [],
-  plots: [{ value: 1, name: 'Plot 1' }, { value: 2, name: 'Plot 2' }],
+  plots: [{ value: 1, name: 'Plot 1' },
+          { value: 2, name: 'Plot 2' }],
+  activePlotNUM: 0,
   loadSequence: [],
 })
 

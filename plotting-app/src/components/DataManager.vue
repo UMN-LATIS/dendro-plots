@@ -58,7 +58,7 @@
         for (const e of dataEntries) {
           let modalObj = this.store.cache.modals.find(o => o.id == e.id)
           if (e.getBoundingClientRect().top > 54) {
-            modalObj.top = e.getBoundingClientRect().top
+            modalObj.top = e.getBoundingClientRect().top - 1
             modalObj.outOfBounds = false
           } else {
             modalObj.outOfBounds = true

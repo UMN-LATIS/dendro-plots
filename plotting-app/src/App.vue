@@ -10,28 +10,24 @@
       </div>
     </div>
 
-    <div id="plot-wrapper">
-      <div id="plotly-width">
-        <h1> Plotly Width Plot</h1>
-      </div>
-      <div id="plotly-index">
-        <h1> Plotly Index Plot</h1>
-      </div>
+    <div id="plot-management">
+      <PlotManager />
     </div>
   </div>
 </template>
 
 <script>
   import FileManager from './components/FileManager.vue'
-  import DataManager from './components/DataManager.vue'
   import DataHeader from './components/DataHeader.vue'
+  import DataManager from './components/DataManager.vue'
+  import PlotManager from './components/PlotManager.vue'
 
   import store from './modules/store.js'
 
   export default {
     name: 'App',
     provide: { store },
-    components: { FileManager, DataManager, DataHeader },
+    components: { FileManager, DataHeader, DataManager, PlotManager },
   }
 </script>
 
@@ -49,7 +45,7 @@
   }
 
   h1 {
-    color: white;
+    color: black;
   }
 
   h2 {
@@ -89,22 +85,10 @@
     overflow-x: hidden;
   }
 
-  #plot-wrapper {
+  #plot-management {
     width: calc(100% - 140px);
     height: 100%;
     display: flex;
     flex-direction: column;
-  }
-
-  #plotly-width {
-    background: #bb00ff;
-    width: 100%;
-    height: 50%;
-  }
-
-  #plotly-index {
-    background: #02d65d;
-    width: 100%;
-    height: 50%;
   }
 </style>

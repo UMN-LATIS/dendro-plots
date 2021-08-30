@@ -16,14 +16,6 @@
     <div id="undo-redo-buttons">
       <UndoRedoButtons />
     </div>
-    <!--
-    <div class="dropdown" v-if="store.cache.loadSequence.length" v-for="(text, index) in infoText" :key="index">
-      <img class="info-icons" :class="infoID[index]" :src="infoPNG[index]">
-      <div class="dropdown-content">
-        <span> {{ text }} </span>
-      </div>
-    </div>
-    -->
   </div>
 </template>
 
