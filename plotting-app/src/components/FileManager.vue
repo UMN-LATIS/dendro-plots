@@ -11,7 +11,7 @@
 </template>
 
 <script>
-  import Info from './DataComponents/Info.vue'
+  import Info from './SubComponents/Info.vue'
 
   import formatFileData from '../modules/formatFileData.js'
 

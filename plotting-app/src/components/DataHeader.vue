@@ -28,9 +28,9 @@
 </template>
 
 <script>
-  import Info from './DataComponents/Info.vue'
-  import Sort from './DataComponents/Sort.vue'
-  import UndoRedoButtons from './DataComponents/UndoRedoButtons.vue'
+  import Info from './SubComponents/Info.vue'
+  import Sort from './SubComponents/Sort.vue'
+  import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
 
   export default {
     inject: ['store'],

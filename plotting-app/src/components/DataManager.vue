@@ -23,9 +23,9 @@
 </template>
 
 <script>
-  import Name from './DataComponents/Name.vue'
-  import Remove from './DataComponents/Remove.vue'
-  import Modal from './DataComponents/Modal.vue'
+  import Name from './SubComponents/Name.vue'
+  import Remove from './SubComponents/Remove.vue'
+  import Modal from './SubComponents/Modal.vue'
 
   export default {
     inject: ['store'],
