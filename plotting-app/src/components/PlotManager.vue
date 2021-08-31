@@ -19,19 +19,10 @@
   export default {
     inject: ['store'],
     components: { Plot },
-    data() {
-      return {
-        count: 0,
-      }
-    },
     computed: {
       activePlots: function() {
-        for (const b of this.store.states.current) {
-          console.log(b.indexPointsFreq)
-        }
-
         return this.store.cache.plots.filter(obj => {
-          return this.store.states.current.some(o => (o.dataPlotLocation == obj.value && (o.dataPointsActive || o.dataSplineFreq))
+          return this.store.states.current.some(o => (o.rawPlotLocation == obj.value && (o.rawPointsActive || o.rawSplineFreq))
                                                   || (o.indexPlotLocation == obj.value && (o.indexPointsFreq || o.indexSplineFreq)))
         })
       }

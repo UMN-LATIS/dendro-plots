@@ -7,6 +7,7 @@
 
 <script>
   import Plotly from 'plotly.js'
+  import formatTraces from '../../modules/traces.js'
 
   export default {
     inject: ['store'],
@@ -17,19 +18,7 @@
         return String(Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)
       },
       traces: function() {
-        let arr = []
-
-        // raw data toggle
-        for (const obj of this.store.states.current) {
-          if (obj.dataPointsActive && this.value == obj.dataPlotLocation) {
-            let data = this.store.cache.data.find(o => o.id == obj.id)
-            let trace = this.createTrace(obj.name, data.x, data.y, obj.color, "lines+markers")
-
-            arr.push(trace)
-          }
-        }
-
-        return arr
+        return formatTraces(this.value)
       },
       layout: function() {
         let obj = new Object()

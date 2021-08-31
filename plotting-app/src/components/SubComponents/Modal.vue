@@ -10,16 +10,16 @@
 
     <!-- data options -->
     <Toggle :id="id"
-            :toggleProp="'dataPointsActive'"
+            :toggleProp="'rawPointsActive'"
     />
     <Dropdown :id="id"
               :options="rdSplineOptions"
-              :dropdownProp="'dataSplineFreq'"
+              :dropdownProp="'rawSplineFreq'"
     />
     <div style="width: 55px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="store.cache.plots"
-              :dropdownProp="'dataPlotLocation'"
+              :dropdownProp="'rawPlotLocation'"
      />
 
     <!-- index options -->
