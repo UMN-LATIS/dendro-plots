@@ -1,7 +1,6 @@
 <template>
   <div class="plotly-div"
        :ref="divID"
-       :style="{ height: height + 'px' }"
   >
   </div>
 </template>
@@ -11,12 +10,9 @@
 
   export default {
     inject: ['store'],
-    props: ['value', 'name', 'num'],
+    props: ['value', 'name', 'count'],
     components: { },
     computed: {
-      height: function() {
-        return window.innerHeight / this.num
-      },
       divID: function() {
         return String(Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)
       },
@@ -80,6 +76,14 @@
         trace.type = 'scatter' // need scatter gl
         return trace
       },
+      resizePlot: function() {
+        if (!this.$refs[this.divID]) {
+          return
+        }
+        let w = document.getElementById('plot-management').offsetWidth;
+        let h = window.innerHeight / this.count
+        Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
+      }
     },
     watch: {
       'store.states.current': {
@@ -87,10 +91,19 @@
           Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
         },
         deep: true
-      }
+      },
+      count: {
+        handler: function() {
+          this.resizePlot()
+        },
+      },
     },
     mounted() {
       Plotly.newPlot(this.$refs[this.divID], this.traces, this.layout, this.config)
+      this.resizePlot()
+      window.addEventListener('resize', () => {
+        this.resizePlot()
+      })
     },
   }
 </script>

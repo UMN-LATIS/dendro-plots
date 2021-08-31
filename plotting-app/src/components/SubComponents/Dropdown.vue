@@ -19,7 +19,12 @@
     components: { DropdownOptions },
     methods: {
       onChange: function(e) {
-        this.store.methods.newCurrent(e.target.value, this.id, this.dropdownProp)
+        let val = e.target.value
+        let boolCheck = (val === 'false')
+        if (boolCheck) {
+          val = false
+        }
+        this.store.methods.newCurrent(val, this.id, this.dropdownProp)
       }
     }
   }
