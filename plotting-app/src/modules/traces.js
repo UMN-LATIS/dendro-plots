@@ -2,16 +2,19 @@ import store from './store.js'
 import createSpline from './spline.js'
 import createIndex from './index.js'
 
-function simpleTrace(obj, propA, propB) {
+function simpleTrace(obj, colorBool, markerBool, propA, propB) {
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
+  let color = (colorBool) ? obj.color : '#797979'
+  let mode = (markerBool) ? 'lines+markers' : 'lines'
+  let width = (markerBool) ? 1 : 3
 
   let trace = new Object()
   trace.name = obj.name
   trace.x = x
   trace.y = y
-  trace.line = { color: obj.color }
-  trace.mode = 'lines+markers'
+  trace.line = { color: color, width: width }
+  trace.mode = mode
   trace.type = 'scatter' // need scatter gl
 
   return trace
@@ -48,7 +51,7 @@ function splineTrace(obj, prop, freq, splineFORindex) {
   obj = JSON.parse(JSON.stringify(obj))
   obj.name = obj.name + '_' + freq +'yr_spline'
 
-  let trace = simpleTrace(obj, 'spline', prop)
+  let trace = simpleTrace(obj, !obj.colorState, false, 'spline', prop)
 
   return trace
 }
@@ -70,7 +73,7 @@ function indexTrace(obj, prop, freq) {
   obj = JSON.parse(JSON.stringify(obj))
   obj.name = obj.name + '_' + freq +'yr_index'
 
-  let trace = simpleTrace(obj, prop)
+  let trace = simpleTrace(obj, obj.colorState, true, prop)
 
   return trace
 }
@@ -79,10 +82,29 @@ function indexTrace(obj, prop, freq) {
 const formatTraces = function(locVal) {
   let arr = new Array()
 
-  // filter out inactive states
-  let activeStates = store.states.current.filter(o => (
-    o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq
-  ))
+  // create array with data only intended for specified plot
+  let storeCopy = JSON.parse(JSON.stringify(store.states.current))
+  let plotStates = storeCopy.map(o => {
+    let state = new Object()
+    state.id = o.id
+    state.name = o.name
+    state.file = o.file
+    state.color = o.color
+    state.colorState = o.colorState
+
+    if (o.rawPlotLocation == locVal) {
+      state.rawPointsActive = o.rawPointsActive
+      state.rawSplineFreq = o.rawSplineFreq
+    } else if (o.indexPlotLocation == locVal) {
+      state.indexPointsFreq = o.indexPointsFreq
+      state.indexSplineFreq = o.indexSplineFreq
+    }
+
+    return state
+  })
+
+  // filter out inactive data sets
+  let activeStates = plotStates.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
   // add required raw data, splines, & index to states
   let activeData = activeStates.map(obj => {
@@ -115,7 +137,7 @@ const formatTraces = function(locVal) {
   // create traces based on needed format
   activeData.forEach(obj => {
     if (obj.rawPointsActive) {
-      arr.push(simpleTrace(obj, 'raw'))
+      arr.push(simpleTrace(obj, obj.colorState, true, 'raw'))
     }
     if (obj.rawSplineFreq) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
@@ -128,7 +150,6 @@ const formatTraces = function(locVal) {
     }
   })
 
-  console.log(arr)
   return arr
 }
 

@@ -35,6 +35,11 @@
             text: 'Legend'
           }
         }
+        obj.xaxis = {
+          title: {
+            text: 'Year'
+          }
+        }
         obj.margin = {
           t: 60,
           b: 60,
@@ -55,21 +60,11 @@
       }
     },
     methods: {
-      createTrace: function(name, x, y, color, mode) {
-        let trace = new Object()
-        trace.name = name
-        trace.x = x
-        trace.y = y
-        trace.line = { color: color}
-        trace.mode = mode
-        trace.type = 'scatter' // need scatter gl
-        return trace
-      },
       resizePlot: function() {
         if (!this.$refs[this.divID]) {
           return
         }
-        let w = document.getElementById('plot-management').offsetWidth;
+        let w = document.getElementsByClassName('plotly-div')[this.value - 1].offsetWidth;
         let h = window.innerHeight / this.count
         Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       }
@@ -77,6 +72,7 @@
     watch: {
       'store.states.current': {
         handler: function() {
+          console.log('change to current state')
           Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
         },
         deep: true
