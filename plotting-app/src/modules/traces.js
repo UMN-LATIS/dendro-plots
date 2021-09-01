@@ -84,7 +84,11 @@ const formatTraces = function(locVal) {
 
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
-  let plotStates = storeCopy.map(o => {
+
+  // filter out inactive data sets
+  let activeStates = storeCopy.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+
+  let activePlots = activeStates.map(o => {
     let state = new Object()
     state.id = o.id
     state.name = o.name
@@ -95,7 +99,8 @@ const formatTraces = function(locVal) {
     if (o.rawPlotLocation == locVal) {
       state.rawPointsActive = o.rawPointsActive
       state.rawSplineFreq = o.rawSplineFreq
-    } else if (o.indexPlotLocation == locVal) {
+    }
+    if (o.indexPlotLocation == locVal) {
       state.indexPointsFreq = o.indexPointsFreq
       state.indexSplineFreq = o.indexSplineFreq
     }
@@ -103,11 +108,8 @@ const formatTraces = function(locVal) {
     return state
   })
 
-  // filter out inactive data sets
-  let activeStates = plotStates.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
-
   // add required raw data, splines, & index to states
-  let activeData = activeStates.map(obj => {
+  let activeData = activePlots.map(obj => {
     // add raw data to all in-case spline or index requires computation
     let raw = store.cache.raw.find(o => o.id == obj.id)
     obj.raw = {
@@ -135,18 +137,20 @@ const formatTraces = function(locVal) {
   })
 
   // create traces based on needed format
+  // order of creation important
+  // most recent trace rendered on top of earlier traces
   activeData.forEach(obj => {
-    if (obj.rawPointsActive) {
-      arr.push(simpleTrace(obj, obj.colorState, true, 'raw'))
-    }
     if (obj.rawSplineFreq) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
     }
-    if (obj.indexPointsFreq) {
-      arr.push(indexTrace(obj, 'index', obj.indexPointsFreq))
+    if (obj.rawPointsActive) {
+      arr.push(simpleTrace(obj, obj.colorState, true, 'raw'))
     }
     if (obj.indexSplineFreq) {
       arr.push(splineTrace(obj, 'index', obj.indexSplineFreq, true))
+    }
+    if (obj.indexPointsFreq) {
+      arr.push(indexTrace(obj, 'index', obj.indexPointsFreq))
     }
   })
 

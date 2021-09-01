@@ -32,12 +32,22 @@
         obj.showlegend = true
         obj.legend = {
           title: {
-            text: 'Legend'
+            text: 'Legend',
           }
         }
         obj.xaxis = {
           title: {
-            text: 'Year'
+            text: 'Year',
+            font: {
+              size: 12,
+            }
+          }
+        }
+        obj.yaxis = {
+          title: {
+            font: {
+              size: 12,
+            }
           }
         }
         obj.margin = {
@@ -72,7 +82,6 @@
     watch: {
       'store.states.current': {
         handler: function() {
-          console.log('change to current state')
           Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
         },
         deep: true
