@@ -37,6 +37,7 @@
     font-size: 12px;
     color: black;
     height: 16px;
+    max-width: 60px;
     border: 1px solid black;
     border-radius: 2px;
     position: absolute;

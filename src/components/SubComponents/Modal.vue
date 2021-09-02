@@ -46,6 +46,10 @@
      <Toggle :id="id"
              :toggleProp="'colorState'"
      />
+     <Dropdown :id="id"
+               :options="store.cache.shapes"
+               :dropdownProp="'shape'"
+      />
 
   </div>
 </template>
@@ -94,6 +98,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 375px;
+    width: 433px;
   }
 </style>

@@ -7,7 +7,7 @@ function simpleTrace(obj, colorBool, markerBool, propA, propB) {
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
   let color = (colorBool) ? obj.color : '#797979'
   let mode = (markerBool) ? 'lines+markers' : 'lines'
-  let width = (markerBool) ? 1 : 3
+  let width = (markerBool) ? 2 : 4
 
   let trace = new Object()
   trace.name = obj.name
@@ -15,6 +15,9 @@ function simpleTrace(obj, colorBool, markerBool, propA, propB) {
   trace.y = y
   trace.line = { color: color, width: width }
   trace.mode = mode
+  if (markerBool) {
+    trace.marker = { symbol: obj.shape, size: 6 }
+  }
   trace.type = 'scatter' // need scatter gl
 
   return trace
@@ -94,23 +97,16 @@ const formatTraces = function(locVal) {
   let activeStates = storeCopy.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
   let activePlots = activeStates.map(o => {
-    let state = new Object()
-    state.id = o.id
-    state.name = o.name
-    state.file = o.file
-    state.color = o.color
-    state.colorState = o.colorState
-
-    if (o.rawPlotLocation == locVal) {
-      state.rawPointsActive = o.rawPointsActive
-      state.rawSplineFreq = o.rawSplineFreq
+    if (o.rawPlotLocation != locVal) {
+      delete o.rawPointsActive
+      delete o.rawSplineFreq
     }
-    if (o.indexPlotLocation == locVal) {
-      state.indexPointsFreq = o.indexPointsFreq
-      state.indexSplineFreq = o.indexSplineFreq
+    if (o.indexPlotLocation != locVal) {
+      delete o.indexPointsFreq
+      delete o.indexSplineFreq
     }
 
-    return state
+    return o
   })
 
   // add required raw data, splines, & index to states
