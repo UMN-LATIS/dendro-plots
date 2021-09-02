@@ -13,7 +13,7 @@
             :toggleProp="'rawPointsActive'"
     />
     <Dropdown :id="id"
-              :options="rdSplineOptions"
+              :options="splineOptions"
               :dropdownProp="'rawSplineFreq'"
     />
     <div style="width: 55px;"></div> <!-- spacer div -->
@@ -25,12 +25,12 @@
     <!-- index options -->
     <div style="width: 65px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
-              :options="rdSplineOptions"
+              :options="splineOptions"
               :dropdownProp="'indexPointsFreq'"
     />
     <div style="width: 55px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
-              :options="rdSplineOptions"
+              :options="splineOptions"
               :dropdownProp="'indexSplineFreq'"
     />
     <div style="width: 55px;"></div> <!-- spacer div -->
@@ -63,12 +63,16 @@
     data() {
       return {
         info: ['options info'],
-        rdSplineOptions: [{ value: false, name: 'None' },
-                          { value: 20, name: '20' },
-                          { value: 30, name: '30' },
-                          { value: 50, name: '50' },
-                          { value: 100, name: '100' },
-                          { value: 200, name: '200' }]
+        splineOptions: [
+                          { value: false, name: 'None' },
+                          { value: 20, name: '20yr' },
+                          { value: 30, name: '30yr' },
+                          { value: 50, name: '50yr' },
+                          { value: 100, name: '100yr' },
+                          { value: 200, name: '200yr' },
+                          { value: 0.5, name: '50%' },
+                          { value: 0.67, name: '67%' },
+                        ]
       }
     },
   }

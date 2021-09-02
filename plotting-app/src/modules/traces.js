@@ -21,6 +21,11 @@ function simpleTrace(obj, colorBool, markerBool, propA, propB) {
 }
 
 function splineTrace(obj, prop, freq, splineFORindex) {
+  if (freq < 1) {
+    let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0])
+    freq = freq * yearSpan
+  }
+
   let x, y
   if (splineFORindex) {
     let indexObj = store.cache.index.find(o => o.id == obj.id)

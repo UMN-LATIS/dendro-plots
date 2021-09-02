@@ -33,11 +33,12 @@
         obj.legend = {
           title: {
             text: 'Legend',
-          }
+          },
+          orientation: 'h'
         }
         obj.xaxis = {
           title: {
-            text: 'Year',
+            text: '',
             font: {
               size: 12,
             }
