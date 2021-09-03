@@ -30,9 +30,10 @@
     components: { FileManager, DataHeader, DataManager, PlotManager },
     created() {
       window.addEventListener('message', (e) => {
-        if (e.origin == '*') {
-          console.log(e.data)
-        }
+        /*if (e.origin !== 'https://dendro.elevator.umn.edu/') {
+          return
+        }*/
+        console.log(e.data)
       })
     }
   }
