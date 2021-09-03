@@ -29,6 +29,7 @@
     provide: { store },
     components: { FileManager, DataHeader, DataManager, PlotManager },
     created() {
+      console.log('created app')
       window.addEventListener('message', (e) => {
         /*if (e.origin !== 'https://dendro.elevator.umn.edu/') {
           return
