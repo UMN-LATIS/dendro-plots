@@ -30,7 +30,8 @@ const cache = reactive({
             '#bcbd22',  // curry yellow-green
             '#17becf'   // blue-teal
           ],
-  shapes: [{ value: 'circle', name: 'Circle' },
+  shapes: [{value: false, name: 'None'},
+           { value: 'circle', name: 'Circle' },
            { value: 'triangle-up', name: 'Triangle' },
            { value: 'triangle-down', name: 'Inverse Triangle' },
            { value: 'square', name: 'Square' },
@@ -78,7 +79,7 @@ const methods = {
       colorIndex++
       newState.shape = cache.shapes[shapeIndex].value
       shapeIndex++
-      newState.colorState = true
+      newState.applyColorToRaw = true
 
       newState.rawPointsActive = false
       newState.rawSplineFreq = false

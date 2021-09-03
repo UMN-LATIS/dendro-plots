@@ -16,7 +16,7 @@
               :options="splineOptions"
               :dropdownProp="'rawSplineFreq'"
     />
-    <div style="width: 55px;"></div> <!-- spacer div -->
+    <div style="width: 60px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="store.cache.plots"
               :dropdownProp="'rawPlotLocation'"
@@ -28,12 +28,12 @@
               :options="splineOptions"
               :dropdownProp="'indexPointsFreq'"
     />
-    <div style="width: 55px;"></div> <!-- spacer div -->
+    <div style="width: 60px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="splineOptions"
               :dropdownProp="'indexSplineFreq'"
     />
-    <div style="width: 55px;"></div> <!-- spacer div -->
+    <div style="width: 60px;"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="store.cache.plots"
               :dropdownProp="'indexPlotLocation'"
@@ -44,8 +44,9 @@
      <ColorSwatch :id="id" />
      <div style="width: 16px;"></div> <!-- spacer div -->
      <Toggle :id="id"
-             :toggleProp="'colorState'"
+             :toggleProp="'applyColorToRaw'"
      />
+     <!-- marker options -->
      <Dropdown :id="id"
                :options="store.cache.shapes"
                :dropdownProp="'shape'"
@@ -98,6 +99,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 433px;
+    width: 444px;
   }
 </style>

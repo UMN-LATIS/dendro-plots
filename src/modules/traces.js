@@ -2,12 +2,12 @@ import store from './store.js'
 import createSpline from './spline.js'
 import createIndex from './index.js'
 
-function simpleTrace(obj, colorBool, markerBool, propA, propB) {
+function simpleTrace(obj, colorBool, propA, propB) {
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
   let color = (colorBool) ? obj.color : '#797979'
-  let mode = (markerBool) ? 'lines+markers' : 'lines'
-  let width = (markerBool) ? 2 : 4
+  let width = (obj.shape) ? 2 : 3
+  let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
   let trace = new Object()
   trace.name = obj.name
@@ -15,8 +15,8 @@ function simpleTrace(obj, colorBool, markerBool, propA, propB) {
   trace.y = y
   trace.line = { color: color, width: width }
   trace.mode = mode
-  if (markerBool) {
-    trace.marker = { symbol: obj.shape, size: 6 }
+  if (obj.shape) {
+    trace.marker = { symbol: obj.shape, size: 8 }
   }
   trace.type = 'scatter' // need scatter gl
 
@@ -24,8 +24,10 @@ function simpleTrace(obj, colorBool, markerBool, propA, propB) {
 }
 
 function splineTrace(obj, prop, freq, splineFORindex) {
+  let freqName = freq + 'yr'
   if (freq < 1) {
     let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
+    freqName = (100 * freq) + '%'
     freq = freq * yearSpan
   }
 
@@ -57,14 +59,22 @@ function splineTrace(obj, prop, freq, splineFORindex) {
   }
 
   obj = JSON.parse(JSON.stringify(obj))
-  obj.name = obj.name + '_' + freq +'yr_spline'
+  obj.name = obj.name + '_' + freqName +'_spline'
+  obj.shape = false
 
-  let trace = simpleTrace(obj, !obj.colorState, false, 'spline', prop)
+  let trace = simpleTrace(obj, !obj.applyColorToRaw, 'spline', prop)
 
   return trace
 }
 
 function indexTrace(obj, prop, freq) {
+  let freqName = freq + 'yr'
+  if (freq < 1) {
+    let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
+    freqName = (100 * freq) + '%'
+    freq = freq * yearSpan
+  }
+
   if (!obj.index) {
     // check if spline exists in order to compute index
     let splineObj = store.cache.splines.raw.find(o => o.id == obj.id)
@@ -79,9 +89,9 @@ function indexTrace(obj, prop, freq) {
   }
 
   obj = JSON.parse(JSON.stringify(obj))
-  obj.name = obj.name + '_' + freq +'yr_index'
+  obj.name = obj.name + '_' + freqName +'_index'
 
-  let trace = simpleTrace(obj, obj.colorState, true, prop)
+  let trace = simpleTrace(obj, obj.applyColorToRaw, prop)
 
   return trace
 }
@@ -145,7 +155,7 @@ const formatTraces = function(locVal) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
     }
     if (obj.rawPointsActive) {
-      arr.push(simpleTrace(obj, obj.colorState, true, 'raw'))
+      arr.push(simpleTrace(obj, obj.applyColorToRaw, 'raw'))
     }
     if (obj.indexSplineFreq) {
       arr.push(splineTrace(obj, 'index', obj.indexSplineFreq, true))
