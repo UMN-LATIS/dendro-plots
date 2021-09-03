@@ -31,7 +31,7 @@
     data() {
       return {
           //parentSite: 'http://localhost:4000',
-          parentSite: 'https://umn-latis.github.io/leaflet-treering/',
+          parentSite: 'https://umn-latis.github.io',
       }
     },
     methods: {
