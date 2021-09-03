@@ -28,14 +28,47 @@
     name: 'App',
     provide: { store },
     components: { FileManager, DataHeader, DataManager, PlotManager },
-    created() {
-      console.log('created app')
-      window.addEventListener('message', (e) => {
-        /*if (e.origin !== 'https://dendro.elevator.umn.edu/') {
+    data() {
+      return {
+          //parentSite: 'http://localhost:4000',
+          parentSite: 'https://umn-latis.github.io/leaflet-treering/',
+      }
+    },
+    methods: {
+      onMessage: function(e) {
+        if (e.origin !== this.parentSite) {
           return
-        }*/
-        console.log(e.data)
-      })
+        }
+        let data = []
+        let pointsObj = e.data.points
+        if (pointsObj.ew && pointsObj.lw) {
+          data.push(pointsObj.ew)
+          data.push(pointsObj.lw)
+        }
+        data.push(pointsObj.tw)
+        store.methods.loadData(data)
+
+        // give file location
+        for (const obj of store.states.current) {
+          obj.file = 'DendroElevator'
+        }
+
+        let defaultState = store.states.current[0]
+        defaultState.rawPointsActive = true
+        defaultState.rawSplineFreq = 20
+        defaultState.rawPlotLocation = 1
+
+        defaultState.indexPointsFreq = 20
+        defaultState.indexSplineFreq = 20
+        defaultState.indexPlotLocation = 2
+      }
+    },
+    mounted() {
+      window.opener.postMessage('open', this.parentSite)
+      window.addEventListener('message', this.onMessage, false)
+    },
+    beforeUnmount() {
+      window.removeEventListener('message', this.onMessage, false)
     }
   }
 </script>
