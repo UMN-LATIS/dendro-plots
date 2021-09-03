@@ -64,7 +64,7 @@
         obj.responsive = false // causes mode bar issue when true
         obj.scrollZoom = true
         obj.displayModeBar = true
-        obj.modeBarButtonsToRemove = ['pan2d', 'select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
+        obj.modeBarButtonsToRemove = ['select2d', 'lasso2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d']
         obj.editable = true
         obj.displaylogo = false
         return obj

@@ -28,6 +28,13 @@
     name: 'App',
     provide: { store },
     components: { FileManager, DataHeader, DataManager, PlotManager },
+    created() {
+      window.addEventListener('message', (e) => {
+        if (e.origin == '*') {
+          console.log(e.data)
+        }
+      })
+    }
   }
 </script>
 

@@ -37,9 +37,10 @@ const createSpline = function(x, y, freq, id, propA, propB) {
   splineObj[freq] = {
     x: xArr,
     y: yArr,
+    eq: spline,
   }
 
-  return { x: xArr, y: yArr }
+  return { x: xArr, y: yArr, eq: spline }
 }
 
 export default createSpline

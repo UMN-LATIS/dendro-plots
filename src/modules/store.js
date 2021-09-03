@@ -66,6 +66,9 @@ const methods = {
       let newState = new Object()
       // set IDs are random 5 digit numbers
       let id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      while (states.current.some(o => o.id == id)) {
+        id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      }
 
       // default state values
       newState.id = id

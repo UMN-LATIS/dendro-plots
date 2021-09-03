@@ -52,7 +52,7 @@ function splineTrace(obj, prop, freq, splineFORindex) {
     // add spline to obj
     obj.spline[prop] = {
       x: spline.x,
-      y: spline.y
+      y: spline.y,
     }
   }
 

@@ -5,15 +5,7 @@ const createIndex = function(x, y, spline, freq, id) {
 
   let xArr = x
   let yArr = x.map((e, i) => {
-    let j = spline.x.indexOf(e)
-    if (j === -1) {
-      // find closest value to use for calculation
-      let n = spline.x.reduce((prev, curr) => {
-        return (Math.abs(curr - e) < Math.abs(prev - e) ? curr : prev);
-      })
-      j = spline.x.indexOf(n)
-    }
-    return y[i] / spline.y[j]
+    return y[i] / spline.eq.fn(e)
   })
 
   // save index to index cache in store.js
