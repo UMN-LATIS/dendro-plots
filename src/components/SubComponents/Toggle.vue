@@ -8,7 +8,11 @@
     props: ['id', 'toggleProp'],
     computed: {
       isChecked: function() {
-        return this.store.states.current.find(o => o.id == this.id)[this.toggleProp]
+        let set = this.store.states.current.find(o => o.id == this.id)
+        if (set) {
+          return set[this.toggleProp]
+        }
+        return false
       },
     },
     methods: {

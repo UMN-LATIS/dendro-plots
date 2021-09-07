@@ -6,7 +6,7 @@
       </div>
       <DataHeader id="data-header"/>
       <div id="data-management">
-        <DataManager />
+        <DataManager :useCache="false" />
       </div>
     </div>
 
@@ -30,8 +30,8 @@
     components: { FileManager, DataHeader, DataManager, PlotManager },
     data() {
       return {
-          //parentSite: 'http://localhost:4000',
-          parentSite: 'https://umn-latis.github.io/leaflet-treering/',
+          parentSite: 'http://localhost:4000',
+          //parentSite: 'https://umn-latis.github.io',
       }
     },
     methods: {
@@ -46,24 +46,13 @@
           data.push(pointsObj.lw)
         }
         data.push(pointsObj.tw)
-        store.methods.loadData(data)
-
-        // give file location
-        for (const obj of store.states.current) {
-          obj.file = 'DendroElevator'
-        }
-
-        let defaultState = store.states.current[0]
-        defaultState.rawPointsActive = true
-        defaultState.rawSplineFreq = 20
-        defaultState.rawPlotLocation = 1
-
-        defaultState.indexPointsFreq = 20
-        defaultState.indexSplineFreq = 20
-        defaultState.indexPlotLocation = 2
+        store.methods.initializeData(data)
       }
     },
     mounted() {
+      if (!window.opener) {
+        return
+      }
       window.opener.postMessage('open', this.parentSite)
       window.addEventListener('message', this.onMessage, false)
     },

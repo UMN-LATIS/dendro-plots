@@ -8,7 +8,12 @@
     props: ['id'],
     computed: {
       colorValue: function() {
-        return this.store.states.current.find(o => o.id == this.id).color
+        let states = (this.id > 99 && this.id < 9999) ? this.store.cache.states : this.store.states.current
+        let set = states.find(o => o.id == this.id)
+        if (set) {
+          return set.color
+        }
+        return '#FF0000'
       }
     },
     methods: {

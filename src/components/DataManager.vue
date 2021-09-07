@@ -18,7 +18,8 @@
     <Modal class="modal"
            :id="obj.id"
            :top="obj.top"
-           v-if="obj.active && !obj.outOfBounds" />
+           v-if="obj.active && !obj.outOfBounds"
+    />
   </div>
 </template>
 
@@ -29,11 +30,17 @@
 
   export default {
     inject: ['store'],
+    props: ['useCache'],
     components: { Name, Remove, Modal },
+    data() {
+      return {
+        states: (this.useCache) ? this.store.cache.states : this.store.states.current
+      }
+    },
     computed: {
       pairs: function() {
         // combine state & cache info so it can be used as props
-        return this.store.states.current.map(stateObj => {
+        return this.states.map(stateObj => {
           let modalObj = this.store.cache.modals.find(o => o.id == stateObj.id)
           let pairObj = new Object()
           pairObj.id = stateObj.id

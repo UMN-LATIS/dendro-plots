@@ -12,7 +12,8 @@
     props: ['id', 'name', 'value', 'dropdownProp'],
     computed: {
       isSelected: function() {
-        let selectedVal = this.store.states.current.find(o => o.id == this.id)[this.dropdownProp]
+        let set = this.store.states.current.find(o => o.id == this.id)
+        let selectedVal = (set) ? set[this.dropdownProp] : null
         return (selectedVal == this.value) ? true : false
       }
     },
