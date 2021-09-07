@@ -8,16 +8,26 @@
     props: ['id', 'toggleProp'],
     computed: {
       isChecked: function() {
-        let set = this.store.states.current.find(o => o.id == this.id)
-        if (set) {
-          return set[this.toggleProp]
+        if (this.id === this.store.cache.allID) {
+          return this.store.methods.checkAll(this.toggleProp)
+        } else {
+          let set = this.store.states.current.find(o => o.id == this.id)
+          if (set) {
+            return set[this.toggleProp]
+          }
         }
         return false
       },
     },
     methods: {
       onToggle: function(e) {
-        this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
+        if (this.id === this.store.cache.allID) {
+          // all set
+          this.store.methods.allAction(this.toggleProp, e.target.checked)
+        } else {
+          // base core or uploaded sets
+          this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
+        }
       },
     }
   }

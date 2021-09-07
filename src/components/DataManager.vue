@@ -32,15 +32,11 @@
     inject: ['store'],
     props: ['useCache'],
     components: { Name, Remove, Modal },
-    data() {
-      return {
-        states: (this.useCache) ? this.store.cache.states : this.store.states.current
-      }
-    },
     computed: {
       pairs: function() {
         // combine state & cache info so it can be used as props
-        return this.states.map(stateObj => {
+        let states = (this.useCache) ? this.store.cache.states : this.store.states.current
+        return states.map(stateObj => {
           let modalObj = this.store.cache.modals.find(o => o.id == stateObj.id)
           let pairObj = new Object()
           pairObj.id = stateObj.id

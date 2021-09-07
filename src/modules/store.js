@@ -41,6 +41,8 @@ const cache = reactive({
            { value: 'triangle-down-open', name: 'Open Inverse Triangle' },
            { value: 'square-open', name: 'Open Square' },
            { value: 'diamond-open', name: 'Open Diamond' }],
+  allID: 111,
+  medianID: 222,
   states: [],
   modals: [],
 })
@@ -66,21 +68,21 @@ const methods = {
     }
 
     let statesARR = [{
-      id: 111,
+      id: cache.allID,
       name: 'All',
-      color: '#ff0000'
+      color: '#ffffff'
     },
     {
-      id: 222,
+      id: cache.medianID,
       name: 'Median',
-      color: '#1e00ff'
+      color: '#ffffff'
     }]
 
     let modalARR = [{
-      id: 111,
+      id: cache.allID,
     },
     {
-      id: 222,
+      id: cache.medianID,
     }]
 
     for (const obj of statesARR) {
@@ -245,6 +247,23 @@ const methods = {
   updateCache: function(name, id, prop, data) {
     let obj = cache[name].find(o => o.id == id)
     obj[prop] = data
+  },
+  allAction: function(prop, val) {
+    let copy = JSON.parse(JSON.stringify(states.current))
+    for (const obj of copy) {
+      obj[prop] = val
+    }
+    this.newCurrent(copy)
+  },
+  checkAll: function(prop) {
+    let testVal = (states.current[0]) ? states.current[0][prop] : null
+    for (let i = 1; i < states.current.length; i++) {
+      let val = states.current[i][prop]
+      if (val !== testVal) {
+        return false
+      }
+    }
+    return testVal
   }
 }
 

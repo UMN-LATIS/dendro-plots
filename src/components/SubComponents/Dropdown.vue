@@ -23,8 +23,17 @@
         let boolCheck = (val === 'false')
         if (boolCheck) {
           val = false
+        } else if (parseInt(val)) {
+          val = parseInt(val)
         }
-        this.store.methods.newCurrent(val, this.id, this.dropdownProp)
+        
+        if (this.id === this.store.cache.allID) {
+          // all set
+          this.store.methods.allAction(this.dropdownProp, val)
+        } else {
+          // base core or uploaded sets
+          this.store.methods.newCurrent(val, this.id, this.dropdownProp)
+        }
       }
     }
   }

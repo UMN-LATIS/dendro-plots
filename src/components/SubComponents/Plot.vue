@@ -75,7 +75,7 @@
         if (!this.$refs[this.divID]) {
           return
         }
-        let w = document.getElementsByClassName('plotly-div')[this.value - 1].offsetWidth;
+        let w = document.getElementById('plot-management').offsetWidth;
         let h = window.innerHeight / this.count
         Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       }

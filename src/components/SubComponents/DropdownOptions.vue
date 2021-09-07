@@ -12,8 +12,15 @@
     props: ['id', 'name', 'value', 'dropdownProp'],
     computed: {
       isSelected: function() {
-        let set = this.store.states.current.find(o => o.id == this.id)
-        let selectedVal = (set) ? set[this.dropdownProp] : null
+        let selectedVal
+        if (this.id === this.store.cache.allID) {
+          // all set
+          selectedVal = this.store.methods.checkAll(this.dropdownProp)
+        } else {
+          // base core and uploaded sets
+          let set = this.store.states.current.find(o => o.id == this.id)
+          selectedVal = (set) ? set[this.dropdownProp] : null
+        }
         return (selectedVal == this.value) ? true : false
       }
     },
