@@ -45,6 +45,7 @@ const cache = reactive({
   medianID: 222,
   states: [],
   modals: [],
+  dataIDsForMedian: [],
 })
 
 const methods = {
@@ -70,12 +71,12 @@ const methods = {
     let statesARR = [{
       id: cache.allID,
       name: 'All',
-      color: '#ffffff'
+      color: '#ff0000'
     },
     {
       id: cache.medianID,
       name: 'Median',
-      color: '#ffffff'
+      color: '#001eff'
     }]
 
     let modalARR = [{
@@ -94,6 +95,12 @@ const methods = {
       Object.assign(obj, modalDEFAULT)
       cache.modals.push(obj)
     }
+
+    let medianPoints = new Object()
+    medianPoints.id = cache.medianID
+    medianPoints.x = []
+    medianPoints.y = []
+    cache.raw.push(medianPoints)
 
     // base core sets given specifc IDs
     let id = 1
@@ -264,6 +271,31 @@ const methods = {
       }
     }
     return testVal
+  },
+  findDataForMedian: function(activeDataIDs) {
+    // if not current, reset raw, splines, & indexes
+    let medianRaw = cache.raw.find(o => o.id === cache.medianID)
+    medianRaw.x = []
+    medianRaw.y = []
+    let medianSplineRaw = cache.splines.raw.find(o => o.id === cache.medianID)
+    if (medianSplineRaw) {
+      medianSplineRaw = {}
+    }
+    let medianSplineIndex = cache.splines.index.find(o => o.id === cache.medianID)
+    if (medianSplineIndex) {
+      medianSplineIndex = {}
+    }
+    let medianIndex = cache.index.find(o => o.id === cache.medianID)
+    if (medianIndex) {
+      medianIndex = {}
+    }
+
+    // find new median
+    let dataForMedian = activeDataIDs.map(id => {
+      let data = cache.raw.find(o => o.id == id)
+      return data
+    })
+    return dataForMedian.filter(o => o)
   }
 }
 

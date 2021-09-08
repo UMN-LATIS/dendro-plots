@@ -12,7 +12,11 @@
   export default {
     inject: ['store'],
     props: ['value', 'name', 'count'],
-    components: { },
+    data() {
+      return {
+        median: this.store.cache.states.find(o => o.id === this.store.cache.medianID)
+      }
+    },
     computed: {
       divID: function() {
         return String(Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)
@@ -82,6 +86,12 @@
     },
     watch: {
       'store.states.current': {
+        handler: function() {
+          Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
+        },
+        deep: true
+      },
+      median: {
         handler: function() {
           Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
         },

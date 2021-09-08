@@ -14,11 +14,10 @@
       isSelected: function() {
         let selectedVal
         if (this.id === this.store.cache.allID) {
-          // all set
           selectedVal = this.store.methods.checkAll(this.dropdownProp)
         } else {
-          // base core and uploaded sets
-          let set = this.store.states.current.find(o => o.id == this.id)
+          let states = (this.id === this.store.cache.medianID) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.id == this.id)
           selectedVal = (set) ? set[this.dropdownProp] : null
         }
         return (selectedVal == this.value) ? true : false

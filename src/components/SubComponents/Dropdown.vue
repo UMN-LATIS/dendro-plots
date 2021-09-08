@@ -26,10 +26,12 @@
         } else if (parseInt(val)) {
           val = parseInt(val)
         }
-        
+
         if (this.id === this.store.cache.allID) {
           // all set
           this.store.methods.allAction(this.dropdownProp, val)
+        } else if (this.id === this.store.cache.medianID) {
+          this.store.methods.updateCache('states', this.id, this.dropdownProp, val)
         } else {
           // base core or uploaded sets
           this.store.methods.newCurrent(val, this.id, this.dropdownProp)

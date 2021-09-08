@@ -11,7 +11,8 @@
         if (this.id === this.store.cache.allID) {
           return this.store.methods.checkAll(this.toggleProp)
         } else {
-          let set = this.store.states.current.find(o => o.id == this.id)
+          let states = (this.id === this.store.cache.medianID) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.id == this.id)
           if (set) {
             return set[this.toggleProp]
           }
@@ -22,10 +23,10 @@
     methods: {
       onToggle: function(e) {
         if (this.id === this.store.cache.allID) {
-          // all set
           this.store.methods.allAction(this.toggleProp, e.target.checked)
+        } else if (this.id === this.store.cache.medianID) {
+          this.store.methods.updateCache('states', this.id, this.toggleProp, e.target.checked)
         } else {
-          // base core or uploaded sets
           this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
         }
       },

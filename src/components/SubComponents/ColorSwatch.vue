@@ -13,7 +13,7 @@
         if (set) {
           return set.color
         }
-        return '#FF0000'
+        return '#000000'
       }
     },
     methods: {
@@ -21,6 +21,8 @@
         if (this.id ===  this.store.cache.allID) {
           // all set
           this.store.methods.allAction('color', e.target.value)
+        } else if (this.id === this.store.cache.medianID) {
+          this.store.methods.updateCache('states', this.id, 'color', e.target.value)
         } else {
           // base core or uploaded sets
           this.store.methods.newCurrent(e.target.value, this.id, 'color')
