@@ -30,8 +30,8 @@ export default {
   components: { FileManager, DataHeader, DataManager, PlotManager },
   data() {
     return {
-      //parentSite: 'http://localhost:4000',
-      parentSite: "https://umn-latis.github.io/leaflet-treering/",
+      parentSite: 'http://localhost:4000',
+      //parentSite: "https://umn-latis.github.io/leaflet-treering/",
     };
   },
   methods: {
@@ -63,10 +63,10 @@ export default {
       defaultState.indexPlotLocation = 2;
     },
   },
-  // mounted() {
-  //   window.opener.postMessage('open', this.parentSite)
-  //   window.addEventListener('message', this.onMessage, false)
-  // },
+  mounted() {
+    window.opener.postMessage('open', this.parentSite)
+    window.addEventListener('message', this.onMessage, false)
+  },
   beforeUnmount() {
     window.removeEventListener("message", this.onMessage, false);
   },

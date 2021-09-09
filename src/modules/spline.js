@@ -1,7 +1,7 @@
 import simpleSmoothingSpline from "@umn-latis/simple-smoothing-spline";
 import store from "./store.js";
 
-const createSpline = function(x, y, freq, id, propA, propB) {
+const createSpline = async function(x, y, freq, id, propA, propB) {
   console.log("created spline");
 
   let data = x.map((e, i) => {
@@ -13,7 +13,7 @@ const createSpline = function(x, y, freq, id, propA, propB) {
   });
 
   let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975);
-  const spline = simpleSmoothingSpline(data, { lambda: lambda });
+  const spline = await simpleSmoothingSpline(data, { lambda: lambda });
 
   let xArr = [];
   let yArr = [];

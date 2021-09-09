@@ -17,9 +17,6 @@
       divID: function() {
         return String(Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)
       },
-      traces: function() {
-        return formatTraces(this.value)
-      },
       layout: function() {
         let obj = new Object()
         obj.title = {
@@ -78,12 +75,22 @@
         let w = document.getElementsByClassName('plotly-div')[this.value - 1].offsetWidth;
         let h = window.innerHeight / this.count
         Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
+      },
+      createPlot: async function() {
+        let traces = await Promise.all(formatTraces(this.value))
+        Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
+        this.resizePlot()
+      },
+      updatePlot: async function() {
+        let traces = await Promise.all(formatTraces(this.value))
+        Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
+        this.resizePlot()
       }
     },
     watch: {
       'store.states.current': {
         handler: function() {
-          Plotly.react(this.$refs[this.divID], this.traces, this.layout, this.config)
+          this.updatePlot()
         },
         deep: true
       },
@@ -94,8 +101,7 @@
       },
     },
     mounted() {
-      Plotly.newPlot(this.$refs[this.divID], this.traces, this.layout, this.config)
-      this.resizePlot()
+      this.createPlot()
       window.addEventListener('resize', () => {
         this.resizePlot()
       })
