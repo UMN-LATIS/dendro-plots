@@ -71,7 +71,7 @@ const methods = {
     let statesARR = [{
       id: cache.allID,
       name: 'All',
-      color: '#ff0000'
+      color: '#ffffff'
     },
     {
       id: cache.medianID,

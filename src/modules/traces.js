@@ -3,10 +3,11 @@ import createSpline from './spline.js'
 import createIndex from './index.js'
 import createMedian from './median.js'
 
-function simpleTrace(obj, colorBool, propA, propB) {
+function simpleTrace(obj, colorTrace, propA, propB) {
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
-  let color = (colorBool) ? obj.color : '#797979'
+  let color = (colorTrace) ? obj.color : '#797979'
+  let opacity = (colorTrace) ? 1 : 0.7
   let width = (obj.shape) ? 2 : 3
   let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
@@ -15,6 +16,7 @@ function simpleTrace(obj, colorBool, propA, propB) {
   trace.x = x
   trace.y = y
   trace.line = { color: color, width: width }
+  trace.opacity = opacity
   trace.mode = mode
   if (obj.shape) {
     trace.marker = { symbol: obj.shape, size: 8 }
@@ -98,7 +100,7 @@ function indexTrace(obj, prop, freq) {
 }
 
 // param (locVal): plot location value
-const formatTraces = function(locVal) {
+const formatTraces = async function(locVal) {
   let arr = new Array()
 
   // create array with data only intended for specified plot
