@@ -110,14 +110,16 @@ async function indexTrace(obj, prop, freq) {
 }
 
 // param (locVal): plot location value
-const formatTraces = async function(locVal) {
+const formatTraces = function(locVal) {
   let arr = new Array()
 
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
   // add median to copy
   let median = store.cache.states.find(o => o.id === store.cache.medianID)
-  storeCopy.push(JSON.parse(JSON.stringify(median)))
+  if (median) {
+    storeCopy.push(JSON.parse(JSON.stringify(median)))
+  }
 
   // filter out inactive data sets
   let activeStates = storeCopy.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))

@@ -47,21 +47,7 @@ export default {
         data.push(pointsObj.lw);
       }
       data.push(pointsObj.tw);
-      store.methods.loadData(data);
-
-      // give file location
-      for (const obj of store.states.current) {
-        obj.file = "DendroElevator";
-      }
-
-      let defaultState = store.states.current[0];
-      defaultState.rawPointsActive = true;
-      defaultState.rawSplineFreq = 20;
-      defaultState.rawPlotLocation = 1;
-
-      defaultState.indexPointsFreq = 20;
-      defaultState.indexSplineFreq = 20;
-      defaultState.indexPlotLocation = 2;
+      store.methods.initializeData(data);
     },
 },
     mounted() {
