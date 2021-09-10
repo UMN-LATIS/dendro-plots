@@ -26,7 +26,7 @@ function simpleTrace(obj, colorTrace, propA, propB) {
   return trace
 }
 
-function splineTrace(obj, prop, freq, splineFORindex) {
+async function splineTrace(obj, prop, freq, splineFORindex) {
   let freqName = freq + 'yr'
   if (freq < 1) {
     let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
@@ -40,7 +40,12 @@ function splineTrace(obj, prop, freq, splineFORindex) {
     let index = (indexObj) ? indexObj[freq] : null
     if (!index) {
       let splineObj = store.cache.splines.raw.find(o => o.id == obj.id)
-      let spline = (splineObj && splineObj[freq]) ? splineObj[freq] : createSpline(obj.raw.x, obj.raw.y, freq, obj.id, prop, 'raw')
+      let spline
+      if (splineObj && splineObj[freq]) {
+        spline = splineObj[freq]
+      } else {
+        spline = await createSpline(obj.raw.x, obj.raw.y, freq, obj.id, prop, 'raw')
+      }
       index = createIndex(obj.raw.x, obj.raw.y, spline, freq, obj.id)
     }
     x = index.x
@@ -52,7 +57,7 @@ function splineTrace(obj, prop, freq, splineFORindex) {
 
   // spline data previously saved
   if (!obj.spline[prop]) {
-    let spline = createSpline(x, y, freq, obj.id, prop)
+    let spline = await createSpline(x, y, freq, obj.id, prop)
 
     // add spline to obj
     obj.spline[prop] = {
@@ -70,7 +75,7 @@ function splineTrace(obj, prop, freq, splineFORindex) {
   return trace
 }
 
-function indexTrace(obj, prop, freq) {
+async function indexTrace(obj, prop, freq) {
   let freqName = freq + 'yr'
   if (freq < 1) {
     let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
@@ -81,7 +86,12 @@ function indexTrace(obj, prop, freq) {
   if (!obj.index) {
     // check if spline exists in order to compute index
     let splineObj = store.cache.splines.raw.find(o => o.id == obj.id)
-    let spline = (splineObj && splineObj[freq]) ? splineObj[freq] : createSpline(obj.raw.x, obj.raw.y, freq, obj.id, prop, 'raw')
+    let spline
+    if (splineObj && splineObj[freq]) {
+      spline = splineObj[freq]
+    } else {
+      spline = await createSpline(obj.raw.x, obj.raw.y, freq, obj.id, prop, 'raw')
+    }
     let index = createIndex(obj.raw.x, obj.raw.y, spline, freq, obj.id)
 
     // add index to obj

@@ -92,12 +92,15 @@
         let h = window.innerHeight / this.count
         Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       },
-      updatePlot: function() {
-        Plotly.react(this.$refs[this.divID], [], this.loading.layout, this.loading.config)
-        let traces = formatTraces(this.value)
-        traces.then(val => {
-          Plotly.react(this.$refs[this.divID], val, this.layout, this.config)
-        })
+      createPlot: async function() {
+        let traces = await Promise.all(formatTraces(this.value))
+        Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
+        this.resizePlot()
+      },
+      updatePlot: async function() {
+        let traces = await Promise.all(formatTraces(this.value))
+        Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
+        this.resizePlot()
       }
     },
     watch: {
@@ -120,12 +123,8 @@
       },
     },
     mounted() {
-      let traces = formatTraces(this.value)
-      traces.then(val => {
-        Plotly.newPlot(this.$refs[this.divID], val, this.layout, this.config)
-        window.addEventListener('resize', () => {
-          this.resizePlot()
-        })
+      this.createPlot()
+      window.addEventListener('resize', () => {
         this.resizePlot()
       })
     },
