@@ -12,7 +12,23 @@
   export default {
     inject: ['store'],
     props: ['value', 'name', 'count'],
-    components: { },
+    data() {
+      return {
+        median: this.store.cache.states.find(o => o.id === this.store.cache.medianID),
+        loading: {
+          layout: {
+            title: {
+              text: 'Loading...'
+            },
+            showlegend: false,
+          },
+          config: {
+            displayModeBar: false,
+            displaylogo: false,
+          }
+        }
+      }
+    },
     computed: {
       divID: function() {
         return String(Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000)
@@ -26,7 +42,7 @@
             l: 20,
           }
         }
-        obj.showlegend = true
+        obj.showlegend = false
         obj.legend = {
           title: {
             text: 'Legend',
@@ -65,14 +81,14 @@
         obj.editable = true
         obj.displaylogo = false
         return obj
-      }
+      },
     },
     methods: {
       resizePlot: function() {
         if (!this.$refs[this.divID]) {
           return
         }
-        let w = document.getElementsByClassName('plotly-div')[this.value - 1].offsetWidth;
+        let w = document.getElementById('plot-management').offsetWidth;
         let h = window.innerHeight / this.count
         Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       },
@@ -89,6 +105,12 @@
     },
     watch: {
       'store.states.current': {
+        handler: function() {
+          this.updatePlot()
+        },
+        deep: true
+      },
+      median: {
         handler: function() {
           this.updatePlot()
         },
@@ -112,5 +134,9 @@
 <style scoped>
   .plotly-div {
     width: 100%;
+  }
+
+  .hide {
+    display: none;
   }
 </style>

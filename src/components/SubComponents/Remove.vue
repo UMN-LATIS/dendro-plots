@@ -12,7 +12,13 @@
     props: ['id'],
     methods: {
       onClick: function() {
-        this.store.methods.removeCurrent(this.id)
+        if (this.id === this.store.cache.allID) {
+          // all set
+          this.store.methods.newCurrent([])
+        } else {
+          // base core or uploaded sets
+          this.store.methods.removeCurrent(this.id)
+        }
       }
     }
   }

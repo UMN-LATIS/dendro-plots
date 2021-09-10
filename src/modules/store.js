@@ -14,7 +14,6 @@ const cache = reactive({
               index: [],
            },
   index: [],
-  modals: [],
   plots: [{ value: 1, name: 'Plot 1' },
           { value: 2, name: 'Plot 2' }],
   loadSequence: [],
@@ -30,6 +29,7 @@ const cache = reactive({
             '#bcbd22',  // curry yellow-green
             '#17becf'   // blue-teal
           ],
+  colorIndex: 0,
   shapes: [{value: false, name: 'None'},
            { value: 'circle', name: 'Circle' },
            { value: 'triangle-up', name: 'Triangle' },
@@ -40,54 +40,95 @@ const cache = reactive({
            { value: 'triangle-up-open', name: 'Open Triangle' },
            { value: 'triangle-down-open', name: 'Open Inverse Triangle' },
            { value: 'square-open', name: 'Open Square' },
-           { value: 'diamond-open', name: 'Open Diamond' }]
+           { value: 'diamond-open', name: 'Open Diamond' }],
+  allID: 111,
+  medianID: 222,
+  states: [],
+  modals: [],
+  dataIDsForMedian: [],
 })
 
 const methods = {
-  loadData: function(data) {
-    let colorIndex = 0
-    let shapeIndex = 0
+  initializeData: function(data) {
+    // create all & median states
+    let statesDEFAULT = {
+      shape: false,
+      applyColorToRaw: true,
+      rawPointsActive: false,
+      rawSplineFreq: false,
+      rawPlotLocation: 1,
+      indexPointsFreq: false,
+      indexSplineFreq: false,
+      indexPlotLocation: 2,
+    }
 
-    this.saveCurrent()
+    let modalDEFAULT = {
+      active: false,
+      top: 0,
+      outOfBounds: false,
+    }
+
+    let statesARR = [{
+      id: cache.allID,
+      name: 'All',
+      color: '#ffffff'
+    },
+    {
+      id: cache.medianID,
+      name: 'Median',
+      color: '#001eff'
+    }]
+
+    let modalARR = [{
+      id: cache.allID,
+    },
+    {
+      id: cache.medianID,
+    }]
+
+    for (const obj of statesARR) {
+      Object.assign(obj, statesDEFAULT)
+      cache.states.push(obj)
+    }
+
+    for (const obj of modalARR) {
+      Object.assign(obj, modalDEFAULT)
+      cache.modals.push(obj)
+    }
+
+    let medianPoints = new Object()
+    medianPoints.id = cache.medianID
+    medianPoints.x = []
+    medianPoints.y = []
+    cache.raw.push(medianPoints)
+
+    // base core sets given specifc IDs
+    let id = 1
 
     for (const set of data) {
-      if (colorIndex == cache.colors.length) {
-        colorIndex = 0
-      }
-      if (shapeIndex == cache.shapes.length) {
-        shapeIndex = 0
-      }
-
-      let existingSet = states.current.find(obj => obj.name == set.name)
-      if (existingSet) {
-        let n = states.current.filter(obj => obj.name.split(' (')[0] == set.name).length
-        set.name = set.name + ' (' + n + ')'
-      }
-
       let newState = new Object()
-      // set IDs are random 5 digit numbers
-      let id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-      while (states.current.some(o => o.id == id)) {
-        id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
-      }
+
+      let rawPointsBOOL = (id === 1) ? true : false
+      let rawSplineNUM = (id === 1) ? 20 : false
+      let indexPointsNUM = (id === 1) ? 20 : false
+      let indexSplineNUM = (id === 1) ? 20 : false
 
       // default state values
       newState.id = id
       newState.name = set.name
-      newState.file = set.fileName
-      newState.color = cache.colors[colorIndex]
-      colorIndex++
-      newState.shape = cache.shapes[shapeIndex].value
-      shapeIndex++
+      newState.file = 'DendroElevator'
+      newState.color = cache.colors[cache.colorIndex]
+      cache.colorIndex++
+      newState.shape = false
       newState.applyColorToRaw = true
 
-      newState.rawPointsActive = false
-      newState.rawSplineFreq = false
+      newState.rawPointsActive = rawPointsBOOL
+      newState.rawSplineFreq = rawSplineNUM
       newState.rawPlotLocation = 1
 
-      newState.indexPointsFreq = false
-      newState.indexSplineFreq = false
-      newState.indexPlotLocation = 1
+      newState.indexPointsFreq = indexPointsNUM
+      newState.indexSplineFreq = indexSplineNUM
+      newState.indexPlotLocation = 2
 
       states.current.push(newState)
 
@@ -107,7 +148,69 @@ const methods = {
       cache.modals.push(newModal)
 
       // establish default load sequence
-      cache.loadSequence.push(newState.id)
+      cache.loadSequence.push(id)
+
+      id++
+    }
+  },
+  loadData: function(data) {
+    this.saveCurrent()
+
+    for (const set of data) {
+      if (cache.colorIndex == cache.colors.length) {
+        cache.colorIndex = 0
+      }
+
+      let existingSet = states.current.find(obj => obj.name == set.name)
+      if (existingSet) {
+        let n = states.current.filter(obj => obj.name.split(' (')[0] == set.name).length
+        set.name = set.name + ' (' + n + ')'
+      }
+
+      let newState = new Object()
+
+      // set IDs are random 5 digit numbers
+      let id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      while (states.current.some(o => o.id == id)) {
+        id = Math.floor(Math.random() * (99999 - 10000 + 1)) + 10000
+      }
+
+      // default state values
+      newState.id = id
+      newState.name = set.name
+      newState.file = set.fileName
+      newState.color = cache.colors[cache.colorIndex]
+      cache.colorIndex++
+      newState.shape = cache.shapes[0].value
+      newState.applyColorToRaw = true
+
+      newState.rawPointsActive = false
+      newState.rawSplineFreq = false
+      newState.rawPlotLocation = 1
+
+      newState.indexPointsFreq = false
+      newState.indexSplineFreq = false
+      newState.indexPlotLocation = 2
+
+      states.current.push(newState)
+
+      // cache data
+      let newPoints = new Object()
+      newPoints.id = id
+      newPoints.x = set.x
+      newPoints.y = set.y
+      cache.raw.push(newPoints)
+
+      // default active cache values
+      let newModal = new Object()
+      newModal.id = id
+      newModal.active = false
+      newModal.top = 0
+      newModal.outOfBounds = false
+      cache.modals.push(newModal)
+
+      // establish default load sequence
+      cache.loadSequence.push(id)
     }
   },
   addTo: function(data, property) {
@@ -151,6 +254,48 @@ const methods = {
   updateCache: function(name, id, prop, data) {
     let obj = cache[name].find(o => o.id == id)
     obj[prop] = data
+  },
+  allAction: function(prop, val) {
+    let copy = JSON.parse(JSON.stringify(states.current))
+    for (const obj of copy) {
+      obj[prop] = val
+    }
+    this.newCurrent(copy)
+  },
+  checkAll: function(prop) {
+    let testVal = (states.current[0]) ? states.current[0][prop] : null
+    for (let i = 1; i < states.current.length; i++) {
+      let val = states.current[i][prop]
+      if (val !== testVal) {
+        return false
+      }
+    }
+    return testVal
+  },
+  findDataForMedian: function(activeDataIDs) {
+    // if not current, reset raw, splines, & indexes
+    let medianRaw = cache.raw.find(o => o.id === cache.medianID)
+    medianRaw.x = []
+    medianRaw.y = []
+    let medianSplineRaw = cache.splines.raw.find(o => o.id === cache.medianID)
+    if (medianSplineRaw) {
+      medianSplineRaw = {}
+    }
+    let medianSplineIndex = cache.splines.index.find(o => o.id === cache.medianID)
+    if (medianSplineIndex) {
+      medianSplineIndex = {}
+    }
+    let medianIndex = cache.index.find(o => o.id === cache.medianID)
+    if (medianIndex) {
+      medianIndex = {}
+    }
+
+    // find new median
+    let dataForMedian = activeDataIDs.map(id => {
+      let data = cache.raw.find(o => o.id == id)
+      return data
+    })
+    return dataForMedian.filter(o => o)
   }
 }
 

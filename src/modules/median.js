@@ -1,4 +1,4 @@
-const median = function (dataArray) {
+const createMedian = function (dataArray) {
   var longestDataLength = 0;
   for (let set of dataArray) {
     var setLength = set.y.length;
@@ -60,4 +60,4 @@ const median = function (dataArray) {
   return medianSet
 }
 
-export default median
+export default createMedian

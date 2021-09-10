@@ -8,12 +8,25 @@
     props: ['id'],
     computed: {
       colorValue: function() {
-        return this.store.states.current.find(o => o.id == this.id).color
+        let states = (this.id > 99 && this.id < 9999) ? this.store.cache.states : this.store.states.current
+        let set = states.find(o => o.id == this.id)
+        if (set) {
+          return set.color
+        }
+        return '#000000'
       }
     },
     methods: {
       onChange: function(e) {
-        this.store.methods.newCurrent(e.target.value, this.id, 'color')
+        if (this.id ===  this.store.cache.allID) {
+          // all set
+          this.store.methods.allAction('color', e.target.value)
+        } else if (this.id === this.store.cache.medianID) {
+          this.store.methods.updateCache('states', this.id, 'color', e.target.value)
+        } else {
+          // base core or uploaded sets
+          this.store.methods.newCurrent(e.target.value, this.id, 'color')
+        }
       }
     },
   }

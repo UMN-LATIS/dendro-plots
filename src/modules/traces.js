@@ -1,11 +1,13 @@
 import store from './store.js'
 import createSpline from './spline.js'
 import createIndex from './index.js'
+import createMedian from './median.js'
 
-function simpleTrace(obj, colorBool, propA, propB) {
+function simpleTrace(obj, colorTrace, propA, propB) {
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
-  let color = (colorBool) ? obj.color : '#797979'
+  let color = (colorTrace) ? obj.color : '#797979'
+  let opacity = (colorTrace) ? 1 : 0.7
   let width = (obj.shape) ? 2 : 3
   let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
@@ -14,6 +16,7 @@ function simpleTrace(obj, colorBool, propA, propB) {
   trace.x = x
   trace.y = y
   trace.line = { color: color, width: width }
+  trace.opacity = opacity
   trace.mode = mode
   if (obj.shape) {
     trace.marker = { symbol: obj.shape, size: 8 }
@@ -107,11 +110,14 @@ async function indexTrace(obj, prop, freq) {
 }
 
 // param (locVal): plot location value
-const formatTraces = function(locVal) {
+const formatTraces = async function(locVal) {
   let arr = new Array()
 
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
+  // add median to copy
+  let median = store.cache.states.find(o => o.id === store.cache.medianID)
+  storeCopy.push(JSON.parse(JSON.stringify(median)))
 
   // filter out inactive data sets
   let activeStates = storeCopy.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
@@ -131,6 +137,24 @@ const formatTraces = function(locVal) {
 
   // add required raw data, splines, & index to states
   let activeData = activePlots.map(obj => {
+    // median
+    if (obj.id === store.cache.medianID) {
+      // find if median not current
+      let activeDataIDs = store.states.current.map(o => {
+          if (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq) {
+            return o.id
+          }
+      })
+      if (JSON.stringify(store.cache.dataIDsForMedian.sort()) != JSON.stringify(activeDataIDs.sort())) {
+        store.cache.dataIDsForMedian = activeDataIDs
+        let data = store.methods.findDataForMedian(activeDataIDs)
+        let median = createMedian(data)
+        let medianRaw = store.cache.raw.find(o => o.id === store.cache.medianID)
+        medianRaw.x = median.x
+        medianRaw.y = median.y
+      }
+    }
+
     // add raw data to all in-case spline or index requires computation
     let raw = store.cache.raw.find(o => o.id == obj.id)
     obj.raw = {

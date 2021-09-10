@@ -10,6 +10,7 @@
     </div>
     <h1 v-if="!activePlots.length"> Modify options to activate plots. </h1>
   </div>
+  <h1 v-else-if="store.states.past.length || store.states.future.length"> Upload data to activate plots. </h1> 
   <h1 v-else> Loading... </h1>
 </template>
 

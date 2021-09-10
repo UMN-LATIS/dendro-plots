@@ -1,20 +1,26 @@
 <template>
   <div v-if="store.cache.loadSequence.length">
-    <div id="info">
-      <Info :info="info"
-            :width="20"
-            :height="20"
-      />
+    <div>
+      <div id="info">
+        <Info :info="info"
+              :width="20"
+              :height="20"
+        />
+      </div>
+
+      <p> Data </p>
+
+      <div id="sort">
+        <Sort />
+      </div>
+
+      <div id="undo-redo-buttons">
+        <UndoRedoButtons />
+      </div>
     </div>
 
-    <p> Data </p>
-
-    <div id="sort">
-      <Sort />
-    </div>
-
-    <div id="undo-redo-buttons">
-      <UndoRedoButtons />
+    <div>
+      <DataManager :useCache="true" />
     </div>
   </div>
 </template>
@@ -23,13 +29,14 @@
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
+  import DataManager from './DataManager.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, UndoRedoButtons },
+    components: { Info, Sort, UndoRedoButtons, DataManager },
     data() {
       return {
-        info: ['Click to show/hide options.']
+        info: ['Click to show/hide options.'],
       }
     },
   }

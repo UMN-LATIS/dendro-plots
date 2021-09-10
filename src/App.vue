@@ -6,7 +6,7 @@
       </div>
       <DataHeader id="data-header" />
       <div id="data-management">
-        <DataManager />
+        <DataManager :useCache="false" />
       </div>
     </div>
 
@@ -17,6 +17,7 @@
 </template>
 
 <script>
+
 import FileManager from "./components/FileManager.vue";
 import DataHeader from "./components/DataHeader.vue";
 import DataManager from "./components/DataManager.vue";
@@ -62,15 +63,19 @@ export default {
       defaultState.indexSplineFreq = 20;
       defaultState.indexPlotLocation = 2;
     },
-  },
-  mounted() {
-    window.opener.postMessage('open', this.parentSite)
-    window.addEventListener('message', this.onMessage, false)
-  },
-  beforeUnmount() {
-    window.removeEventListener("message", this.onMessage, false);
-  },
-};
+},
+    mounted() {
+      if (!window.opener) {
+        return
+      }
+      window.opener.postMessage('open', this.parentSite)
+      window.addEventListener('message', this.onMessage, false)
+    },
+    beforeUnmount() {
+      window.removeEventListener('message', this.onMessage, false)
+    }
+  }
+
 </script>
 
 <style>
