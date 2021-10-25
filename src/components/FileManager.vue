@@ -21,8 +21,7 @@
     data() {
       return {
         info: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-                   'Accepts multiple files with multiple series in upload sequence.',
-                   'Click to download example datasets with correctly formatted headers.']
+                   'Accepts multiple files with multiple series in upload sequence.']
       }
     },
     methods: {

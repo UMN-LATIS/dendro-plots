@@ -67,7 +67,16 @@
     components: { Info, Toggle, Dropdown, ColorSwatch },
     data() {
       return {
-        info: ['options info'],
+        info: ['From left to right, options include: ',
+                '1) Toggle raw data appearance in plot.',
+                '2) Select visualization spline wavelength for raw data.',
+                '3) Select plot for raw data appearance.',
+                '4) Select detrending spline wavelength for indexing raw data.',
+                '5) Select visualization spline wavelength for indexed data.',
+                '6) Select plot for indexed data appearance.',
+                '7) Select color for this time series.',
+                '8) Toggle color/gray between time series and spline.',
+                '9) Select shape of marker for data values.'],
         splineOptions: [
                           { value: false, name: 'None' },
                           { value: 20, name: '20yr' },
