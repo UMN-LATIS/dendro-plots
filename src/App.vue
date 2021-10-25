@@ -32,12 +32,12 @@ export default {
   data() {
     return {
       //parentSite: 'http://localhost:4000',
-      parentSite: "https://umn-latis.github.io/leaflet-treering/",
+      parentSite: "https://umn-latis.github.io",
     };
   },
   methods: {
     onMessage: function(e) {
-      if (e.origin !== this.parentSite) {
+      if (e.origin != this.parentSite) {
         return;
       }
       let data = [];
