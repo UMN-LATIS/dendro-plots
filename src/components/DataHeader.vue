@@ -36,7 +36,7 @@
     components: { Info, Sort, UndoRedoButtons, DataManager },
     data() {
       return {
-        info: ['Click to show/hide options.'],
+        info: ['Click on time series name to show/hide data plotting options.'],
       }
     },
   }
