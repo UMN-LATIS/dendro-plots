@@ -50,7 +50,7 @@ function formatRWL (data) {
       array.splice(0, 2) // remove row name & decade/year
       array = array.filter((e) => { // remove sentinel, sentinel = indicator of specimens final width
         if ((isNaN(parseFloat(e)) == false) &&
-        (parseFloat(e) > 0) &&
+        (e != '-9999') &&
         (e != '999')) {
           return e
         }
@@ -92,7 +92,7 @@ function formatRWL (data) {
       if (year_in_rwlData == year_in_formattedData) {
         var width_to_test = rwlArray[yearAdj];
         if ((isNaN(parseFloat(width_to_test)) == false) &&
-            (parseFloat(width_to_test) > 0) &&
+            (width_to_test != '-9999') &&
             (width_to_test != '999')) {
           // check that width is not a sentinel (indicator of end of core)
           var width = String(parseFloat(rwlArray[yearAdj]) / 1000);
@@ -211,7 +211,7 @@ const formatFileData = async function (files) {
       for (let row = 1; row < fileData.data.length; row++) {
         let year = fileData.data[row][0]
         let width = fileData.data[row][col]
-        if (width >= 0) {
+        if (width != -1) {
           yearArray.push(parseInt(year))
           widthArray.push(parseFloat(width))
         }
