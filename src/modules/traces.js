@@ -8,7 +8,7 @@ function simpleTrace(obj, colorTrace, propA, propB) {
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
   let color = (colorTrace) ? obj.color : '#797979'
   let opacity = (colorTrace) ? 1 : 0.7
-  let width = (obj.shape) ? 2 : 3
+  let width = (obj.shape) ? 1 : 2
   let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
   let trace = new Object()

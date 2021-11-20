@@ -79,6 +79,8 @@
                 '9) Select shape of marker for data values.'],
         splineOptions: [
                           { value: false, name: 'None' },
+                          { value: 5, name: '5yr' },
+                          { value: 10, name: '10yr' },
                           { value: 20, name: '20yr' },
                           { value: 30, name: '30yr' },
                           { value: 50, name: '50yr' },

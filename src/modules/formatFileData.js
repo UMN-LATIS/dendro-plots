@@ -5,22 +5,6 @@
 
 import Papa from 'papaparse'
 
-function toMM (num) {
-  if (num.length == 4) {
-    // 1234 => 1.234
-    return num.slice(0, 1) + '.' + num.slice(1);
-  } else if (num.length == 3) {
-    // 123 => 0.123
-    return '0.' + num
-  } else if (num.length == 2) {
-    // 12 => 0.012
-    return '0.0' + num
-  } else {
-    // 1 => 0.001
-    return '0.00' + num
-  }
-}
-
 function formatRWL (data) {
   var formattedData = [];
   // 1) rwl remove header
@@ -111,7 +95,7 @@ function formatRWL (data) {
             (parseFloat(width_to_test) > 0) &&
             (width_to_test != '999')) {
           // check that width is not a sentinel (indicator of end of core)
-          var width = toMM(rwlArray[yearAdj])
+          var width = String(parseFloat(rwlArray[yearAdj]) / 1000);
           array.push(width);
           yearAdj++
         } else { // if sentinel, add -1 (missing data indicator) to rest of formattedData

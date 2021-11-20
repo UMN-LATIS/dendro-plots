@@ -6,7 +6,7 @@
     />
   </div>
 
-  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl" multiple hidden ref="fileInput" @change="uploadFiles">
+  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl, .ewr, .lwr, .raw" multiple hidden ref="fileInput" @change="uploadFiles">
   <label for="file-upload"> Upload Files </label>
 </template>
 

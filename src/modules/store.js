@@ -18,16 +18,16 @@ const cache = reactive({
           { value: 2, name: 'Plot 2' }],
   loadSequence: [],
   colors: [
-            '#1f77b4',  // muted blue
-            '#ff7f0e',  // safety orange
-            '#2ca02c',  // cooked asparagus green
-            '#d62728',  // brick red
-            '#9467bd',  // muted purple
-            '#8c564b',  // chestnut brown
-            '#e377c2',  // raspberry yogurt pink
-            '#7f7f7f',  // middle gray
-            '#bcbd22',  // curry yellow-green
-            '#17becf'   // blue-teal
+            '#a6cee3', // light blue
+            '#1f78b4', // dark blue
+            '#b2df8a', // light green
+            '#33a02c', // dark green
+            '#fb9a99', // light red
+            '#e31a1c', // dark red
+            '#fdbf6f', // light orange
+            '#ff7f00', // dark orange
+            '#cab2d6', // light purple
+            '#6a3d9a'  // dark purple
           ],
   colorIndex: 0,
   shapes: [{value: false, name: 'None'},
@@ -108,11 +108,6 @@ const methods = {
     for (const set of data) {
       let newState = new Object()
 
-      let rawPointsBOOL = (id === 1) ? true : false
-      let rawSplineNUM = (id === 1) ? 20 : false
-      let indexPointsNUM = (id === 1) ? 20 : false
-      let indexSplineNUM = (id === 1) ? 20 : false
-
       // default state values
       newState.id = id
       newState.name = set.name
@@ -122,12 +117,12 @@ const methods = {
       newState.shape = false
       newState.applyColorToRaw = true
 
-      newState.rawPointsActive = rawPointsBOOL
-      newState.rawSplineFreq = rawSplineNUM
+      newState.rawPointsActive = true
+      newState.rawSplineFreq = false
       newState.rawPlotLocation = 1
 
-      newState.indexPointsFreq = indexPointsNUM
-      newState.indexSplineFreq = indexSplineNUM
+      newState.indexPointsFreq = false
+      newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
 
       states.current.push(newState)
@@ -184,7 +179,7 @@ const methods = {
       newState.shape = cache.shapes[0].value
       newState.applyColorToRaw = true
 
-      newState.rawPointsActive = false
+      newState.rawPointsActive = true
       newState.rawSplineFreq = false
       newState.rawPlotLocation = 1
 
