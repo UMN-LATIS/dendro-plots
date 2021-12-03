@@ -5,6 +5,8 @@
 
 import Papa from 'papaparse'
 
+const dataSentinals = [-1, -9.9, -9.99, -9.999, -9999, 9.9, 9.99, 9.999, 999, 9999]
+
 function formatRWL (data) {
   var formattedData = [];
   // 1) rwl remove header
@@ -50,8 +52,7 @@ function formatRWL (data) {
       array.splice(0, 2) // remove row name & decade/year
       array = array.filter((e) => { // remove sentinel, sentinel = indicator of specimens final width
         if ((isNaN(parseFloat(e)) == false) &&
-        (e != '-9999') &&
-        (e != '999')) {
+        !(dataSentinals.includes(parseFloat(e)))) {
           return e
         }
       });
@@ -92,8 +93,7 @@ function formatRWL (data) {
       if (year_in_rwlData == year_in_formattedData) {
         var width_to_test = rwlArray[yearAdj];
         if ((isNaN(parseFloat(width_to_test)) == false) &&
-            (width_to_test != '-9999') &&
-            (width_to_test != '999')) {
+            !(dataSentinals.includes(parseFloat(width_to_test)))) {
           // check that width is not a sentinel (indicator of end of core)
           var width = String(parseFloat(rwlArray[yearAdj]) / 1000);
           array.push(width);
@@ -209,11 +209,11 @@ const formatFileData = async function (files) {
       var yearArray = []
       var widthArray = []
       for (let row = 1; row < fileData.data.length; row++) {
-        let year = fileData.data[row][0]
-        let width = fileData.data[row][col]
-        if (width != -1) {
-          yearArray.push(parseInt(year))
-          widthArray.push(parseFloat(width))
+        let year = parseInt(fileData.data[row][0])
+        let width = parseFloat(fileData.data[row][col])
+        if (!(dataSentinals.includes(width))) {
+          yearArray.push(year)
+          widthArray.push(width)
         }
       }
       var obj = new Object()

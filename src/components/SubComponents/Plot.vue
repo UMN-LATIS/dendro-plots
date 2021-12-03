@@ -14,20 +14,9 @@
     props: ['value', 'name', 'count'],
     data() {
       return {
-        median: this.store.cache.states.find(o => o.id === this.store.cache.medianID),
-        loading: {
-          layout: {
-            title: {
-              text: 'Loading...'
-            },
-            showlegend: false,
-          },
-          config: {
-            displayModeBar: false,
-            displaylogo: false,
-          }
-        }
-      }
+        medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
+        medianB: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[1]),
+      } 
     },
     computed: {
       divID: function() {
@@ -110,7 +99,13 @@
         },
         deep: true
       },
-      median: {
+      medianA: {
+        handler: function() {
+          this.updatePlot()
+        },
+        deep: true
+      },
+      medianB: {
         handler: function() {
           this.updatePlot()
         },

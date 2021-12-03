@@ -19,6 +19,33 @@
       </div>
     </div>
 
+    <div id="additional-buttons">
+      <img src="../assets/spaghetti.png">
+      <Toggle id="spag"
+              :toggleProp="null"
+      />
+      <!--
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      <Toggle id="null"
+              :toggleProp="null"
+      />
+      -->
+    </div>
+
     <div>
       <DataManager :useCache="true" />
     </div>
@@ -29,11 +56,12 @@
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
+  import Toggle from './SubComponents/Toggle.vue'
   import DataManager from './DataManager.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, UndoRedoButtons, DataManager },
+    components: { Info, Sort, UndoRedoButtons, Toggle, DataManager },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -107,6 +135,10 @@
 
   #sort {
     margin-left: 6px;
+  }
+
+  #additional-buttons {
+    display: block;
   }
 
 </style>

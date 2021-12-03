@@ -8,10 +8,18 @@
     props: ['id', 'toggleProp'],
     computed: {
       isChecked: function() {
+        if (this.id === "null") {
+          return false;
+        }
+
+        if (this.id === "spag") {
+          return this.store.cache.spagActive
+        }
+
         if (this.id === this.store.cache.allID) {
           return this.store.methods.checkAll(this.toggleProp)
         } else {
-          let states = (this.id === this.store.cache.medianID) ? this.store.cache.states : this.store.states.current
+          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
           let set = states.find(o => o.id == this.id)
           if (set) {
             return set[this.toggleProp]
@@ -22,9 +30,18 @@
     },
     methods: {
       onToggle: function(e) {
+        if (this.id === "null") {
+          return
+        }
+
+        if (this.id === "spag") {
+          this.store.methods.spagAction(e.target.checked)
+          return
+        }
+
         if (this.id === this.store.cache.allID) {
           this.store.methods.allAction(this.toggleProp, e.target.checked)
-        } else if (this.id === this.store.cache.medianID) {
+        } else if (this.store.cache.medianIDs.includes(this.id)) {
           this.store.methods.updateCache('states', this.id, this.toggleProp, e.target.checked)
         } else {
           this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)

@@ -16,7 +16,7 @@
         if (this.id === this.store.cache.allID) {
           selectedVal = this.store.methods.checkAll(this.dropdownProp)
         } else {
-          let states = (this.id === this.store.cache.medianID) ? this.store.cache.states : this.store.states.current
+          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
           let set = states.find(o => o.id == this.id)
           selectedVal = (set) ? set[this.dropdownProp] : null
         }

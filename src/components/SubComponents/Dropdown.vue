@@ -30,7 +30,7 @@
         if (this.id === this.store.cache.allID) {
           // all set
           this.store.methods.allAction(this.dropdownProp, val)
-        } else if (this.id === this.store.cache.medianID) {
+        } else if (this.store.cache.medianIDs.includes(this.id)) {
           this.store.methods.updateCache('states', this.id, this.dropdownProp, val)
         } else {
           // base core or uploaded sets

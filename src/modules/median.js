@@ -7,38 +7,32 @@ const createMedian = function (dataArray) {
     }
   }
 
-  var medianYears = [];
-  var medianWidths = [];
-  var year_to_find_median_width_for = Number.MAX_SAFE_INTEGER;
-  var last_year_to_account_for = -1 * (Number.MAX_SAFE_INTEGER);
+  var medianYears = []
+  var medianWidths = []
+  var year_to_find_median_width_for
+  var last_year_to_account_for
 
   for (let set of dataArray) {
     let years = set.x.filter(Boolean);
-
-    var sets_first_year = parseInt(years[0])
-    if (sets_first_year < year_to_find_median_width_for) { // find oldest (smallest) year in all sets of data
-      year_to_find_median_width_for = sets_first_year;
-    }
-
-    var sets_last_year = parseInt(years[years.length - 1])
-    if (sets_last_year > last_year_to_account_for) { // find most recent (largest) year in all sets of data
-      last_year_to_account_for = sets_last_year;
-    }
+    // find oldest (smallest) year in all sets of data
+    year_to_find_median_width_for = Math.min(...years)
+    // find most recent (largest) year in all sets of data
+    last_year_to_account_for = Math.max(...years)
   }
 
   while (year_to_find_median_width_for <= last_year_to_account_for) {
     var single_year_widths = []
     for (let set of dataArray) { // loop through data sets
       for (let i = 0; i < set.x.length; i++) { // loop through years & widths of each data set
-        if ((set.x.length > 0) && (parseInt(set.x[i]) == year_to_find_median_width_for)) {
-          single_year_widths.push(parseFloat(set.y[i]));
+        if ((set.x.length > 0) && (set.x[i] == year_to_find_median_width_for)) {
+          single_year_widths.push(set.y[i]);
         }
       }
     }
 
     single_year_widths.sort( (a, b) => { return a - b} ); // sort into asscending order
     if (single_year_widths.length == 0) {
-      medianWidths.push('0');
+      medianWidths.push(0);
     } else if (single_year_widths.length % 2 == 0) { // if even length, need to take average of middle values
       var midUpper = (single_year_widths.length / 2);
       var midLower = (single_year_widths.length / 2) - 1;

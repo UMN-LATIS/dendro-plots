@@ -47,10 +47,11 @@ export default {
         data.push(pointsObj.lw);
       }
       data.push(pointsObj.tw);
-      store.methods.initializeData(data);
+      store.methods.processSentData(data);
     },
 },
     mounted() {
+      store.methods.initializeData();
       if (!window.opener) {
         return
       }

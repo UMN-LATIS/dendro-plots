@@ -42,14 +42,15 @@ const cache = reactive({
            { value: 'square-open', name: 'Open Square' },
            { value: 'diamond-open', name: 'Open Diamond' }],
   allID: 111,
-  medianID: 222,
+  medianIDs: [220, 221],
   states: [],
   modals: [],
-  dataIDsForMedian: [],
+  spagActive: false,
+  beforeSpag: [],
 })
 
 const methods = {
-  initializeData: function(data) {
+  initializeData: function() {
     // create all & median states
     let statesDEFAULT = {
       shape: false,
@@ -74,16 +75,24 @@ const methods = {
       color: '#ffffff'
     },
     {
-      id: cache.medianID,
-      name: 'Median',
+      id: cache.medianIDs[0],
+      name: 'Median A',
       color: '#001eff'
+    },
+    {
+      id: cache.medianIDs[1],
+      name: 'Median B',
+      color: '#ff0000'
     }]
 
     let modalARR = [{
       id: cache.allID,
     },
     {
-      id: cache.medianID,
+      id: cache.medianIDs[0],
+    },
+    {
+      id: cache.medianIDs[1],
     }]
 
     for (const obj of statesARR) {
@@ -96,12 +105,15 @@ const methods = {
       cache.modals.push(obj)
     }
 
-    let medianPoints = new Object()
-    medianPoints.id = cache.medianID
-    medianPoints.x = []
-    medianPoints.y = []
-    cache.raw.push(medianPoints)
-
+    for (const id of cache.medianIDs) {
+      let medianPoints = new Object()
+      medianPoints.id = id
+      medianPoints.x = []
+      medianPoints.y = []
+      cache.raw.push(medianPoints)
+    }
+  },
+  processSentData: function(data) {
     // base core sets given specifc IDs
     let id = 1
 
@@ -268,29 +280,40 @@ const methods = {
     return testVal
   },
   findDataForMedian: function(activeDataIDs) {
-    // if not current, reset raw, splines, & indexes
-    let medianRaw = cache.raw.find(o => o.id === cache.medianID)
-    medianRaw.x = []
-    medianRaw.y = []
-    let medianSplineRaw = cache.splines.raw.find(o => o.id === cache.medianID)
-    if (medianSplineRaw) {
-      medianSplineRaw = {}
-    }
-    let medianSplineIndex = cache.splines.index.find(o => o.id === cache.medianID)
-    if (medianSplineIndex) {
-      medianSplineIndex = {}
-    }
-    let medianIndex = cache.index.find(o => o.id === cache.medianID)
-    if (medianIndex) {
-      medianIndex = {}
+    let dataForMedian = []
+    for (let id of activeDataIDs) {
+      if (id) {
+        let data = cache.raw.find(o => o.id == id)
+        dataForMedian.push(data)
+      }
     }
 
-    // find new median
-    let dataForMedian = activeDataIDs.map(id => {
-      let data = cache.raw.find(o => o.id == id)
-      return data
-    })
-    return dataForMedian.filter(o => o)
+    return dataForMedian
+  },
+  spagAction: function(active) {
+    cache.spagActive = active
+    if (active) {
+      cache.beforeSpag = JSON.parse(JSON.stringify(states.current))
+      this.allAction('color', '#797979')
+
+      let activeStates = states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+
+      // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
+      let plot1Active = activeStates.some(o => o.rawPlotLocation == 1 || o.indexPlotLocation == 1)
+      let plot2Active = activeStates.some(o => o.rawPlotLocation == 2 || o.indexPlotLocation == 2)
+
+      if (plot1Active) {
+        this.updateCache('states', 220, 'rawPointsActive', true)
+      }
+      if (plot2Active) {
+        this.updateCache('states', 221, 'rawPlotLocation', 2)
+        this.updateCache('states', 221, 'rawPointsActive', true)
+      }
+    } else {
+      states.current = cache.beforeSpag
+      this.updateCache('states', 220, 'rawPointsActive', false)
+      this.updateCache('states', 221, 'rawPointsActive', false)
+    }
   }
 }
 
