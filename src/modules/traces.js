@@ -140,19 +140,10 @@ const formatTraces = function(locVal) {
   })
 
   // add required raw data, splines, & index to states
+  let medianData = []
   let activeData = activePlots.map(obj => {
-    // median
     if (store.cache.medianIDs.includes(obj.id)) {
-      let activeDataIDs = activePlots.map(o => {
-        if (o.rawPointsActive && o.id > 999) {
-          return o.id
-        }
-      })
-      let data = store.methods.findDataForMedian(activeDataIDs)
-      let median = createMedian(data)
-      let medianRaw = store.cache.raw.find(o => o.id === obj.id)
-      medianRaw.x = median.x
-      medianRaw.y = median.y
+      return obj
     }
 
     // add raw data to all in-case spline or index requires computation
@@ -161,16 +152,24 @@ const formatTraces = function(locVal) {
       x: raw.x,
       y: raw.y
     }
+
+    if (obj.rawPointsActive) {
+      medianData.push(obj.raw)
+    }
+
     if (obj.rawSplineFreq) {
       let rawSpline = store.cache.splines.raw.find(o => o.id == obj.id)
       obj.spline = {
         raw: (rawSpline) ? rawSpline[obj.rawSplineFreq] : null
       }
     }
+
     if (obj.indexPointsFreq) {
       let index = store.cache.index.find(o => o.id == obj.id)
       obj.index = (index) ? index[obj.indexPointsFreq] : null
+      medianData.push(obj.index)
     }
+
     if (obj.indexSplineFreq) {
       let indexSpline = store.cache.splines.index.find(o => o.id == obj.id)
       obj.spline = {
@@ -178,8 +177,19 @@ const formatTraces = function(locVal) {
       }
     }
 
-    return obj
-  })
+      return obj
+    })
+
+    // add median to set based on which points were active (decided above)
+    activeData.forEach(obj => {
+      if (store.cache.medianIDs.includes(obj.id)) {
+        let median = createMedian(medianData)
+        obj.raw = {
+          x: median.x,
+          y : median.y,
+        }
+      }
+    })
 
   // create traces based on needed format
   // order of creation important

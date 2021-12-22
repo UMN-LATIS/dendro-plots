@@ -279,17 +279,6 @@ const methods = {
     }
     return testVal
   },
-  findDataForMedian: function(activeDataIDs) {
-    let dataForMedian = []
-    for (let id of activeDataIDs) {
-      if (id) {
-        let data = cache.raw.find(o => o.id == id)
-        dataForMedian.push(data)
-      }
-    }
-
-    return dataForMedian
-  },
   spagAction: function(active) {
     cache.spagActive = active
     if (active) {
