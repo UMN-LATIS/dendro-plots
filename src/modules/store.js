@@ -47,6 +47,7 @@ const cache = reactive({
   modals: [],
   spagActive: false,
   beforeSpag: [],
+  updatePlotSwitch: false,
 })
 
 const methods = {
@@ -117,7 +118,29 @@ const methods = {
     // base core sets given specifc IDs
     let id = 1
 
-    for (const set of data) {
+    // check if spot for data existing (data in leaflet updated, but new plot not popped out)
+    if (cache.raw.find(o => o.id == id)) {
+      for (let set of data) {
+        let raw = cache.raw.find(o => o.id == id)
+        raw.x = set.x
+        raw.y = set.y
+
+        // reset spline & index data
+        let index = cache.index.find(o => o.id == id)
+        index = null
+        let rawSpline = cache.splines.raw.find(o => o.id == id)
+        rawSpline = null
+        let indexSpline = cache.splines.index.find(o => o.id == id)
+        indexSpline = null
+
+        id++
+      }
+      cache.updatePlotSwitch = !cache.updatePlotSwitch
+      return
+    }
+
+    // if not, create new data profile
+    for (let set of data) {
       let newState = new Object()
 
       // default state values

@@ -16,7 +16,7 @@
       return {
         medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
         medianB: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[1]),
-      } 
+      }
     },
     computed: {
       divID: function() {
@@ -93,6 +93,12 @@
       }
     },
     watch: {
+      'store.cache.updatePlotSwitch': {
+        handler: function() {
+          this.updatePlot()
+        },
+        deep: true
+      },
       'store.states.current': {
         handler: function() {
           this.updatePlot()
