@@ -9,15 +9,15 @@ const createMedian = function (dataArray) {
 
   var medianYears = []
   var medianWidths = []
-  var year_to_find_median_width_for
-  var last_year_to_account_for
+  var year_to_find_median_width_for = Number.MAX_SAFE_INTEGER
+  var last_year_to_account_for = -Number.MAX_SAFE_INTEGER
 
   for (let set of dataArray) {
     let years = set.x.filter(Boolean);
     // find oldest (smallest) year in all sets of data
-    year_to_find_median_width_for = Math.min(...years)
+    year_to_find_median_width_for = (Math.min(...years) < year_to_find_median_width_for) ? Math.min(...years) : year_to_find_median_width_for
     // find most recent (largest) year in all sets of data
-    last_year_to_account_for = Math.max(...years)
+    last_year_to_account_for = (Math.max(...years) > last_year_to_account_for) ? Math.max(...years) : last_year_to_account_for
   }
 
   while (year_to_find_median_width_for <= last_year_to_account_for) {
