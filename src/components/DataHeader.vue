@@ -20,14 +20,17 @@
     </div>
 
     <div id="additional-buttons">
-      <img src="../assets/spaghetti.png">
-      <Toggle id="spag"
-              :toggleProp="null"
+      <ClickIcon id="modalToggle"
+                :info="['Click to toggle data modals.']"
+                :imageName="'bullet-points'"
+                :callback="modalToggle"
+      />
+      <ClickIcon id="spagToggle"
+                :info="['Click to toggle spaghetti plot.']"
+                :imageName="'spaghetti-plot'"
+                :callback="spagToggle"
       />
       <!--
-      <Toggle id="null"
-              :toggleProp="null"
-      />
       <Toggle id="null"
               :toggleProp="null"
       />
@@ -57,16 +60,38 @@
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
   import Toggle from './SubComponents/Toggle.vue'
+  import ClickIcon from './SubComponents/ClickIcon.vue'
   import DataManager from './DataManager.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, UndoRedoButtons, Toggle, DataManager },
+    components: { Info, Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
+        spagActive: false,
       }
     },
+    methods: {
+      spagToggle: function() {
+        this.spagActive = !this.spagActive
+        this.store.methods.spagAction(this.spagActive)
+      },
+      modalToggle: function() {
+        let allOff = true
+        for (let obj of this.store.cache.modals) {
+          if (obj.active) {
+            allOff = false
+            obj.active = false
+          }
+        }
+        if (allOff) {
+          for (let obj of this.store.cache.modals) {
+            obj.active = true
+          }
+        }
+      }
+    }
   }
 </script>
 

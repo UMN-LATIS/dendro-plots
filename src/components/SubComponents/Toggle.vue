@@ -8,14 +8,6 @@
     props: ['id', 'toggleProp'],
     computed: {
       isChecked: function() {
-        if (this.id === "null") {
-          return false;
-        }
-
-        if (this.id === "spag") {
-          return this.store.cache.spagActive
-        }
-
         if (this.id === this.store.cache.allID) {
           return this.store.methods.checkAll(this.toggleProp)
         } else {
@@ -30,15 +22,6 @@
     },
     methods: {
       onToggle: function(e) {
-        if (this.id === "null") {
-          return
-        }
-
-        if (this.id === "spag") {
-          this.store.methods.spagAction(e.target.checked)
-          return
-        }
-
         if (this.id === this.store.cache.allID) {
           this.store.methods.allAction(this.toggleProp, e.target.checked)
         } else if (this.store.cache.medianIDs.includes(this.id)) {
