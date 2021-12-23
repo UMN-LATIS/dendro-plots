@@ -4,10 +4,12 @@ import createIndex from './index.js'
 import createMedian from './median.js'
 
 function simpleTrace(obj, colorTrace, propA, propB) {
+  // only splines have 2 properties (splines, raw or index.)
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
   let color = (colorTrace) ? obj.color : '#797979'
-  let opacity = 0.6
+  let opacity = (propB) ? 1 : 0.5 // opacity for gray scale
+  opacity = (colorTrace) ? 0.7 : opacity // opacity for color
   let width = (obj.shape) ? 1 : 2
   let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
