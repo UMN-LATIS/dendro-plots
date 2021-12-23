@@ -42,11 +42,11 @@ export default {
       }
       let data = [];
       let pointsObj = e.data.points;
+      data.push(pointsObj.tw);
       if (pointsObj.ew && pointsObj.lw) {
         data.push(pointsObj.ew);
         data.push(pointsObj.lw);
       }
-      data.push(pointsObj.tw);
       store.methods.processSentData(data);
     },
 },

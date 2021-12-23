@@ -115,12 +115,16 @@ const methods = {
     }
   },
   processSentData: function(data) {
-    // base core sets given specifc IDs
-    let id = 1
+    for (let id = 0; id < data.length; id++) {
+      // id: 0 = tw
+      // id: 1 = ew
+      // id: 2 = lw
+      // based on array order set in App.vue
 
-    // check if spot for data existing (data in leaflet updated, but new plot not popped out)
-    if (cache.raw.find(o => o.id == id)) {
-      for (let set of data) {
+      let set = data[id];
+
+      // check if data profile exists (data in leaflet updated, but new plot not popped out)
+      if (cache.raw.find(o => o.id == id)) {
         let raw = cache.raw.find(o => o.id == id)
         raw.x = set.x
         raw.y = set.y
@@ -133,14 +137,11 @@ const methods = {
         let indexSpline = cache.splines.index.find(o => o.id == id)
         indexSpline = null
 
-        id++
+        cache.updatePlotSwitch = !cache.updatePlotSwitch
+        continue;
       }
-      cache.updatePlotSwitch = !cache.updatePlotSwitch
-      return
-    }
 
-    // if not, create new data profile
-    for (let set of data) {
+      // else create new profile
       let newState = new Object()
 
       // default state values
@@ -179,8 +180,6 @@ const methods = {
 
       // establish default load sequence
       cache.loadSequence.push(id)
-
-      id++
     }
   },
   loadData: function(data) {
@@ -265,7 +264,7 @@ const methods = {
   },
   newCurrent: function(data, id, property) {
     this.saveCurrent()
-    if (id && property) {
+    if ((id || id == 0) && property) {
       let currentSet = states.current.find(obj => obj.id == id)
       currentSet[property] = data
     } else {
