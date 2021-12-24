@@ -107,8 +107,8 @@ h2 {
 
 #file-mangement {
   width: inherit;
-  height: 24px;
-  min-height: 24px;
+  height: 20px;
+  min-height: 20px;
   overflow: hidden;
   margin-top: 5px;
   margin-bottom: 5px;

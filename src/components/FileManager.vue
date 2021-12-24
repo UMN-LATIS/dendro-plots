@@ -1,27 +1,27 @@
 <template>
-  <div id="info">
-    <Info :info="info"
-          :width="20"
-          :height="20"
-    />
+  <div class="dropdown">
+    <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl, .ewr, .lwr, .raw" multiple hidden ref="fileInput" @change="uploadFiles">
+    <label for="file-upload">
+      <img src="../assets/upload.png" />
+    </label>
+    <div class="dropdown-content">
+      <p class="info"
+         v-for="blurb in info"
+         :key="blurb"> {{ blurb }}
+      </p>
+    </div>
   </div>
-
-  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl, .ewr, .lwr, .raw" multiple hidden ref="fileInput" @change="uploadFiles">
-  <label for="file-upload"> Upload Files </label>
 </template>
 
 <script>
-  import Info from './SubComponents/Info.vue'
-
   import formatFileData from '../modules/formatFileData.js'
 
   export default {
     inject: ['store'],
-    components: { Info },
-    data() {
+    data: function() {
       return {
         info: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-                   'Accepts multiple files with multiple series in upload sequence.']
+               'Accepts multiple files with multiple series in upload sequence.']
       }
     },
     methods: {
@@ -35,35 +35,62 @@
 </script>
 
 <style scoped>
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
   input {
     margin: 0;
     padding: 0;
   }
 
   label {
-    background-color: black;
-    color: white;
-    padding: 4px 14px;
-    font-family: sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    border-radius: 4px;
+    padding: 0;
     cursor: pointer;
     margin: 0;
+    margin-left: 2px;
     display: inline-block;
-    margin-left: 22px;
   }
 
-  label:hover {
-    background-color: #797979;
-    color: white;
+  .info {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    width: max-content;
   }
 
-  #info {
-    width: 20px;
-    height: 20px;
-    margin-top: 1px;
+  .dropdown {
+    display: inline-block;
+    border: none;
+  }
+
+  .dropdown-content {
+    display: none;
+    font-weight: normal;
+    font-family: Sans-serif;
+    font-size: 12px;
+    color: black;
+    padding: 6px;
+    margin: 0;
     position: absolute;
+    margin-top: 20px;
+    margin-left: -10px;
+    background-color: #f6f6f6;
+    border: 1px solid black;
+    border-radius: 2px;
+    z-index: 999999;
+    /* fix transition so hover text is not instant */
+    transition: opacity 1s linear;
+    opacity: 0;
+  }
+
+  .dropdown:hover .dropdown-content {
+    opacity: 1;
+    display: inline;
   }
 
 </style>

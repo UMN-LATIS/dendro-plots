@@ -1,35 +1,32 @@
 <template>
   <div v-if="store.cache.loadSequence.length">
     <div>
-      <div id="info">
-        <Info :info="info"
-              :width="20"
-              :height="20"
-        />
+      <!-- replace hover text wrapper with Vue dynamic components -->
+      <div class="dropdown">
+        <p class="header">Data </p>
+        <div class="dropdown-content">
+          <p class="info"
+             v-for="blurb in info"
+             :key="blurb"> {{ blurb }}
+          </p>
+        </div>
       </div>
 
-      <p> Data </p>
-
-      <div id="sort">
-        <Sort />
-      </div>
-
-      <div id="undo-redo-buttons">
-        <UndoRedoButtons />
-      </div>
-    </div>
-
-    <div id="additional-buttons">
       <ClickIcon id="modalToggle"
                 :info="['Click to toggle data modals.']"
                 :imageName="'bullet-points'"
                 :callback="modalToggle"
       />
+      <Sort />
+    </div>
+
+    <div id="additional-buttons">
       <ClickIcon id="spagToggle"
                 :info="['Click to toggle spaghetti plot.']"
                 :imageName="'spaghetti-plot'"
                 :callback="spagToggle"
       />
+      <UndoRedoButtons />
       <!--
       <Toggle id="null"
               :toggleProp="null"
@@ -56,7 +53,6 @@
 </template>
 
 <script>
-  import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
   import Toggle from './SubComponents/Toggle.vue'
@@ -65,7 +61,7 @@
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager },
+    components: { Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -98,10 +94,11 @@
 <style scoped>
   div {
     margin: 0;
+    margin-left: 2px;
     display: inline;
   }
 
-  p {
+  .header {
     font-family: Sans-serif;
     font-weight: bold;
     font-size: 18px;
@@ -109,26 +106,22 @@
     height: 18px;
     display: inline;
     margin: 0;
-    margin-left: 22px;
+    margin-right: 8px;
   }
 
-  img {
-    width: 18px;
-    height: 18px;
-    margin: 0 6px;
-    cursor: pointer;
+  .info {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    width: max-content;
   }
 
-  .info-icons {
-    cursor: help;
-  }
-
-  .dropdown, .show:hover {
-    cursor: normal;
-  }
-
-  .dropdown:hover .dropdown-content {
-    display: inline;
+  .dropdown {
+    display: inline-block;
+    border: none;
   }
 
   .dropdown-content {
@@ -140,26 +133,16 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -16px;
-    margin-top: 22px;
+    margin-top: 20px;
+    margin-left: -26px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
   }
 
-  .first {
-    margin-left: 5px;
-  }
-
-  #info {
-    width: 20px;
-    height: 20px;
-    position: absolute;
-  }
-
-  #sort {
-    margin-left: 6px;
+  .dropdown:hover .dropdown-content {
+    display: inline;
   }
 
   #additional-buttons {
