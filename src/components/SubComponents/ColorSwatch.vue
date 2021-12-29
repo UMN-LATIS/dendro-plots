@@ -43,7 +43,7 @@
     margin-bottom: 2px;
     box-sizing: border-box;
     cursor: pointer;
-    position: fixed;
+    position: absolute;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {

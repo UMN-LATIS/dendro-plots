@@ -3,7 +3,7 @@
     <DropdownOptions v-for="obj in options"
                      :key="obj.value"
                      :id="id"
-                     :name="obj.name"
+                     :name="obj.name + optionModifer"
                      :value="obj.value"
                      :dropdownProp="dropdownProp"
     />
@@ -15,7 +15,7 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'options', 'dropdownProp'],
+    props: ['id', 'options', 'optionModifer', 'dropdownProp'],
     components: { DropdownOptions },
     methods: {
       onChange: function(e) {
@@ -48,7 +48,6 @@
     font-size: 12px;
     color: black;
     height: 16px;
-    width: 56px;
     border: 1px solid black;
     border-radius: 2px;
     position: absolute;

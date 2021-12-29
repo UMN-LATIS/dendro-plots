@@ -8,47 +8,55 @@
           :height="20"
     />
 
+    <!-- ALL SPACER DIVS DECIDED BY WIDTH OF SELECT TAG WIDTH IN DEV TOOLS (+5 wiggle room)-->
+
     <!-- data options -->
     <Toggle :id="id"
             :toggleProp="'rawPointsActive'"
     />
     <Dropdown :id="id"
               :options="splineOptions"
+              :optionModifer="'detrending spline'"
               :dropdownProp="'rawSplineFreq'"
     />
-    <div style="width: 60px;"></div> <!-- spacer div -->
+    <div style="width: 152px"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="store.cache.plots"
+              :optionModifer="': raw data'"
               :dropdownProp="'rawPlotLocation'"
      />
 
     <!-- index options -->
-    <div style="width: 65px;"></div> <!-- spacer div -->
+    <div style="width: 114px"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="splineOptions"
+              :optionModifer="'index points'"
               :dropdownProp="'indexPointsFreq'"
     />
-    <div style="width: 60px;"></div> <!-- spacer div -->
+    <div style="width: 125px"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="splineOptions"
+              :optionModifer="'visualization spline'"
               :dropdownProp="'indexSplineFreq'"
     />
-    <div style="width: 60px;"></div> <!-- spacer div -->
+    <div style="width: 161px"></div> <!-- spacer div -->
     <Dropdown :id="id"
               :options="store.cache.plots"
+              :optionModifer="': index data'"
               :dropdownProp="'indexPlotLocation'"
      />
 
      <!-- color options -->
-     <div style="width: 65px;"></div> <!-- spacer div -->
+     <div style="width: 124px"></div> <!-- spacer div -->
      <ColorSwatch :id="id" />
-     <div style="width: 16px;"></div> <!-- spacer div -->
+     <div :style="{ width: toggleWidth + 'px' }"></div> <!-- spacer div -->
      <Toggle :id="id"
              :toggleProp="'applyColorToRaw'"
      />
      <!-- marker options -->
      <Dropdown :id="id"
                :options="store.cache.shapes"
+               :optionModifer="''"
                :dropdownProp="'shape'"
       />
 
@@ -65,7 +73,7 @@
     inject: ['store'],
     props: ['id', 'top'],
     components: { Info, Toggle, Dropdown, ColorSwatch },
-    data() {
+    data: function() {
       return {
         info: ['From left to right, options include: ',
                 '1) Toggle raw data appearance in plot.',
@@ -78,17 +86,19 @@
                 '8) Toggle color/gray between time series and spline.',
                 '9) Select shape of marker for data values.'],
         splineOptions: [
-                          { value: false, name: 'None' },
-                          { value: 5, name: '5yr' },
-                          { value: 10, name: '10yr' },
-                          { value: 20, name: '20yr' },
-                          { value: 30, name: '30yr' },
-                          { value: 50, name: '50yr' },
-                          { value: 100, name: '100yr' },
-                          { value: 200, name: '200yr' },
-                          { value: 0.5, name: '50%' },
-                          { value: 0.67, name: '67%' },
-                        ]
+                          { value: false, name: 'No ' },
+                          { value: 5, name: '5yr ' },
+                          { value: 10, name: '10yr ' },
+                          { value: 20, name: '20yr ' },
+                          { value: 30, name: '30yr ' },
+                          { value: 50, name: '50yr ' },
+                          { value: 100, name: '100yr ' },
+                          { value: 200, name: '200yr ' },
+                          { value: 0.5, name: '50% ' },
+                          { value: 0.67, name: '67% ' },
+                        ],
+        dropdownWidth: 150,
+        toggleWidth: 16,
       }
     },
   }
@@ -110,6 +120,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 444px;
+    width: 900px;
   }
 </style>
