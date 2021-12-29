@@ -53,12 +53,15 @@
   .dropdown {
     width: 20px;
     height: 20px;
-    display: inline-block;
     border: none;
+    display: inline-block;
   }
 
   .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    transition-delay: 1s;
     padding: 6px;
     margin: 0;
     position: absolute;
@@ -73,5 +76,7 @@
 
   .dropdown:hover .dropdown-content {
     display: inline;
+    visibility: visible;
+    opacity: 1;
   }
 </style>

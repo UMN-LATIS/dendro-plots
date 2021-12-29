@@ -69,7 +69,10 @@
   }
 
   .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
     font-size: 12px;
@@ -83,12 +86,10 @@
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
-    /* fix transition so hover text is not instant */
-    transition: opacity 1s linear;
-    opacity: 0;
   }
 
   .dropdown:hover .dropdown-content {
+    visibility: visible;
     opacity: 1;
     display: inline;
   }

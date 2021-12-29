@@ -77,10 +77,15 @@
 
   .dropdown:hover .dropdown-content {
     display: inline;
+    visibility: visible;
+    opacity: 1;
   }
 
   .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 1s;
+    transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
     font-size: 12px;
