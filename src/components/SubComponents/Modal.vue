@@ -55,11 +55,11 @@
           {
             id: this.id,
             left: 0,
-            width: 152,
+            width: 92,
             component: 'Dropdown',
             info: ['Select visualization spline wavelength for raw data.'],
             options: this.splineOptions,
-            optionModifer: 'detrending spline',
+            optionModifer: 'spline',
             mainProp: 'rawSplineFreq',
             actions: ['rawSplineFreq', 'indexPointsFreq'],
           }, // raw spline dropdown
@@ -81,7 +81,7 @@
             component: 'Dropdown',
             info: ['Select detrending spline wavelength for indexing raw data.'],
             options: this.splineOptions,
-            optionModifer: 'index points',
+            optionModifer: 'spline index',
             mainProp: 'indexPointsFreq',
             actions: ['indexPointsFreq'],
           }, // index points dropdown
@@ -92,7 +92,7 @@
             component: 'Dropdown',
             info: ['Select visualization spline wavelength for indexed data.'],
             options: this.splineOptions,
-            optionModifer: 'visualization points',
+            optionModifer: 'visualization spline',
             mainProp: 'indexSplineFreq',
             actions: ['indexSplineFreq'],
           }, // index spline dropdown
@@ -155,6 +155,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 878px;
+    width: 820px;
   }
 </style>

@@ -30,7 +30,7 @@ const cache = reactive({
             '#6a3d9a'  // dark purple
           ],
   colorIndex: 0,
-  shapes: [{value: false, name: 'None'},
+  shapes: [{value: false, name: 'No marker'},
            { value: 'circle', name: 'Circle' },
            { value: 'triangle-up', name: 'Triangle' },
            { value: 'triangle-down', name: 'Inverse Triangle' },
