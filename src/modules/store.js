@@ -73,7 +73,7 @@ const methods = {
     let statesARR = [{
       id: cache.allID,
       name: 'All',
-      color: '#ffffff',
+      color: '#000000',
       file: 'DendroPlots'
     },
     {

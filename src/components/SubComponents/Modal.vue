@@ -15,15 +15,12 @@
 </template>
 
 <script>
-  import Toggle from './Toggle.vue'
-  import Dropdown from './Dropdown.vue'
-  import ColorSwatch from './ColorSwatch.vue'
   import HoverWrapper from './HoverWrapper.vue'
 
   export default {
     inject: ['store'],
     props: ['id', 'top'],
-    components: { Toggle, Dropdown, ColorSwatch, HoverWrapper },
+    components: { HoverWrapper },
     data: function() {
       return {
         splineOptions: [
@@ -55,11 +52,11 @@
           {
             id: this.id,
             left: 0,
-            width: 92,
+            width: 161,
             component: 'Dropdown',
             info: ['Select visualization spline wavelength for raw data.'],
             options: this.splineOptions,
-            optionModifer: 'spline',
+            optionModifer: 'visualization spline',
             mainProp: 'rawSplineFreq',
             actions: ['rawSplineFreq', 'indexPointsFreq'],
           }, // raw spline dropdown
@@ -155,6 +152,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 820px;
+    width: 890px;
   }
 </style>

@@ -1,6 +1,10 @@
 <template>
   <div class="dropdown">
-    <p class="name"> {{ name }} </p>
+    <p class="name"
+       :style="{ color: ofColor }"
+    >
+      {{ name }}
+    </p>
     <div class="dropdown-content">
       <p class="info"> {{ name + ' from ' + file }} </p>
       <p class="info"> Click on time series name to show/hide data plotting options </p>
@@ -11,10 +15,15 @@
 <script>
   export default {
     inject: ['store'],
-    props: ['name', 'file'],
+    props: ['name', 'file', 'id'],
     computed: {
-      info: function() {
-        return this.name + ' from ' + this.file
+      ofColor: function() {
+        let states = (this.id > 99 && this.id < 9999) ? this.store.cache.states : this.store.states.current
+        let set = states.find(o => o.id == this.id)
+        if (set) {
+          return set.color
+        }
+        return '#000000'
       }
     }
   }

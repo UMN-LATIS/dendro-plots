@@ -9,6 +9,7 @@
 
     <Name :name="obj.name"
           :file="obj.file"
+          :id="obj.id"
     />
 
     <Remove class="remove"

@@ -1,18 +1,18 @@
 <template>
   <div>
+    <HoverWrapper :isMarginLeft="-40"
+                  :isWidth="40"
+                  :isData="{}"
+                  :isComponent="'Text'"
+                  :info="['Click on time series name to show/hide data plotting options.']"
+    />
+
     <HoverWrapper :isMarginLeft="0"
                   :isWidth="20"
                   :isData="{}"
                   :isComponent="'FileUpload'"
                   :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
                          'Accepts multiple files with multiple series in upload sequence.']"
-    />
-
-    <HoverWrapper :isMarginLeft="-40"
-                  :isWidth="40"
-                  :isData="{}"
-                  :isComponent="'Text'"
-                  :info="['Click on time series name to show/hide data plotting options.']"
     />
 
     <div v-if="store.cache.loadSequence.length"

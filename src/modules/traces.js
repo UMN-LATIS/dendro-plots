@@ -31,7 +31,8 @@ function simpleTrace(obj, colorTrace, propA, propB) {
 async function splineTrace(obj, prop, freq, splineFORindex) {
   let freqName = freq + 'yr'
   if (freq < 1) {
-    let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
+    let years = obj.raw.x.filter(Boolean)
+    let yearSpan = Math.abs(years[years.length - 1] - years[0]) + 1
     freqName = (100 * freq) + '%'
     freq = freq * yearSpan
   }
@@ -80,7 +81,8 @@ async function splineTrace(obj, prop, freq, splineFORindex) {
 async function indexTrace(obj, prop, freq) {
   let freqName = freq + 'yr'
   if (freq < 1) {
-    let yearSpan = Math.abs(obj.raw.x[obj.raw.x.length - 1] - obj.raw.x[0]) + 1
+    let years = obj.raw.x.filter(Boolean)
+    let yearSpan = Math.abs(years[years.length - 1] - years[0]) + 1
     freqName = (100 * freq) + '%'
     freq = freq * yearSpan
   }
