@@ -4,7 +4,7 @@
          v-if="store.cache.loadSequence.length > 1"
          @click="onClick">
     <div class="dropdown-content">
-      <span> {{ sortText[sortType] }} </span>
+      <p class="info"> {{ sortText[sortType] }} </p>
     </div>
   </div>
 </template>
@@ -71,20 +71,26 @@
     margin-bottom: -2px;
   }
 
-  .dropdown, .show:hover {
-    cursor: pointer;
+  .info {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    width: max-content;
   }
 
-  .dropdown:hover .dropdown-content {
-    display: inline;
-    visibility: visible;
-    opacity: 1;
+  .dropdown {
+    height: 20px;
+    display: inline-block;
+    border: none;
   }
 
   .dropdown-content {
     visibility: hidden;
     opacity: 0;
-    transition: opacity 1s;
+    transition: opacity 0s;
     transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
@@ -93,11 +99,18 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -10px;
-    margin-top: 22px;
+    margin-top: 20px;
+    margin-left: -20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
   }
+
+  .dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    display: inline;
+  }
+
 </style>

@@ -60,7 +60,7 @@
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
         for (const e of dataEntries) {
           let modalObj = this.store.cache.modals.find(o => o.id == e.id)
-          if (e.getBoundingClientRect().top > 54) {
+          if (e.getBoundingClientRect().top > 114 || e.id < 999) {
             modalObj.top = e.getBoundingClientRect().top - 1
             modalObj.outOfBounds = false
           } else {

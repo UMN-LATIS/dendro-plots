@@ -8,7 +8,10 @@
     <div class="dropdown-content"
          :style="{ 'margin-left': isMarginLeft + 'px' }"
     >
-      <p class="info"> {{ info }} </p>
+      <p class="info"
+         v-for="blurb in info"
+         :key="blurb"> {{ blurb }}
+      </p>
     </div>
 
   </div>
@@ -18,11 +21,14 @@
   import Toggle from './Toggle.vue'
   import Dropdown from './Dropdown.vue'
   import ColorSwatch from './ColorSwatch.vue'
+  import FileUpload from './FileUpload.vue'
+  import Text from './Text.vue'
+  import ClickIcon from './ClickIcon.vue'
 
   export default {
     inject: ['store'],
     props: ['isMarginLeft', 'isWidth', 'isData', 'isComponent', 'info'],
-    components: { Toggle, Dropdown, ColorSwatch },
+    components: { Toggle, Dropdown, ColorSwatch, FileUpload, Text, ClickIcon },
   }
 </script>
 

@@ -1,10 +1,7 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <div id="file-mangement">
-        <FileManager />
-      </div>
-      <DataHeader id="data-header" />
+      <DataHeader />
       <div id="data-management">
         <DataManager :useCache="false" />
       </div>
@@ -74,6 +71,7 @@ html {
   height: 100%;
   width: 100%;
   background: #f6f6f6;
+  overflow: hidden;
 }
 
 div {
@@ -103,15 +101,6 @@ h2 {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-#file-mangement {
-  width: inherit;
-  height: 20px;
-  min-height: 20px;
-  overflow: hidden;
-  margin-top: 5px;
-  margin-bottom: 5px;
 }
 
 #data-management {

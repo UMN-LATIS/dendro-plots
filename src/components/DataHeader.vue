@@ -1,49 +1,50 @@
 <template>
-  <div v-if="store.cache.loadSequence.length">
-    <div>
-      <!-- replace hover text wrapper with Vue dynamic components -->
-      <div class="dropdown">
-        <p class="header">Data </p>
-        <div class="dropdown-content">
-          <p class="info"
-             v-for="blurb in info"
-             :key="blurb"> {{ blurb }}
-          </p>
-        </div>
-      </div>
+  <div>
+    <HoverWrapper :isMarginLeft="0"
+                  :isWidth="20"
+                  :isData="{}"
+                  :isComponent="'FileUpload'"
+                  :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
+                         'Accepts multiple files with multiple series in upload sequence.']"
+    />
 
-      <ClickIcon id="modalToggle"
-                :info="['Click to toggle data modals.']"
-                :imageName="'bullet-points'"
-                :callback="modalToggle"
+    <HoverWrapper :isMarginLeft="-40"
+                  :isWidth="40"
+                  :isData="{}"
+                  :isComponent="'Text'"
+                  :info="['Click on time series name to show/hide data plotting options.']"
+    />
+
+    <div v-if="store.cache.loadSequence.length"
+         style="display: inline;"
+    >
+      <HoverWrapper :isMarginLeft="-20"
+                    :isWidth="20"
+                    :isData="{
+                        imageName: 'bullet-points',
+                        callback: modalToggle,
+                      }"
+                    :isComponent="'ClickIcon'"
+                    :info="['Click to toggle data modals.']"
       />
+
       <Sort />
     </div>
+  </div>
 
+  <div v-if="store.cache.loadSequence.length">
     <div id="additional-buttons">
-      <ClickIcon id="spagToggle"
-                :info="['Click to toggle spaghetti plot.']"
-                :imageName="'spaghetti-plot'"
-                :callback="spagToggle"
+      <HoverWrapper :isMarginLeft="-20"
+                    :isWidth="20"
+                    :isData="{
+                        imageName: 'spaghetti-plot',
+                        callback: spagToggle,
+                      }"
+                    :isComponent="'ClickIcon'"
+                    :info="['Click to toggle spaghetti plot.']"
       />
+
       <UndoRedoButtons />
-      <!--
-      <Toggle id="null"
-              :toggleProp="null"
-      />
-      <Toggle id="null"
-              :toggleProp="null"
-      />
-      <Toggle id="null"
-              :toggleProp="null"
-      />
-      <Toggle id="null"
-              :toggleProp="null"
-      />
-      <Toggle id="null"
-              :toggleProp="null"
-      />
-      -->
     </div>
 
     <div>
@@ -53,15 +54,18 @@
 </template>
 
 <script>
+  import formatFileData from '../modules/formatFileData.js'
+
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
   import Toggle from './SubComponents/Toggle.vue'
   import ClickIcon from './SubComponents/ClickIcon.vue'
   import DataManager from './DataManager.vue'
+  import HoverWrapper from './SubComponents/HoverWrapper.vue'
 
   export default {
     inject: ['store'],
-    components: { Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager },
+    components: { Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -86,7 +90,7 @@
             obj.active = true
           }
         }
-      }
+      },
     }
   }
 </script>
@@ -96,6 +100,24 @@
     margin: 0;
     margin-left: 2px;
     display: inline;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+
+  input {
+    margin: 0;
+    padding: 0;
+  }
+
+  label {
+    padding: 0;
+    cursor: pointer;
+    margin: 0;
+    margin-left: 2px;
+    display: inline-block;
   }
 
   .header {

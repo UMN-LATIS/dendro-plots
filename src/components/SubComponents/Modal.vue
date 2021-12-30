@@ -49,7 +49,7 @@
             left: -20,
             width: 20,
             component: 'Toggle',
-            info: 'Toggle raw data appearance in plot.',
+            info: ['Toggle raw data appearance in plot.'],
             toggleProp: 'rawPointsActive',
           }, // raw points toggle
           {
@@ -57,7 +57,7 @@
             left: 0,
             width: 152,
             component: 'Dropdown',
-            info: 'Select visualization spline wavelength for raw data.',
+            info: ['Select visualization spline wavelength for raw data.'],
             options: this.splineOptions,
             optionModifer: 'detrending spline',
             mainProp: 'rawSplineFreq',
@@ -68,7 +68,7 @@
             left: 0,
             width: 114,
             component: 'Dropdown',
-            info: 'Select plot for raw data appearance.',
+            info: ['Select plot for raw data appearance.'],
             options: this.store.cache.plots,
             optionModifer: ': raw data',
             mainProp: 'rawPlotLocation',
@@ -79,7 +79,7 @@
             left: 0,
             width: 125,
             component: 'Dropdown',
-            info: 'Select detrending spline wavelength for indexing raw data.',
+            info: ['Select detrending spline wavelength for indexing raw data.'],
             options: this.splineOptions,
             optionModifer: 'index points',
             mainProp: 'indexPointsFreq',
@@ -90,7 +90,7 @@
             left: 0,
             width: 161,
             component: 'Dropdown',
-            info: 'Select visualization spline wavelength for indexed data.',
+            info: ['Select visualization spline wavelength for indexed data.'],
             options: this.splineOptions,
             optionModifer: 'visualization points',
             mainProp: 'indexSplineFreq',
@@ -101,7 +101,7 @@
             left: 0,
             width: 124,
             component: 'Dropdown',
-            info: 'Select plot for indexed data appearance.',
+            info: ['Select plot for indexed data appearance.'],
             options: this.store.cache.plots,
             optionModifer: ': index data',
             mainProp: 'indexPlotLocation',
@@ -112,14 +112,14 @@
             left: 0,
             width: 16,
             component: 'ColorSwatch',
-            info: 'Select color for this time series.',
+            info: ['Select color for this time series.'],
           }, // color
           {
             id: this.id,
             left: -20,
             width: 20,
             component: 'Toggle',
-            info: 'Toggle color/gray between time series and spline..',
+            info: ['Toggle color/gray between time series and spline.'],
             toggleProp: 'applyColorToRaw',
           }, // color toggle
           {
@@ -127,7 +127,7 @@
             left: 0,
             width: 124,
             component: 'Dropdown',
-            info: 'Select shape of marker for data values.',
+            info: ['Select shape of marker for data values.'],
             options: this.store.cache.shapes,
             optionModifer: '',
             mainProp: 'shape',
@@ -148,7 +148,7 @@
   .modal-wrapper {
     position: fixed;
     left: 140px;
-    z-index: 9999;
+    z-index: 999;
     height: 20px;
     background: #f6f6f6;
     border: 1.5px solid #bdbdbd;

@@ -73,17 +73,20 @@ const methods = {
     let statesARR = [{
       id: cache.allID,
       name: 'All',
-      color: '#ffffff'
+      color: '#ffffff',
+      file: 'DendroPlots'
     },
     {
       id: cache.medianIDs[0],
       name: 'Median A',
-      color: '#001eff'
+      color: '#001eff',
+      file: 'DendroPlots'
     },
     {
       id: cache.medianIDs[1],
       name: 'Median B',
-      color: '#ff0000'
+      color: '#ff0000',
+      file: 'DendroPlots'
     }]
 
     let modalARR = [{

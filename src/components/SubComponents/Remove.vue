@@ -59,12 +59,16 @@
   }
 
   .dropdown {
+    height: 20px;
     display: inline-block;
     border: none;
   }
 
   .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0s;
+    transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
     font-size: 12px;
@@ -73,7 +77,7 @@
     margin: 0;
     position: absolute;
     margin-top: 20px;
-    margin-left: -10px;
+    margin-left: -20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -81,6 +85,8 @@
   }
 
   .dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
     display: inline;
   }
 
