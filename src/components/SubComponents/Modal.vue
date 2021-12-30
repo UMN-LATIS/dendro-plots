@@ -26,16 +26,6 @@
     components: { Toggle, Dropdown, ColorSwatch, HoverWrapper },
     data: function() {
       return {
-        info: ['From left to right, options include: ',
-                '1) Toggle raw data appearance in plot.',
-                '2) Select visualization spline wavelength for raw data.',
-                '3) Select plot for raw data appearance.',
-                '4) Select detrending spline wavelength for indexing raw data.',
-                '5) Select visualization spline wavelength for indexed data.',
-                '6) Select plot for indexed data appearance.',
-                '7) Select color for this time series.',
-                '8) Toggle color/gray between time series and spline.',
-                '9) Select shape of marker for data values.'],
         splineOptions: [
                           { value: false, name: 'No ' },
                           { value: 5, name: '5yr ' },
@@ -70,7 +60,8 @@
             info: 'Select visualization spline wavelength for raw data.',
             options: this.splineOptions,
             optionModifer: 'detrending spline',
-            dropdownProp: 'rawSplineFreq',
+            mainProp: 'rawSplineFreq',
+            actions: ['rawSplineFreq', 'indexPointsFreq'],
           }, // raw spline dropdown
           {
             id: this.id,
@@ -80,7 +71,8 @@
             info: 'Select plot for raw data appearance.',
             options: this.store.cache.plots,
             optionModifer: ': raw data',
-            dropdownProp: 'rawPlotLocation',
+            mainProp: 'rawPlotLocation',
+            actions: ['rawPlotLocation'],
           }, // raw plot dropdown
           {
             id: this.id,
@@ -90,7 +82,8 @@
             info: 'Select detrending spline wavelength for indexing raw data.',
             options: this.splineOptions,
             optionModifer: 'index points',
-            dropdownProp: 'indexPointsFreq',
+            mainProp: 'indexPointsFreq',
+            actions: ['indexPointsFreq'],
           }, // index points dropdown
           {
             id: this.id,
@@ -100,7 +93,8 @@
             info: 'Select visualization spline wavelength for indexed data.',
             options: this.splineOptions,
             optionModifer: 'visualization points',
-            dropdownProp: 'indexSplineFreq',
+            mainProp: 'indexSplineFreq',
+            actions: ['indexSplineFreq'],
           }, // index spline dropdown
           {
             id: this.id,
@@ -110,7 +104,8 @@
             info: 'Select plot for indexed data appearance.',
             options: this.store.cache.plots,
             optionModifer: ': index data',
-            dropdownProp: 'indexPlotLocation',
+            mainProp: 'indexPlotLocation',
+            actions: ['indexPlotLocation'],
           }, // index plot dropdown
           {
             id: this.id,
@@ -135,7 +130,8 @@
             info: 'Select shape of marker for data values.',
             options: this.store.cache.shapes,
             optionModifer: '',
-            dropdownProp: 'shape',
+            mainProp: 'shape',
+            actions: ['shape'],
           }, // shapes dropdown
         ]
       }

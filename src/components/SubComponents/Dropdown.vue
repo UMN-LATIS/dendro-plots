@@ -5,7 +5,7 @@
                      :id="id"
                      :name="obj.name + optionModifer"
                      :value="obj.value"
-                     :dropdownProp="dropdownProp"
+                     :mainProp="mainProp"
     />
   </select>
 </template>
@@ -15,7 +15,7 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'options', 'optionModifer', 'dropdownProp'],
+    props: ['id', 'options', 'optionModifer', 'mainProp', 'actions'],
     components: { DropdownOptions },
     methods: {
       onChange: function(e) {
@@ -27,14 +27,14 @@
           val = parseInt(val)
         }
 
-        if (this.id === this.store.cache.allID) {
-          // all set
-          this.store.methods.allAction(this.dropdownProp, val)
-        } else if (this.store.cache.medianIDs.includes(this.id)) {
-          this.store.methods.updateCache('states', this.id, this.dropdownProp, val)
-        } else {
-          // base core or uploaded sets
-          this.store.methods.newCurrent(val, this.id, this.dropdownProp)
+        for (let prop of this.actions) {
+          if (this.id === this.store.cache.allID) {
+            this.store.methods.allAction(prop, val)
+          } else if (this.store.cache.medianIDs.includes(this.id)) {
+            this.store.methods.updateCache('states', this.id, prop, val)
+          } else {
+            this.store.methods.newCurrent(val, this.id, prop)
+          }
         }
       }
     }

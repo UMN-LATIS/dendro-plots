@@ -117,7 +117,7 @@ const formatTraces = function(locVal) {
 
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
-  console.log(store.states.current)
+
   // add medians to copy
   for (const id of store.cache.medianIDs) {
     let median = store.cache.states.find(o => o.id === id)
