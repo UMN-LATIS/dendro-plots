@@ -112,10 +112,11 @@ const methods = {
     }
 
     for (const id of cache.medianIDs) {
-      let dataForMedian = new Object()
-      dataForMedian.id = id
-      dataForMedian.dataIDs = []
-      cache.dataIDS_forMedian.push(dataForMedian)
+      let medianIDs = new Object()
+      medianIDs.id = id
+      medianIDs.rawIDs = []
+      medianIDs.indexIDs = []
+      cache.dataIDS_forMedian.push(medianIDs)
 
       let medianPoints = new Object()
       medianPoints.id = id

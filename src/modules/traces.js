@@ -128,23 +128,52 @@ const formatTraces = function(locVal) {
     let medianState = store.cache.states.find(o => o.id === id)
     if (medianState && medianState.rawPointsActive) {
       let rawData_forMedian = []
+      let rawIDs = []
+      let indexIDs = []
       for (const state of activeStates) {
         if (medianState.rawPlotLocation == state.rawPlotLocation) {
           let raw = store.cache.raw.find(o => o.id === state.id)
           rawData_forMedian.push(raw)
+          rawIDs.push(state.id)
         }
         if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq) {
           let index = store.cache.index.find(o => o.id === state.id)[state.indexPointsFreq]
           rawData_forMedian.push(index)
+          indexIDs.push(state.id)
         }
       }
-      if (rawData_forMedian.length > 0) {
-        let median = store.cache.raw.find(o => o.id === medianState.id)
-        let calculatedMedian = createMedian(rawData_forMedian)
-        median.x = calculatedMedian.x
-        median.y = calculatedMedian.y
-        activeStates.push(JSON.parse(JSON.stringify(medianState)))
+
+      if (rawData_forMedian.length < 1) continue
+
+      let needNewMedian = false
+
+      let savedMedian = store.cache.dataIDS_forMedian.find(o => o.id === medianState.id)
+      if (savedMedian.rawIDs.length != rawIDs.length) needNewMedian = true
+      if (savedMedian.indexIDs.length != indexIDs.length) needNewMedian = true
+      // check all ids are the same
+      rawIDs.sort()
+      for (let i = 0; i < rawIDs.length && !needNewMedian; i++) {
+        if (savedMedian.rawIDs[i] != rawIDs[i]) {
+          needNewMedian = true
+        }
       }
+      indexIDs.sort()
+      for (let i = 0; i < indexIDs.length && !needNewMedian; i++) {
+        if (savedMedian.indexIDs[i] != indexIDs[i]) {
+          needNewMedian = true
+        }
+      }
+
+      if (needNewMedian) {
+        savedMedian.rawIDs = rawIDs
+        savedMedian.indexIDs = indexIDs
+      }
+
+      let median = store.cache.raw.find(o => o.id === medianState.id)
+      let calculatedMedian = (needNewMedian) ? createMedian(rawData_forMedian) : store.cache.raw.find(o => o.id === medianState.id)
+      median.x = calculatedMedian.x
+      median.y = calculatedMedian.y
+      activeStates.push(JSON.parse(JSON.stringify(medianState)))
     }
   }
 
