@@ -1,4 +1,8 @@
 const createMedian = function (dataArray) {
+  if (!dataArray.find(e => e)) {
+    return { x: [], y: [] }
+  }
+
   var longestDataLength = 0;
   for (let set of dataArray) {
     var setLength = set.y.length;

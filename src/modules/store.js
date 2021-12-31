@@ -43,10 +43,12 @@ const cache = reactive({
            { value: 'diamond-open', name: 'Open Diamond' }],
   allID: 111,
   medianIDs: [220, 221],
+  dataIDS_forMedian: [],
   states: [],
   modals: [],
   spagActive: false,
-  beforeSpag: [],
+  statesBeforeSpag: [],
+  cacheStatesBeforeSpag: [],
   updatePlotSwitch: false,
 })
 
@@ -110,6 +112,11 @@ const methods = {
     }
 
     for (const id of cache.medianIDs) {
+      let dataForMedian = new Object()
+      dataForMedian.id = id
+      dataForMedian.dataIDs = []
+      cache.dataIDS_forMedian.push(dataForMedian)
+
       let medianPoints = new Object()
       medianPoints.id = id
       medianPoints.x = []
@@ -307,14 +314,17 @@ const methods = {
   spagAction: function(active) {
     cache.spagActive = active
     if (active) {
-      cache.beforeSpag = JSON.parse(JSON.stringify(states.current))
+      cache.statesBeforeSpag = JSON.parse(JSON.stringify(states.current))
+      cache.cacheStatesBeforeSpag = JSON.parse(JSON.stringify(cache.states))
       this.allAction('color', '#797979')
 
       let activeStates = states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
       // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
-      let plot1Active = activeStates.some(o => o.rawPlotLocation == 1 || o.indexPlotLocation == 1)
-      let plot2Active = activeStates.some(o => o.rawPlotLocation == 2 || o.indexPlotLocation == 2)
+      let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
+                                            || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
+      let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))
+                                            || (o.indexPlotLocation == 2 && (o.indexPointsFreq || o.indexSplineFreq)))
 
       if (plot1Active) {
         this.updateCache('states', 220, 'rawPointsActive', true)
@@ -324,9 +334,8 @@ const methods = {
         this.updateCache('states', 221, 'rawPointsActive', true)
       }
     } else {
-      states.current = cache.beforeSpag
-      this.updateCache('states', 220, 'rawPointsActive', false)
-      this.updateCache('states', 221, 'rawPointsActive', false)
+      states.current = cache.statesBeforeSpag
+      cache.states = cache.cacheStatesBeforeSpag
     }
   }
 }

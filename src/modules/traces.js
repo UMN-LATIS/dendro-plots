@@ -120,16 +120,33 @@ const formatTraces = function(locVal) {
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
 
-  // add medians to copy
-  for (const id of store.cache.medianIDs) {
-    let median = store.cache.states.find(o => o.id === id)
-    if (median) {
-      storeCopy.push(JSON.parse(JSON.stringify(median)))
-    }
-  }
-
   // filter out inactive data sets
   let activeStates = storeCopy.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+
+  // calculate and add medians to copy
+  for (const id of store.cache.medianIDs) {
+    let medianState = store.cache.states.find(o => o.id === id)
+    if (medianState && medianState.rawPointsActive) {
+      let rawData_forMedian = []
+      for (const state of activeStates) {
+        if (medianState.rawPlotLocation == state.rawPlotLocation) {
+          let raw = store.cache.raw.find(o => o.id === state.id)
+          rawData_forMedian.push(raw)
+        }
+        if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq) {
+          let index = store.cache.index.find(o => o.id === state.id)[state.indexPointsFreq]
+          rawData_forMedian.push(index)
+        }
+      }
+      if (rawData_forMedian.length > 0) {
+        let median = store.cache.raw.find(o => o.id === medianState.id)
+        let calculatedMedian = createMedian(rawData_forMedian)
+        median.x = calculatedMedian.x
+        median.y = calculatedMedian.y
+        activeStates.push(JSON.parse(JSON.stringify(medianState)))
+      }
+    }
+  }
 
   let activePlots = activeStates.map(o => {
     if (o.rawPlotLocation != locVal) {
@@ -145,21 +162,12 @@ const formatTraces = function(locVal) {
   })
 
   // add required raw data, splines, & index to states
-  let medianData = []
   let activeData = activePlots.map(obj => {
-    if (store.cache.medianIDs.includes(obj.id)) {
-      return obj
-    }
-
     // add raw data to all in-case spline or index requires computation
     let raw = store.cache.raw.find(o => o.id == obj.id)
     obj.raw = {
       x: raw.x,
       y: raw.y
-    }
-
-    if (obj.rawPointsActive) {
-      medianData.push(obj.raw)
     }
 
     if (obj.rawSplineFreq) {
@@ -172,7 +180,6 @@ const formatTraces = function(locVal) {
     if (obj.indexPointsFreq) {
       let index = store.cache.index.find(o => o.id == obj.id)
       obj.index = (index) ? index[obj.indexPointsFreq] : null
-      medianData.push(obj.index)
     }
 
     if (obj.indexSplineFreq) {
@@ -183,19 +190,7 @@ const formatTraces = function(locVal) {
     }
 
       return obj
-    })
-
-    // add median to set based on which points were active (decided above)
-    activeData.forEach(obj => {
-      if (store.cache.medianIDs.includes(obj.id)) {
-        let median = createMedian(medianData)
-        obj.raw = {
-          x: median.x,
-          y : median.y,
-        }
-        obj.spline = {}
-      }
-    })
+  })
 
   // create traces based on needed format
   // order of creation important

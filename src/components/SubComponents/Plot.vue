@@ -79,16 +79,16 @@
         }
         let w = document.getElementById('plot-management').offsetWidth;
         let h = window.innerHeight / this.count
-        Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
+        if (this.$refs[this.divID]) Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       },
       createPlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
-        Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
+        if (this.$refs[this.divID]) Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
-        Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
+        if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       }
     },
