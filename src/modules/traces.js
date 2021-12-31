@@ -193,6 +193,7 @@ const formatTraces = function(locVal) {
           x: median.x,
           y : median.y,
         }
+        obj.spline = {}
       }
     })
 
