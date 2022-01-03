@@ -26,6 +26,8 @@
         if (this.id === this.store.cache.allID) {
           // all set
           this.store.methods.newCurrent([])
+        } else if (this.store.cache.medianIDs.includes(this.id)) {
+          this.store.methods.updateCache('states', this.id, 'rawPointsActive', false)
         } else {
           // base core or uploaded sets
           this.store.methods.removeCurrent(this.id)

@@ -63,7 +63,7 @@ function formatRWL (data) {
   }
   for (var k = earliestYear; k <= latestYear; k++) {
     var newArray = [];
-    newArray.push(String(k));
+    newArray.push(k);
     formattedData.push(newArray);
   }
   // 5) format & add widths to data
@@ -89,20 +89,20 @@ function formatRWL (data) {
         yearAdj = 0;
         break
       }
-      var year_in_rwlData = String(startYear + yearAdj);
+      var year_in_rwlData = startYear + yearAdj;
       if (year_in_rwlData == year_in_formattedData) {
         var width_to_test = rwlArray[yearAdj];
         if ((isNaN(parseFloat(width_to_test)) == false) &&
             !(dataSentinals.includes(parseFloat(width_to_test)))) {
           // check that width is not a sentinel (indicator of end of core)
-          var width = String(parseFloat(rwlArray[yearAdj]) / 1000);
+          var width = parseFloat(rwlArray[yearAdj]) / 1000;
           array.push(width);
           yearAdj++
         } else { // if sentinel, add -1 (missing data indicator) to rest of formattedData
           var current_array_index = formattedData.indexOf(array);
           for (var l = current_array_index; l < formattedData.length; l++) {
             var array_needing_neg_one = formattedData[l];
-            array_needing_neg_one.push('-1');
+            array_needing_neg_one.push(-1);
           }
           break
         }
