@@ -131,12 +131,12 @@ const formatTraces = function(locVal) {
       let rawIDs = []
       let indexIDs = []
       for (const state of activeStates) {
-        if (medianState.rawPlotLocation == state.rawPlotLocation && state.id > 999) {
+        if (medianState.rawPlotLocation == state.rawPlotLocation && !store.cache.medianIDs.includes(state.id)) {
           let raw = store.cache.raw.find(o => o.id === state.id)
           rawData_forMedian.push(raw)
           rawIDs.push(state.id)
         }
-        if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq && state.id > 999) {
+        if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq && !store.cache.medianIDs.includes(state.id)) {
           let index = store.cache.index.find(o => o.id === state.id)[state.indexPointsFreq]
           rawData_forMedian.push(index)
           indexIDs.push(state.id)
