@@ -44,11 +44,10 @@ const cache = reactive({
   allID: 111,
   medianIDs: [220, 221],
   dataIDS_forMedian: [],
+  medianColorsBeforeSpag: [],
   states: [],
   modals: [],
   spagActive: false,
-  statesBeforeSpag: [],
-  cacheStatesBeforeSpag: [],
   updatePlotSwitch: false,
 })
 
@@ -117,6 +116,11 @@ const methods = {
       medianIDs.rawIDs = []
       medianIDs.indexIDs = []
       cache.dataIDS_forMedian.push(medianIDs)
+
+      let medianColor = new Object()
+      medianColor.id = id
+      medianColor.color = '#001eff'
+      cache.medianColorsBeforeSpag.push(medianColor)
 
       let medianPoints = new Object()
       medianPoints.id = id
@@ -315,9 +319,10 @@ const methods = {
   spagAction: function(active) {
     cache.spagActive = active
     if (active) {
-      cache.statesBeforeSpag = JSON.parse(JSON.stringify(states.current))
-      cache.cacheStatesBeforeSpag = JSON.parse(JSON.stringify(cache.states))
-      this.allAction('color', '#797979')
+      for (let obj of cache.states) {
+        let medianColor = cache.medianColorsBeforeSpag.find(o => o.id === obj.id)
+        if (medianColor?.color) medianColor.color = obj.color
+      }
 
       let activeStates = states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
@@ -329,14 +334,18 @@ const methods = {
 
       if (plot1Active) {
         this.updateCache('states', 220, 'rawPointsActive', true)
+        this.updateCache('states', 220, 'color', '#000000')
       }
       if (plot2Active) {
         this.updateCache('states', 221, 'rawPlotLocation', 2)
         this.updateCache('states', 221, 'rawPointsActive', true)
+        this.updateCache('states', 221, 'color', '#000000')
       }
     } else {
-      states.current = cache.statesBeforeSpag
-      cache.states = cache.cacheStatesBeforeSpag
+      for (let obj of cache.medianColorsBeforeSpag) {
+        this.updateCache('states', obj.id, 'rawPointsActive', false)
+        this.updateCache('states', obj.id, 'color', obj.color)
+      }
     }
   }
 }

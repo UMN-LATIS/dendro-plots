@@ -8,7 +8,7 @@ function simpleTrace(obj, colorTrace, propA, propB) {
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
   let color = (colorTrace) ? obj.color : '#797979'
-  let opacity = (propB) ? 1 : 0.5 // opacity for gray scale
+  let opacity = (propB) ? 1 : 0.5 // opacity for gray scale; splines darker than raw points
   opacity = (colorTrace) ? 0.7 : opacity // opacity for color
   let width = (obj.shape) ? 1 : 2
   let mode = (obj.shape) ? 'lines+markers' : 'lines'

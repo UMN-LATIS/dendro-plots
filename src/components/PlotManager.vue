@@ -27,6 +27,7 @@
                                                                  || (o.indexPlotLocation == obj.value && (o.indexPointsFreq || o.indexSplineFreq)))
           let cachePlotActive = this.store.cache.states.some(o => (o.rawPlotLocation == obj.value && o.rawPointsActive)
                                                                || (o.indexPlotLocation == obj.value && o.rawPointsActive && o.indexPointsFreq))
+
           return statePlotActive || cachePlotActive
         })
       }
