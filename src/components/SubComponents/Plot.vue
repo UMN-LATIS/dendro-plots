@@ -24,6 +24,7 @@
       },
       layout: function() {
         let obj = new Object()
+        obj.dragmode = 'pan'
         obj.title = {
           text: this.name,
           x: 0,
