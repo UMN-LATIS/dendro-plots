@@ -70,7 +70,7 @@
   .dropdown-content {
     visibility: hidden;
     opacity: 0;
-    transition: opacity 0s;
+    transition: z-index 0, opacity 0s;
     transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
@@ -84,7 +84,7 @@
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
-    z-index: 999999;
+    z-index: 0;
     width: max-content;
   }
 
@@ -92,6 +92,7 @@
     visibility: visible;
     opacity: 1;
     display: inline;
+    z-index: 99999;
   }
 
 </style>

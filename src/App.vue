@@ -108,6 +108,7 @@ h2 {
   height: 100%;
   overflow-y: visible;
   overflow-x: hidden;
+  z-index: 999;
 }
 
 #plot-management {

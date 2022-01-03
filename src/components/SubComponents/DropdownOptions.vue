@@ -25,3 +25,12 @@
     },
   }
 </script>
+
+<style scoped>
+
+  option {
+    z-index: 0;
+    position: relative;
+  }
+
+</style>

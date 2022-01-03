@@ -150,9 +150,8 @@
   }
 
   .modal-wrapper {
-    position: fixed;
+    position: absolute;
     left: 140px;
-    z-index: 99;
     height: 20px;
     background: #f6f6f6;
     border: 1.5px solid #bdbdbd;

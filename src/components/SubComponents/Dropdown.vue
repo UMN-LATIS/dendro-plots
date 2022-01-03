@@ -70,6 +70,7 @@
     margin-top: 2px;
     margin-bottom: 2px;
     cursor: pointer;
+    z-index: 0;
   }
 
 </style>
