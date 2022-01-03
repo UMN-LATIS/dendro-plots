@@ -10,7 +10,9 @@ function simpleTrace(obj, colorTrace, propA, propB) {
   let color = (colorTrace) ? obj.color : '#797979'
   let opacity = (propB) ? 1 : 0.5 // opacity for gray scale; splines darker than raw points
   opacity = (colorTrace) ? 0.7 : opacity // opacity for color
+  opacity = (store.cache.spagActive && !store.cache.medianIDs.includes(obj.id)) ? 0.2 : opacity // opacity for spaghetti plot
   let width = (obj.shape) ? 1 : 2
+  width = (store.cache.spagActive && store.cache.medianIDs.includes(obj.id)) ? 3 : width // width for spaghetti plot
   let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
   let trace = new Object()

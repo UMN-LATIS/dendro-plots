@@ -7,7 +7,6 @@
     </p>
     <div class="dropdown-content">
       <p class="info"> {{ name + ' from ' + file }} </p>
-      <p class="info"> Click on time series name to show/hide data plotting options </p>
     </div>
   </div>
 </template>
@@ -32,7 +31,7 @@
 <style scoped>
   div {
     width: 96px;
-    height: 34px;
+    height: 16px;
     display: inline;
   }
 

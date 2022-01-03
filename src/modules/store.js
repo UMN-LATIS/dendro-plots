@@ -44,7 +44,7 @@ const cache = reactive({
   allID: 111,
   medianIDs: [220, 221],
   dataIDS_forMedian: [],
-  medianColorsBeforeSpag: [],
+  colorsBeforeSpag: [],
   states: [],
   modals: [],
   spagActive: false,
@@ -80,13 +80,13 @@ const methods = {
     {
       id: cache.medianIDs[0],
       name: 'Median A',
-      color: '#001eff',
+      color: '#000000',
       file: 'DendroPlots'
     },
     {
       id: cache.medianIDs[1],
       name: 'Median B',
-      color: '#ff0000',
+      color: '#000000',
       file: 'DendroPlots'
     }]
 
@@ -116,11 +116,6 @@ const methods = {
       medianIDs.rawIDs = []
       medianIDs.indexIDs = []
       cache.dataIDS_forMedian.push(medianIDs)
-
-      let medianColor = new Object()
-      medianColor.id = id
-      medianColor.color = '#001eff'
-      cache.medianColorsBeforeSpag.push(medianColor)
 
       let medianPoints = new Object()
       medianPoints.id = id
@@ -261,16 +256,38 @@ const methods = {
     states[property].push(data)
   },
   undo: function() {
+    // spaghetti plot is not affected by undo
+    // remove its visual changes, save state, then reapply
+    if (cache.spagActive) {
+      this.spagAction(false)
+      cache.spagActive = true
+    }
+
     let recentState = states.past[states.past.length - 1]
     states.past.pop()
     this.addTo(states.current, 'future')
     states.current = recentState
+
+    if (cache.spagActive) {
+      this.spagAction(true)
+    }
   },
   redo: function() {
+    // spaghetti plot is not affected by redo
+    // remove its visual changes, save state, then reapply
+    if (cache.spagActive) {
+      this.spagAction(false)
+      cache.spagActive = true
+    }
+
     let recentState = states.future[states.future.length - 1]
     states.future.pop()
     this.addTo(states.current, 'past')
     states.current = recentState
+
+    if (cache.spagActive) {
+      this.spagAction(true)
+    }
   },
   saveCurrent: function() {
     states.future = []
@@ -319,12 +336,30 @@ const methods = {
   spagAction: function(active) {
     cache.spagActive = active
     if (active) {
-      for (let obj of cache.states) {
-        let medianColor = cache.medianColorsBeforeSpag.find(o => o.id === obj.id)
-        if (medianColor?.color) medianColor.color = obj.color
+      // store current colors
+      let allStates = JSON.parse(JSON.stringify(states.current))
+      allStates.push(...JSON.parse(JSON.stringify(cache.states)))
+
+      for (let obj of allStates) {
+        let colorObj = cache.colorsBeforeSpag.find(o => o.id === obj.id)
+        if (colorObj) {
+          colorObj.color = obj.color
+        } else {
+          colorObj = {
+            id: obj.id,
+            color: obj.color,
+          }
+          cache.colorsBeforeSpag.push(colorObj)
+        }
       }
 
       let activeStates = states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+
+      // change all core colors
+      for (let obj of activeStates) {
+        //093259
+        obj.color = '#084d49'
+      }
 
       // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
       let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
@@ -342,9 +377,14 @@ const methods = {
         this.updateCache('states', 221, 'color', '#000000')
       }
     } else {
-      for (let obj of cache.medianColorsBeforeSpag) {
-        this.updateCache('states', obj.id, 'rawPointsActive', false)
-        this.updateCache('states', obj.id, 'color', obj.color)
+      for (let obj of cache.colorsBeforeSpag) {
+        if (cache.medianIDs.includes(obj.id)) {
+          this.updateCache('states', obj.id, 'rawPointsActive', false)
+          this.updateCache('states', obj.id, 'color', obj.color)
+        } else {
+          let stateObj = states.current.find(o => o.id == obj.id)
+          if (stateObj) stateObj.color = obj.color
+        }
       }
     }
   }

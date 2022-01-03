@@ -64,7 +64,7 @@
           {
             id: this.id,
             left: 0,
-            width: 114,
+            width: 111,
             component: 'Dropdown',
             info: ['Select plot for raw data appearance.'],
             options: this.store.cache.plots,
@@ -76,7 +76,7 @@
           {
             id: this.id,
             left: 0,
-            width: 125,
+            width: 124,
             component: 'Dropdown',
             info: ['Select detrending spline wavelength for indexing raw data.'],
             options: this.splineOptions,
@@ -101,7 +101,7 @@
           {
             id: this.id,
             left: 0,
-            width: 124,
+            width: 120,
             component: 'Dropdown',
             info: ['Select plot for indexed data appearance.'],
             options: this.store.cache.plots,
@@ -152,13 +152,13 @@
   .modal-wrapper {
     position: fixed;
     left: 140px;
-    z-index: 999;
+    z-index: 99;
     height: 20px;
     background: #f6f6f6;
     border: 1.5px solid #bdbdbd;
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 890px;
+    width: 880px;
   }
 </style>
