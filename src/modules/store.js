@@ -193,6 +193,12 @@ const methods = {
     }
   },
   loadData: function(data) {
+    // spaghetti plot applies to uploaded data
+    // remove its visual changes, save state, then reapply
+    if (cache.spagActive) {
+      this.spagAction(false)
+      cache.spagActive = true
+    }
     this.saveCurrent()
 
     for (const set of data) {
@@ -250,6 +256,10 @@ const methods = {
 
       // establish default load sequence
       cache.loadSequence.push(id)
+
+      if (cache.spagActive) {
+        this.spagAction(true)
+      }
     }
   },
   addTo: function(data, property) {
