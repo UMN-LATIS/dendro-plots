@@ -92,11 +92,7 @@
   }
 
   .data-entry-wrapper:hover {
-    background-color: #d9d9d9;
-  }
-
-  .active {
-    background-color: #bdbdbd !important;
+    background-color: #ffffff;
   }
 
   .remove {

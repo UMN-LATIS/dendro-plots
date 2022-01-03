@@ -101,6 +101,7 @@ h2 {
   height: 100%;
   display: flex;
   flex-direction: column;
+  z-index: 999;
 }
 
 #data-management {
@@ -108,7 +109,6 @@ h2 {
   height: 100%;
   overflow-y: visible;
   overflow-x: hidden;
-  z-index: 999;
 }
 
 #plot-management {
