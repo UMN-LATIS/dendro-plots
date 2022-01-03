@@ -6,6 +6,7 @@
                      :name="obj.name + optionModifer"
                      :value="obj.value"
                      :mainProp="mainProp"
+                     :disabled="isDisabled"
     />
   </select>
 </template>
@@ -15,7 +16,7 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'options', 'optionModifer', 'mainProp', 'actions'],
+    props: ['id', 'options', 'optionModifer', 'mainProp', 'actions', 'disableProp'],
     components: { DropdownOptions },
     methods: {
       onChange: function(e) {
@@ -35,6 +36,21 @@
           } else {
             this.store.methods.newCurrent(val, this.id, prop)
           }
+        }
+      }
+    },
+    computed: {
+      isDisabled: function() {
+        if (!this.disableProp) {
+          return this.disableProp
+        }
+
+        if (this.id === this.store.cache.allID) {
+          return !this.store.methods.checkAll(this.disableProp)
+        } else {
+          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.id == this.id)
+          if (set) return !set[this.disableProp]
         }
       }
     }

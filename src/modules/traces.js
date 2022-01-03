@@ -40,16 +40,11 @@ async function splineTrace(obj, prop, freq, splineFORindex) {
   let x, y
   if (splineFORindex) {
     let indexObj = store.cache.index.find(o => o.id == obj.id)
-    let index = (indexObj) ? indexObj[freq] : null
+    let index = indexObj[obj.indexPointsFreq]
     if (!index) {
-      let splineObj = store.cache.splines.raw.find(o => o.id == obj.id)
-      let spline
-      if (splineObj && splineObj[freq]) {
-        spline = splineObj[freq]
-      } else {
-        spline = await createSpline(obj.raw.x, obj.raw.y, freq, obj.id, prop, 'raw')
-      }
-      index = createIndex(obj.raw.x, obj.raw.y, spline, freq, obj.id)
+      // cannot create a spline if points not specified
+      store.states.current.find(o => o.id == obj.id).indexSplineFreq = false
+      return null
     }
     x = index.x
     y = index.y
@@ -239,7 +234,7 @@ const formatTraces = function(locVal) {
     }
   })
 
-  return arr
+  return arr.filter(Boolean)
 }
 
 export default formatTraces

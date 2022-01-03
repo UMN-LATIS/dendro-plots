@@ -59,6 +59,7 @@
             optionModifer: 'visualization spline',
             mainProp: 'rawSplineFreq',
             actions: ['rawSplineFreq', 'indexPointsFreq'],
+            disableProp: false,
           }, // raw spline dropdown
           {
             id: this.id,
@@ -70,6 +71,7 @@
             optionModifer: ': raw data',
             mainProp: 'rawPlotLocation',
             actions: ['rawPlotLocation'],
+            disableProp: false,
           }, // raw plot dropdown
           {
             id: this.id,
@@ -81,17 +83,20 @@
             optionModifer: 'spline index',
             mainProp: 'indexPointsFreq',
             actions: ['indexPointsFreq'],
+            disableProp: false,
           }, // index points dropdown
           {
             id: this.id,
             left: 0,
             width: 161,
             component: 'Dropdown',
-            info: ['Select visualization spline wavelength for indexed data.'],
+            info: ['Select visualization spline wavelength for indexed data.',
+                   'Index points must be selected to enable this.'],
             options: this.splineOptions,
             optionModifer: 'visualization spline',
             mainProp: 'indexSplineFreq',
             actions: ['indexSplineFreq'],
+            disableProp: 'indexPointsFreq',
           }, // index spline dropdown
           {
             id: this.id,
@@ -103,6 +108,7 @@
             optionModifer: ': index data',
             mainProp: 'indexPlotLocation',
             actions: ['indexPlotLocation'],
+            disableProp: false,
           }, // index plot dropdown
           {
             id: this.id,
@@ -129,6 +135,7 @@
             optionModifer: '',
             mainProp: 'shape',
             actions: ['shape'],
+            disableProp: false,
           }, // shapes dropdown
         ]
       }
