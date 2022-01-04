@@ -21,7 +21,7 @@
         if (this.id ===  this.store.cache.allID) {
           // all set
           this.store.methods.allAction('color', e.target.value)
-        } else if (this.id === this.store.cache.medianID) {
+        } else if (this.store.cache.medianIDs.includes(this.id)) {
           this.store.methods.updateCache('states', this.id, 'color', e.target.value)
         } else {
           // base core or uploaded sets
@@ -43,7 +43,7 @@
     margin-bottom: 2px;
     box-sizing: border-box;
     cursor: pointer;
-    position: fixed;
+    position: absolute;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {

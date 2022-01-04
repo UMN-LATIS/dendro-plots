@@ -14,19 +14,8 @@
     props: ['value', 'name', 'count'],
     data() {
       return {
-        median: this.store.cache.states.find(o => o.id === this.store.cache.medianID),
-        loading: {
-          layout: {
-            title: {
-              text: 'Loading...'
-            },
-            showlegend: false,
-          },
-          config: {
-            displayModeBar: false,
-            displaylogo: false,
-          }
-        }
+        medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
+        medianB: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[1]),
       }
     },
     computed: {
@@ -35,6 +24,7 @@
       },
       layout: function() {
         let obj = new Object()
+        obj.dragmode = 'pan'
         obj.title = {
           text: this.name,
           x: 0,
@@ -90,27 +80,39 @@
         }
         let w = document.getElementById('plot-management').offsetWidth;
         let h = window.innerHeight / this.count
-        Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
+        if (this.$refs[this.divID]) Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       },
       createPlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
-        Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
+        if (this.$refs[this.divID]) Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
-        Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
+        if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       }
     },
     watch: {
+      'store.cache.updatePlotSwitch': {
+        handler: function() {
+          this.updatePlot()
+        },
+        deep: true
+      },
       'store.states.current': {
         handler: function() {
           this.updatePlot()
         },
         deep: true
       },
-      median: {
+      medianA: {
+        handler: function() {
+          this.updatePlot()
+        },
+        deep: true
+      },
+      medianB: {
         handler: function() {
           this.updatePlot()
         },

@@ -4,7 +4,7 @@
          v-if="store.cache.loadSequence.length > 1"
          @click="onClick">
     <div class="dropdown-content">
-      <span> {{ sortText[sortType] }} </span>
+      <p class="info"> {{ sortText[sortType] }} </p>
     </div>
   </div>
 </template>
@@ -15,7 +15,7 @@
     data() {
       return {
         sortType: 0,
-        sortText: ['Sorting by load sequence', 'Sorting A -> Z', 'Sorting Z -> A'],
+        sortText: ['Sorting by load sequence.', 'Sorting A to Z.', 'Sorting Z to A.'],
       }
     },
     methods: {
@@ -71,16 +71,27 @@
     margin-bottom: -2px;
   }
 
-  .dropdown, .show:hover {
-    cursor: pointer;
+  .info {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+    font-family: sans-serif;
+    font-size: 12px;
+    color: black;
+    width: max-content;
   }
 
-  .dropdown:hover .dropdown-content {
-    display: inline;
+  .dropdown {
+    height: 20px;
+    display: inline-block;
+    border: none;
   }
 
   .dropdown-content {
-    display: none;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0s;
+    transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
     font-size: 12px;
@@ -88,11 +99,18 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -10px;
     margin-top: 22px;
+    margin-left: -20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
     z-index: 999999;
   }
+
+  .dropdown:hover .dropdown-content {
+    visibility: visible;
+    opacity: 1;
+    display: inline;
+  }
+
 </style>

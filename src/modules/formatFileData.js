@@ -5,21 +5,7 @@
 
 import Papa from 'papaparse'
 
-function toMM (num) {
-  if (num.length == 4) {
-    // 1234 => 1.234
-    return num.slice(0, 1) + '.' + num.slice(1);
-  } else if (num.length == 3) {
-    // 123 => 0.123
-    return '0.' + num
-  } else if (num.length == 2) {
-    // 12 => 0.012
-    return '0.0' + num
-  } else {
-    // 1 => 0.001
-    return '0.00' + num
-  }
-}
+const dataSentinals = [-1, -9.9, -9.99, -9.999, -9999, 9.9, 9.99, 9.999, 999, 9999]
 
 function formatRWL (data) {
   var formattedData = [];
@@ -66,8 +52,7 @@ function formatRWL (data) {
       array.splice(0, 2) // remove row name & decade/year
       array = array.filter((e) => { // remove sentinel, sentinel = indicator of specimens final width
         if ((isNaN(parseFloat(e)) == false) &&
-        (parseFloat(e) > 0) &&
-        (e != '999')) {
+        !(dataSentinals.includes(parseFloat(e)))) {
           return e
         }
       });
@@ -78,7 +63,7 @@ function formatRWL (data) {
   }
   for (var k = earliestYear; k <= latestYear; k++) {
     var newArray = [];
-    newArray.push(String(k));
+    newArray.push(k);
     formattedData.push(newArray);
   }
   // 5) format & add widths to data
@@ -104,21 +89,20 @@ function formatRWL (data) {
         yearAdj = 0;
         break
       }
-      var year_in_rwlData = String(startYear + yearAdj);
+      var year_in_rwlData = startYear + yearAdj;
       if (year_in_rwlData == year_in_formattedData) {
         var width_to_test = rwlArray[yearAdj];
         if ((isNaN(parseFloat(width_to_test)) == false) &&
-            (parseFloat(width_to_test) > 0) &&
-            (width_to_test != '999')) {
+            !(dataSentinals.includes(parseFloat(width_to_test)))) {
           // check that width is not a sentinel (indicator of end of core)
-          var width = toMM(rwlArray[yearAdj])
+          var width = parseFloat(rwlArray[yearAdj]) / 1000;
           array.push(width);
           yearAdj++
         } else { // if sentinel, add -1 (missing data indicator) to rest of formattedData
           var current_array_index = formattedData.indexOf(array);
           for (var l = current_array_index; l < formattedData.length; l++) {
             var array_needing_neg_one = formattedData[l];
-            array_needing_neg_one.push('-1');
+            array_needing_neg_one.push(-1);
           }
           break
         }
@@ -225,11 +209,11 @@ const formatFileData = async function (files) {
       var yearArray = []
       var widthArray = []
       for (let row = 1; row < fileData.data.length; row++) {
-        let year = fileData.data[row][0]
-        let width = fileData.data[row][col]
-        if (width >= 0) {
-          yearArray.push(parseInt(year))
-          widthArray.push(parseFloat(width))
+        let year = parseInt(fileData.data[row][0])
+        let width = parseFloat(fileData.data[row][col])
+        if (!(dataSentinals.includes(width))) {
+          yearArray.push(year)
+          widthArray.push(width)
         }
       }
       var obj = new Object()

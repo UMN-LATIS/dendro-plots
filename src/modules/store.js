@@ -17,39 +17,47 @@ const cache = reactive({
   plots: [{ value: 1, name: 'Plot 1' },
           { value: 2, name: 'Plot 2' }],
   loadSequence: [],
+  dendroColors: [
+                 '#b2182b', // dark red (tw)
+                 '#f4a582', // light red (ew)
+                 '#d6604d', // middle red (lw)
+               ],
   colors: [
-            '#1f77b4',  // muted blue
-            '#ff7f0e',  // safety orange
-            '#2ca02c',  // cooked asparagus green
-            '#d62728',  // brick red
-            '#9467bd',  // muted purple
-            '#8c564b',  // chestnut brown
-            '#e377c2',  // raspberry yogurt pink
-            '#7f7f7f',  // middle gray
-            '#bcbd22',  // curry yellow-green
-            '#17becf'   // blue-teal
+            '#a6cee3', // light blue
+            '#1f78b4', // dark blue
+            '#b2df8a', // light green
+            '#33a02c', // dark green
+            '#cab2d6', // light purple
+            '#6a3d9a',  // dark purple
+            '#fdbf6f', // light orange
+            '#ff7f00', // dark orange
+            '#fb9a99', // light red
+            '#e31a1c', // dark red
           ],
   colorIndex: 0,
-  shapes: [{value: false, name: 'None'},
-           { value: 'circle', name: 'Circle' },
-           { value: 'triangle-up', name: 'Triangle' },
-           { value: 'triangle-down', name: 'Inverse Triangle' },
-           { value: 'square', name: 'Square' },
-           { value: 'diamond', name: 'Diamond' },
-           { value: 'circle-open', name: 'Open Circle' },
-           { value: 'triangle-up-open', name: 'Open Triangle' },
-           { value: 'triangle-down-open', name: 'Open Inverse Triangle' },
-           { value: 'square-open', name: 'Open Square' },
-           { value: 'diamond-open', name: 'Open Diamond' }],
+  shapes: [{value: false, name: 'No markers'},
+           { value: 'circle', name: 'Circles' },
+           { value: 'triangle-up', name: 'Triangles' },
+           { value: 'triangle-down', name: 'Inverse Triangles' },
+           { value: 'square', name: 'Squares' },
+           { value: 'diamond', name: 'Diamonds' },
+           { value: 'circle-open', name: 'Open Circles' },
+           { value: 'triangle-up-open', name: 'Open Triangles' },
+           { value: 'square-open', name: 'Open Squares' },
+           { value: 'diamond-open', name: 'Open Diamonds' }],
   allID: 111,
-  medianID: 222,
+  medianIDs: [220, 221],
+  dataIDS_forMedian: [],
+  colorsBeforeSpag: [],
   states: [],
   modals: [],
-  dataIDsForMedian: [],
+  spagActive: false,
+  spagColor: '#006994',
+  updatePlotSwitch: false,
 })
 
 const methods = {
-  initializeData: function(data) {
+  initializeData: function() {
     // create all & median states
     let statesDEFAULT = {
       shape: false,
@@ -71,19 +79,30 @@ const methods = {
     let statesARR = [{
       id: cache.allID,
       name: 'All',
-      color: '#ffffff'
+      color: '#000000',
+      file: 'DendroPlots'
     },
     {
-      id: cache.medianID,
-      name: 'Median',
-      color: '#001eff'
+      id: cache.medianIDs[0],
+      name: 'Median A',
+      color: '#000000',
+      file: 'DendroPlots'
+    },
+    {
+      id: cache.medianIDs[1],
+      name: 'Median B',
+      color: '#000000',
+      file: 'DendroPlots'
     }]
 
     let modalARR = [{
       id: cache.allID,
     },
     {
-      id: cache.medianID,
+      id: cache.medianIDs[0],
+    },
+    {
+      id: cache.medianIDs[1],
     }]
 
     for (const obj of statesARR) {
@@ -96,38 +115,56 @@ const methods = {
       cache.modals.push(obj)
     }
 
-    let medianPoints = new Object()
-    medianPoints.id = cache.medianID
-    medianPoints.x = []
-    medianPoints.y = []
-    cache.raw.push(medianPoints)
+    for (const id of cache.medianIDs) {
+      let medianIDs = new Object()
+      medianIDs.id = id
+      medianIDs.rawIDs = []
+      medianIDs.indexIDs = []
+      cache.dataIDS_forMedian.push(medianIDs)
 
-    // base core sets given specifc IDs
-    let id = 1
+      let medianPoints = new Object()
+      medianPoints.id = id
+      medianPoints.x = []
+      medianPoints.y = []
+      cache.raw.push(medianPoints)
+    }
+  },
+  processSentData: function(data) {
+    for (let id = 0; id < data.length; id++) {
+      // id: 0 = tw
+      // id: 1 = ew
+      // id: 2 = lw
+      // based on array order set in App.vue
 
-    for (const set of data) {
+      let set = data[id];
+
+      // check if data profile exists (data in leaflet updated, but new plot not popped out)
+      if (cache.raw.find(o => o.id == id)) {
+        let raw = cache.raw.find(o => o.id == id)
+        raw.x = set.x
+        raw.y = set.y
+        cache.updatePlotSwitch = !cache.updatePlotSwitch
+        continue;
+      }
+
+      // else create new profile
       let newState = new Object()
-
-      let rawPointsBOOL = (id === 1) ? true : false
-      let rawSplineNUM = (id === 1) ? 20 : false
-      let indexPointsNUM = (id === 1) ? 20 : false
-      let indexSplineNUM = (id === 1) ? 20 : false
 
       // default state values
       newState.id = id
       newState.name = set.name
       newState.file = 'DendroElevator'
-      newState.color = cache.colors[cache.colorIndex]
+      newState.color = cache.dendroColors[id]
       cache.colorIndex++
       newState.shape = false
       newState.applyColorToRaw = true
 
-      newState.rawPointsActive = rawPointsBOOL
-      newState.rawSplineFreq = rawSplineNUM
+      newState.rawPointsActive = true
+      newState.rawSplineFreq = false
       newState.rawPlotLocation = 1
 
-      newState.indexPointsFreq = indexPointsNUM
-      newState.indexSplineFreq = indexSplineNUM
+      newState.indexPointsFreq = false
+      newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
 
       states.current.push(newState)
@@ -149,8 +186,6 @@ const methods = {
 
       // establish default load sequence
       cache.loadSequence.push(id)
-
-      id++
     }
   },
   loadData: function(data) {
@@ -184,7 +219,7 @@ const methods = {
       newState.shape = cache.shapes[0].value
       newState.applyColorToRaw = true
 
-      newState.rawPointsActive = false
+      newState.rawPointsActive = true
       newState.rawSplineFreq = false
       newState.rawPlotLocation = 1
 
@@ -235,7 +270,7 @@ const methods = {
   },
   newCurrent: function(data, id, property) {
     this.saveCurrent()
-    if (id && property) {
+    if ((id || id == 0) && property) {
       let currentSet = states.current.find(obj => obj.id == id)
       currentSet[property] = data
     } else {
@@ -272,31 +307,6 @@ const methods = {
     }
     return testVal
   },
-  findDataForMedian: function(activeDataIDs) {
-    // if not current, reset raw, splines, & indexes
-    let medianRaw = cache.raw.find(o => o.id === cache.medianID)
-    medianRaw.x = []
-    medianRaw.y = []
-    let medianSplineRaw = cache.splines.raw.find(o => o.id === cache.medianID)
-    if (medianSplineRaw) {
-      medianSplineRaw = {}
-    }
-    let medianSplineIndex = cache.splines.index.find(o => o.id === cache.medianID)
-    if (medianSplineIndex) {
-      medianSplineIndex = {}
-    }
-    let medianIndex = cache.index.find(o => o.id === cache.medianID)
-    if (medianIndex) {
-      medianIndex = {}
-    }
-
-    // find new median
-    let dataForMedian = activeDataIDs.map(id => {
-      let data = cache.raw.find(o => o.id == id)
-      return data
-    })
-    return dataForMedian.filter(o => o)
-  }
 }
 
 export default {

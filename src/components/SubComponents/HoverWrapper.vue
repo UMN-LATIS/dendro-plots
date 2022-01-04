@@ -1,56 +1,38 @@
 <template>
-  <div class="dropdown">
-    <img src="../../assets/delete-button.png"
-         @click="onClick"
+  <div class="dropdown"
+       :style="{ 'width': isWidth + 'px' }"
+  >
+
+    <component :is="isComponent" v-bind="isData" />
+
+    <div class="dropdown-content"
+         :style="{ 'margin-left': isMarginLeft + 'px', 'margin-top': isMarginTop + 'px' }"
     >
-    <div class="dropdown-content">
       <p class="info"
          v-for="blurb in info"
          :key="blurb"> {{ blurb }}
       </p>
     </div>
+
   </div>
 </template>
 
 <script>
+  import Toggle from './Toggle.vue'
+  import Dropdown from './Dropdown.vue'
+  import ColorSwatch from './ColorSwatch.vue'
+  import FileUpload from './FileUpload.vue'
+  import Text from './Text.vue'
+  import ClickIcon from './ClickIcon.vue'
+
   export default {
     inject: ['store'],
-    props: ['id'],
-    data: function () {
-      return {
-        info: ['Remove series.'],
-      }
-    },
-    methods: {
-      onClick: function() {
-        if (this.id === this.store.cache.allID) {
-          // do not remove base set
-          let baseSets = this.store.states.current.filter(o => o.id < 99)
-          this.store.methods.newCurrent(baseSets)
-        } else if (this.store.cache.medianIDs.includes(this.id)) {
-          this.store.methods.updateCache('states', this.id, 'rawPointsActive', false)
-        } else {
-          // base core or uploaded sets
-          this.store.methods.removeCurrent(this.id)
-        }
-      }
-    }
+    props: ['isMarginLeft', 'isMarginTop', 'isWidth', 'isData', 'isComponent', 'info'],
+    components: { Toggle, Dropdown, ColorSwatch, FileUpload, Text, ClickIcon },
   }
 </script>
 
 <style scoped>
-  div {
-    display: inline;
-  }
-
-  img {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin: 0;
-    margin-right: 5px;
-  }
-
   .info {
     margin: 0;
     padding: 0;
@@ -79,8 +61,6 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: -30px;
-    margin-left: -22px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -96,5 +76,4 @@
   .dropdown-content:hover {
     display: none !important;
   }
-
 </style>

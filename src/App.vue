@@ -1,10 +1,7 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <div id="file-mangement">
-        <FileManager />
-      </div>
-      <DataHeader id="data-header" />
+      <DataHeader />
       <div id="data-management">
         <DataManager :useCache="false" />
       </div>
@@ -42,15 +39,16 @@ export default {
       }
       let data = [];
       let pointsObj = e.data.points;
+      data.push(pointsObj.tw);
       if (pointsObj.ew && pointsObj.lw) {
         data.push(pointsObj.ew);
         data.push(pointsObj.lw);
       }
-      data.push(pointsObj.tw);
-      store.methods.initializeData(data);
+      store.methods.processSentData(data);
     },
 },
     mounted() {
+      store.methods.initializeData();
       if (!window.opener) {
         return
       }
@@ -73,6 +71,7 @@ html {
   height: 100%;
   width: 100%;
   background: #f6f6f6;
+  overflow: hidden;
 }
 
 div {
@@ -102,15 +101,7 @@ h2 {
   height: 100%;
   display: flex;
   flex-direction: column;
-}
-
-#file-mangement {
-  width: inherit;
-  height: 24px;
-  min-height: 24px;
-  overflow: hidden;
-  margin-top: 5px;
-  margin-bottom: 5px;
+  z-index: 999;
 }
 
 #data-management {

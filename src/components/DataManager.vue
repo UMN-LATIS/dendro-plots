@@ -9,6 +9,7 @@
 
     <Name :name="obj.name"
           :file="obj.file"
+          :id="obj.id"
     />
 
     <Remove class="remove"
@@ -60,7 +61,7 @@
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
         for (const e of dataEntries) {
           let modalObj = this.store.cache.modals.find(o => o.id == e.id)
-          if (e.getBoundingClientRect().top > 54) {
+          if (e.getBoundingClientRect().top > 114 || e.id < 999) {
             modalObj.top = e.getBoundingClientRect().top - 1
             modalObj.outOfBounds = false
           } else {
@@ -91,11 +92,7 @@
   }
 
   .data-entry-wrapper:hover {
-    background-color: #d9d9d9;
-  }
-
-  .active {
-    background-color: #bdbdbd !important;
+    background-color: #ffffff;
   }
 
   .remove {

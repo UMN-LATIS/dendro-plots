@@ -11,6 +11,7 @@ const createSpline = async function(x, y, freq, id, propA, propB) {
     };
     return pair;
   });
+  data = data.filter(o => o.x && o.y)
 
   let lambda = 0.00001 * Math.pow(2, 9.9784 * Math.log(freq) + 3.975);
   const spline = await simpleSmoothingSpline(data, { lambda: lambda });
