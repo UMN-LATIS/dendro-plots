@@ -3,25 +3,47 @@ import createSpline from './spline.js'
 import createIndex from './index.js'
 import createMedian from './median.js'
 
-function simpleTrace(obj, colorTrace, propA, propB) {
+function simpleTrace(obj, propA, propB) {
+  var spagProfile = {
+    color: store.cache.spagColor,
+    opacity: 0.2,
+    width: (obj.shape) ? 1 : 2,
+    mode: (obj.shape) ? 'lines+markers' : 'lines',
+  }
+
+  var medianProfile = {
+    color: (store.cache.spagActive) ? '#000000' : obj.color,
+    opacity: 0.7,
+    width: (obj.shape) ? 3 : 4,
+    mode: (obj.shape) ? 'lines+markers' : 'lines',
+  }
+
+  var genProfile = {
+    color: ((obj.applyColorToRaw && !propB) || (!obj.applyColorToRaw && propB)) ? obj.color : '#797979',
+    opacity: (propB) ? 1 : 0.5,
+    width: (obj.shape) ? 1 : 2,
+    mode: (obj.shape) ? 'lines+markers' : 'lines',
+  }
+
   // only splines have 2 properties (splines, raw or index.)
   let x = (propB) ? obj[propA][propB].x : obj[propA].x
   let y = (propB) ? obj[propA][propB].y : obj[propA].y
-  let color = (colorTrace) ? obj.color : '#797979'
-  let opacity = (propB) ? 1 : 0.5 // opacity for gray scale; splines darker than raw points
-  opacity = (colorTrace) ? 0.7 : opacity // opacity for color
-  opacity = (store.cache.spagActive && !store.cache.medianIDs.includes(obj.id)) ? 0.2 : opacity // opacity for spaghetti plot
-  let width = (obj.shape) ? 1 : 2
-  width = (store.cache.spagActive && store.cache.medianIDs.includes(obj.id)) ? 3 : width // width for spaghetti plot
-  let mode = (obj.shape) ? 'lines+markers' : 'lines'
 
-  let trace = new Object()
+  let traceProfile = genProfile
+  if (store.cache.spagActive) {
+    traceProfile = spagProfile
+  }
+  if (store.cache.medianIDs.includes(obj.id)) {
+    traceProfile = medianProfile
+  }
+
+  let trace = {}
   trace.name = obj.name
   trace.x = x
   trace.y = y
-  trace.line = { color: color, width: width }
-  trace.opacity = opacity
-  trace.mode = mode
+  trace.line = { color: traceProfile.color, width: traceProfile.width }
+  trace.opacity = traceProfile.opacity
+  trace.mode = traceProfile.mode
   if (obj.shape) {
     trace.marker = { symbol: obj.shape, size: 8 }
   }
@@ -70,7 +92,7 @@ async function splineTrace(obj, prop, freq, splineFORindex) {
   obj.name = obj.name + '_' + freqName +'_spline'
   obj.shape = false
 
-  let trace = simpleTrace(obj, !obj.applyColorToRaw, 'spline', prop)
+  let trace = simpleTrace(obj, 'spline', prop)
 
   return trace
 }
@@ -105,7 +127,7 @@ async function indexTrace(obj, prop, freq) {
   obj = JSON.parse(JSON.stringify(obj))
   obj.name = obj.name + '_' + freqName +'_index'
 
-  let trace = simpleTrace(obj, obj.applyColorToRaw, prop)
+  let trace = simpleTrace(obj, prop)
 
   return trace
 }
@@ -226,7 +248,7 @@ const formatTraces = function(locVal) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
     }
     if (obj.rawPointsActive) {
-      arr.push(simpleTrace(obj, obj.applyColorToRaw, 'raw'))
+      arr.push(simpleTrace(obj, 'raw'))
     }
     if (obj.indexSplineFreq) {
       arr.push(splineTrace(obj, 'index', obj.indexSplineFreq, true))

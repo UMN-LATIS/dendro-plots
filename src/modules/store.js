@@ -48,6 +48,7 @@ const cache = reactive({
   states: [],
   modals: [],
   spagActive: false,
+  spagColor: '#228b22',
   updatePlotSwitch: false,
 })
 
@@ -193,12 +194,6 @@ const methods = {
     }
   },
   loadData: function(data) {
-    // spaghetti plot applies to uploaded data
-    // remove its visual changes, save state, then reapply
-    if (cache.spagActive) {
-      this.spagAction(false)
-      cache.spagActive = true
-    }
     this.saveCurrent()
 
     for (const set of data) {
@@ -256,48 +251,22 @@ const methods = {
 
       // establish default load sequence
       cache.loadSequence.push(id)
-
-      if (cache.spagActive) {
-        this.spagAction(true)
-      }
     }
   },
   addTo: function(data, property) {
     states[property].push(data)
   },
   undo: function() {
-    // spaghetti plot is not affected by undo
-    // remove its visual changes, save state, then reapply
-    if (cache.spagActive) {
-      this.spagAction(false)
-      cache.spagActive = true
-    }
-
     let recentState = states.past[states.past.length - 1]
     states.past.pop()
     this.addTo(states.current, 'future')
     states.current = recentState
-
-    if (cache.spagActive) {
-      this.spagAction(true)
-    }
   },
   redo: function() {
-    // spaghetti plot is not affected by redo
-    // remove its visual changes, save state, then reapply
-    if (cache.spagActive) {
-      this.spagAction(false)
-      cache.spagActive = true
-    }
-
     let recentState = states.future[states.future.length - 1]
     states.future.pop()
     this.addTo(states.current, 'past')
     states.current = recentState
-
-    if (cache.spagActive) {
-      this.spagAction(true)
-    }
   },
   saveCurrent: function() {
     states.future = []
@@ -343,61 +312,6 @@ const methods = {
     }
     return testVal
   },
-  spagAction: function(active) {
-    cache.spagActive = active
-    if (active) {
-      // store current colors
-      let allStates = JSON.parse(JSON.stringify(states.current))
-      allStates.push(...JSON.parse(JSON.stringify(cache.states)))
-
-      for (let obj of allStates) {
-        let colorObj = cache.colorsBeforeSpag.find(o => o.id === obj.id)
-        if (colorObj) {
-          colorObj.color = obj.color
-        } else {
-          colorObj = {
-            id: obj.id,
-            color: obj.color,
-          }
-          cache.colorsBeforeSpag.push(colorObj)
-        }
-      }
-
-      let activeStates = states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
-
-      // change all core colors
-      for (let obj of activeStates) {
-        //093259
-        obj.color = '#084d49'
-      }
-
-      // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
-      let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
-                                            || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
-      let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))
-                                            || (o.indexPlotLocation == 2 && (o.indexPointsFreq || o.indexSplineFreq)))
-
-      if (plot1Active) {
-        this.updateCache('states', 220, 'rawPointsActive', true)
-        this.updateCache('states', 220, 'color', '#000000')
-      }
-      if (plot2Active) {
-        this.updateCache('states', 221, 'rawPlotLocation', 2)
-        this.updateCache('states', 221, 'rawPointsActive', true)
-        this.updateCache('states', 221, 'color', '#000000')
-      }
-    } else {
-      for (let obj of cache.colorsBeforeSpag) {
-        if (cache.medianIDs.includes(obj.id)) {
-          this.updateCache('states', obj.id, 'rawPointsActive', false)
-          this.updateCache('states', obj.id, 'color', obj.color)
-        } else {
-          let stateObj = states.current.find(o => o.id == obj.id)
-          if (stateObj) stateObj.color = obj.color
-        }
-      }
-    }
-  }
 }
 
 export default {

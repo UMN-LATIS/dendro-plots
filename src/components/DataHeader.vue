@@ -69,13 +69,33 @@
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
-        spagActive: false,
       }
     },
     methods: {
       spagToggle: function() {
-        this.spagActive = !this.spagActive
-        this.store.methods.spagAction(this.spagActive)
+        this.store.cache.spagActive = !this.store.cache.spagActive
+        if (this.store.cache.spagActive) {
+          let activeStates = this.store.states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+
+          // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
+          let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
+                                                || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
+          let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))
+                                                || (o.indexPlotLocation == 2 && (o.indexPointsFreq || o.indexSplineFreq)))
+
+          if (plot1Active) {
+            this.store.methods.updateCache('states', 220, 'rawPointsActive', true)
+          }
+          if (plot2Active) {
+            this.store.methods.updateCache('states', 221, 'rawPlotLocation', 2)
+            this.updateCache('states', 221, 'rawPointsActive', true)
+          }
+        } else {
+          this.store.methods.updateCache('states', 220, 'rawPointsActive', false)
+          this.store.methods.updateCache('states', 221, 'rawPointsActive', false)
+        }
+
+        this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
       },
       modalToggle: function() {
         let allOff = true

@@ -17,11 +17,20 @@
     props: ['name', 'file', 'id'],
     computed: {
       ofColor: function() {
+        if (this.store.cache.spagActive && this.id > 9999) { // exclude all & medians
+          return this.store.cache.spagColor
+        }
+
+        if (this.store.cache.medianIDs.includes(this.id)) {
+          return '#000000'
+        }
+
         let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
         let set = states.find(o => o.id == this.id)
         if (set) {
           return set.color
         }
+
         return '#000000'
       }
     }
