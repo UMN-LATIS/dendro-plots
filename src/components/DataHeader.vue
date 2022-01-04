@@ -92,7 +92,7 @@
           }
           if (plot2Active) {
             this.store.methods.updateCache('states', 221, 'rawPlotLocation', 2)
-            this.updateCache('states', 221, 'rawPointsActive', true)
+            this.store.methods.updateCache('states', 221, 'rawPointsActive', true)
           }
         } else {
           this.store.methods.updateCache('states', 220, 'rawPointsActive', false)

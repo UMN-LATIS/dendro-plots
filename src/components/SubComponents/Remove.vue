@@ -24,8 +24,9 @@
     methods: {
       onClick: function() {
         if (this.id === this.store.cache.allID) {
-          // all set
-          this.store.methods.newCurrent([])
+          // do not remove base set
+          let baseSets = this.store.states.current.filter(o => o.id < 99)
+          this.store.methods.newCurrent(baseSets)
         } else if (this.store.cache.medianIDs.includes(this.id)) {
           this.store.methods.updateCache('states', this.id, 'rawPointsActive', false)
         } else {

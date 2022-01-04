@@ -17,17 +17,22 @@ const cache = reactive({
   plots: [{ value: 1, name: 'Plot 1' },
           { value: 2, name: 'Plot 2' }],
   loadSequence: [],
+  dendroColors: [
+                 '#b2182b', // dark red (tw)
+                 '#f4a582', // light red (ew)
+                 '#d6604d', // middle red (lw)
+               ],
   colors: [
             '#a6cee3', // light blue
             '#1f78b4', // dark blue
             '#b2df8a', // light green
             '#33a02c', // dark green
-            '#fb9a99', // light red
-            '#e31a1c', // dark red
+            '#cab2d6', // light purple
+            '#6a3d9a',  // dark purple
             '#fdbf6f', // light orange
             '#ff7f00', // dark orange
-            '#cab2d6', // light purple
-            '#6a3d9a'  // dark purple
+            '#fb9a99', // light red
+            '#e31a1c', // dark red
           ],
   colorIndex: 0,
   shapes: [{value: false, name: 'No markers'},
@@ -47,7 +52,7 @@ const cache = reactive({
   states: [],
   modals: [],
   spagActive: false,
-  spagColor: '#228b22',
+  spagColor: '#006994',
   updatePlotSwitch: false,
 })
 
@@ -138,15 +143,6 @@ const methods = {
         let raw = cache.raw.find(o => o.id == id)
         raw.x = set.x
         raw.y = set.y
-
-        // reset spline & index data
-        let index = cache.index.find(o => o.id == id)
-        index = null
-        let rawSpline = cache.splines.raw.find(o => o.id == id)
-        rawSpline = null
-        let indexSpline = cache.splines.index.find(o => o.id == id)
-        indexSpline = null
-
         cache.updatePlotSwitch = !cache.updatePlotSwitch
         continue;
       }
@@ -158,7 +154,7 @@ const methods = {
       newState.id = id
       newState.name = set.name
       newState.file = 'DendroElevator'
-      newState.color = cache.colors[cache.colorIndex]
+      newState.color = cache.dendroColors[id]
       cache.colorIndex++
       newState.shape = false
       newState.applyColorToRaw = true

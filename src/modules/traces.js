@@ -14,7 +14,7 @@ function simpleTrace(obj, propA, propB) {
   var medianProfile = {
     color: (store.cache.spagActive) ? '#000000' : obj.color,
     opacity: 0.7,
-    width: (obj.shape) ? 3 : 4,
+    width: (obj.shape) ? 2 : 3,
     mode: (obj.shape) ? 'lines+markers' : 'lines',
   }
 
@@ -22,6 +22,13 @@ function simpleTrace(obj, propA, propB) {
     color: ((obj.applyColorToRaw && !propB) || (!obj.applyColorToRaw && propB)) ? obj.color : '#797979',
     opacity: (propB) ? 1 : 0.5,
     width: (obj.shape) ? 1 : 2,
+    mode: (obj.shape) ? 'lines+markers' : 'lines',
+  }
+
+  var dendroProfile = {
+    color: obj.color,
+    opacity: 1,
+    width: (!store.cache.spagActive || !obj.shape) ? 3 : 2,
     mode: (obj.shape) ? 'lines+markers' : 'lines',
   }
 
@@ -35,6 +42,9 @@ function simpleTrace(obj, propA, propB) {
   }
   if (store.cache.medianIDs.includes(obj.id)) {
     traceProfile = medianProfile
+  }
+  if (obj.id < 99) {
+    traceProfile = dendroProfile
   }
 
   let trace = {}
@@ -134,8 +144,6 @@ async function indexTrace(obj, prop, freq) {
 
 // param (locVal): plot location value
 const formatTraces = function(locVal) {
-  let arr = new Array()
-
   // create array with data only intended for specified plot
   let storeCopy = JSON.parse(JSON.stringify(store.states.current))
 
@@ -150,12 +158,12 @@ const formatTraces = function(locVal) {
       let rawIDs = []
       let indexIDs = []
       for (const state of activeStates) {
-        if (medianState.rawPlotLocation == state.rawPlotLocation && !store.cache.medianIDs.includes(state.id)) {
+        if (medianState.rawPlotLocation == state.rawPlotLocation && state.id > 999) { // do not include base core in median
           let raw = store.cache.raw.find(o => o.id === state.id)
           rawData_forMedian.push(raw)
           rawIDs.push(state.id)
         }
-        if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq && !store.cache.medianIDs.includes(state.id)) {
+        if (medianState.rawPlotLocation == state.indexPlotLocation && state.indexPointsFreq && state.id > 999) { // do not include base core in median
           let index = store.cache.index.find(o => o.id === state.id)[state.indexPointsFreq]
           rawData_forMedian.push(index)
           indexIDs.push(state.id)
@@ -221,19 +229,19 @@ const formatTraces = function(locVal) {
     if (obj.rawSplineFreq) {
       let rawSpline = store.cache.splines.raw.find(o => o.id == obj.id)
       obj.spline = {
-        raw: (rawSpline) ? rawSpline[obj.rawSplineFreq] : null
+        raw: (rawSpline && obj.id > 999) ? rawSpline[obj.rawSplineFreq] : null
       }
     }
 
     if (obj.indexPointsFreq) {
       let index = store.cache.index.find(o => o.id == obj.id)
-      obj.index = (index) ? index[obj.indexPointsFreq] : null
+      obj.index = (index && obj.id > 999) ? index[obj.indexPointsFreq] : null
     }
 
     if (obj.indexSplineFreq) {
       let indexSpline = store.cache.splines.index.find(o => o.id == obj.id)
       obj.spline = {
-        index: (indexSpline) ? indexSpline[obj.indexSplineFreq] : null
+        index: (indexSpline && obj.id > 999) ? indexSpline[obj.indexSplineFreq] : null
       }
     }
 
@@ -243,7 +251,11 @@ const formatTraces = function(locVal) {
   // create traces based on needed format
   // order of creation important
   // most recent trace rendered on top of earlier traces
+  let gen = []
+  let last = []
   activeData.forEach(obj => {
+    let arr = (obj.id < 99) ? last : gen
+
     if (obj.rawSplineFreq) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
     }
@@ -257,8 +269,9 @@ const formatTraces = function(locVal) {
       arr.push(indexTrace(obj, 'index', obj.indexPointsFreq))
     }
   })
+  gen.push(...last)
 
-  return arr.filter(Boolean)
+  return gen.filter(Boolean)
 }
 
 export default formatTraces

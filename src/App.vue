@@ -28,8 +28,8 @@ export default {
   components: { FileManager, DataHeader, DataManager, PlotManager },
   data() {
     return {
-      //parentSite: 'http://localhost:4000',
-      parentSite: "https://umn-latis.github.io",
+      parentSite: 'http://localhost:4000',
+      //parentSite: "https://umn-latis.github.io",
     };
   },
   methods: {
