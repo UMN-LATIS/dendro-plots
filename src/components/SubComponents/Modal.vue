@@ -52,7 +52,7 @@
           {
             id: this.id,
             left: 0,
-            width: 161,
+            width: 146,
             component: 'Dropdown',
             info: ['Select visualization spline wavelength for raw data.'],
             options: this.splineOptions,
@@ -64,7 +64,7 @@
           {
             id: this.id,
             left: 0,
-            width: 111,
+            width: 96,
             component: 'Dropdown',
             info: ['Select plot for raw data appearance.'],
             options: this.store.cache.plots,
@@ -76,7 +76,7 @@
           {
             id: this.id,
             left: 0,
-            width: 124,
+            width: 109,
             component: 'Dropdown',
             info: ['Select detrending spline wavelength for indexing raw data.'],
             options: this.splineOptions,
@@ -88,7 +88,7 @@
           {
             id: this.id,
             left: 0,
-            width: 161,
+            width: 146,
             component: 'Dropdown',
             info: ['Select visualization spline wavelength for indexed data.',
                    'Index points must be selected to enable this.'],
@@ -101,7 +101,7 @@
           {
             id: this.id,
             left: 0,
-            width: 120,
+            width: 105,
             component: 'Dropdown',
             info: ['Select plot for indexed data appearance.'],
             options: this.store.cache.plots,
@@ -158,6 +158,6 @@
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 880px;
+    width: 790px;
   }
 </style>
