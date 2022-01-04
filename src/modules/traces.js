@@ -26,7 +26,7 @@ function simpleTrace(obj, propA, propB) {
   }
 
   var dendroProfile = {
-    color: obj.color,
+    color: ((obj.applyColorToRaw && !propB) || (!obj.applyColorToRaw && propB)) ? obj.color : '#797979',
     opacity: 1,
     width: (!store.cache.spagActive || !obj.shape) ? 3 : 2,
     mode: (obj.shape) ? 'lines+markers' : 'lines',
