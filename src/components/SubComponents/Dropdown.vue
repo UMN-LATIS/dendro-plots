@@ -3,7 +3,7 @@
     <DropdownOptions v-for="obj in options"
                      :key="obj.value"
                      :id="id"
-                     :name="obj.name + optionModifer"
+                     :name="optionModifer + obj.name"
                      :value="obj.value"
                      :mainProp="mainProp"
                      :disabled="isDisabled"
@@ -73,7 +73,7 @@
 
     font-family: Sans-serif;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 11px;
     color: black;
     height: 16px;
     border: 1px solid black;

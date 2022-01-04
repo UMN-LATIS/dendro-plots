@@ -79,7 +79,7 @@
   .dropdown-content {
     visibility: hidden;
     opacity: 0;
-    transition: z-index 0, opacity 0s;
+    transition: z-index 0s, opacity 0s;
     transition-delay: 1s;
     font-weight: normal;
     font-family: Sans-serif;
@@ -88,8 +88,8 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: 20px;
-    margin-left: -96px;
+    margin-top: -4px;
+    margin-left: 20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -102,6 +102,10 @@
     opacity: 1;
     display: inline;
     z-index: 99999;
+  }
+
+  .dropdown-content:hover {
+    display: none !important;
   }
 
 </style>

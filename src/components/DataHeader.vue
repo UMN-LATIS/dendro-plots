@@ -1,6 +1,7 @@
 <template>
   <div>
     <HoverWrapper :isMarginLeft="-40"
+                  :isMarginTop="22"
                   :isWidth="40"
                   :isData="{}"
                   :isComponent="'Text'"
@@ -8,24 +9,26 @@
     />
 
     <HoverWrapper :isMarginLeft="0"
+                  :isMarginTop="22"
                   :isWidth="20"
                   :isData="{}"
                   :isComponent="'FileUpload'"
                   :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-                         'Accepts multiple files with multiple series in upload sequence.']"
+                          'Accepts multiple files with multiple series in upload sequence.']"
     />
 
     <div v-if="store.cache.loadSequence.length"
          style="display: inline;"
     >
       <HoverWrapper :isMarginLeft="-20"
+                    :isMarginTop="22"
                     :isWidth="20"
                     :isData="{
                         imageName: 'bullet-points',
                         callback: modalToggle,
                       }"
                     :isComponent="'ClickIcon'"
-                    :info="['Click to toggle data modals.']"
+                    :info="['Toggle appearance of all data menus.']"
       />
 
       <Sort />
@@ -35,13 +38,14 @@
   <div v-if="store.cache.loadSequence.length">
     <div id="additional-buttons">
       <HoverWrapper :isMarginLeft="-20"
+                    :isMarginTop="22"
                     :isWidth="20"
                     :isData="{
                         imageName: 'spaghetti-plot',
                         callback: spagToggle,
                       }"
                     :isComponent="'ClickIcon'"
-                    :info="['Click to toggle spaghetti plot.']"
+                    :info="['Toggle spaghetti plot appearance behavior.']"
       />
 
       <UndoRedoButtons />

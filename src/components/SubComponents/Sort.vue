@@ -15,7 +15,7 @@
     data() {
       return {
         sortType: 0,
-        sortText: ['Sorting by load sequence', 'Sorting A -> Z', 'Sorting Z -> A'],
+        sortText: ['Sorting by load sequence.', 'Sorting A to Z.', 'Sorting Z to A.'],
       }
     },
     methods: {
@@ -99,7 +99,7 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: 20px;
+    margin-top: 22px;
     margin-left: -20px;
     background-color: #f6f6f6;
     border: 1px solid black;

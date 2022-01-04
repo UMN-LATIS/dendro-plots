@@ -18,7 +18,7 @@
     props: ['id'],
     data: function () {
       return {
-        info: ['Remove series'],
+        info: ['Remove series.'],
       }
     },
     methods: {
@@ -78,8 +78,8 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: 20px;
-    margin-left: -20px;
+    margin-top: -30px;
+    margin-left: -22px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -90,6 +90,10 @@
     visibility: visible;
     opacity: 1;
     display: inline;
+  }
+
+  .dropdown-content:hover {
+    display: none !important;
   }
 
 </style>

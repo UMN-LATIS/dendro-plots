@@ -6,7 +6,7 @@
     <component :is="isComponent" v-bind="isData" />
 
     <div class="dropdown-content"
-         :style="{ 'margin-left': isMarginLeft + 'px' }"
+         :style="{ 'margin-left': isMarginLeft + 'px', 'margin-top': isMarginTop + 'px' }"
     >
       <p class="info"
          v-for="blurb in info"
@@ -27,7 +27,7 @@
 
   export default {
     inject: ['store'],
-    props: ['isMarginLeft', 'isWidth', 'isData', 'isComponent', 'info'],
+    props: ['isMarginLeft', 'isMarginTop', 'isWidth', 'isData', 'isComponent', 'info'],
     components: { Toggle, Dropdown, ColorSwatch, FileUpload, Text, ClickIcon },
   }
 </script>
@@ -61,7 +61,6 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: 20px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;
@@ -72,5 +71,9 @@
     visibility: visible;
     opacity: 1;
     display: inline;
+  }
+
+  .dropdown-content:hover {
+    display: none !important;
   }
 </style>

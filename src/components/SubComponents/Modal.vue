@@ -5,6 +5,7 @@
 
     <HoverWrapper v-for="(data, i) in modalTools" :key="i"
                   :isMarginLeft="data.left"
+                  :isMarginTop="data.top"
                   :isWidth="data.width"
                   :isData="data"
                   :isComponent="data.component"
@@ -23,17 +24,17 @@
     components: { HoverWrapper },
     data: function() {
       return {
-        splineOptions: [
-                          { value: false, name: 'No ' },
-                          { value: 5, name: '5yr ' },
-                          { value: 10, name: '10yr ' },
-                          { value: 20, name: '20yr ' },
-                          { value: 30, name: '30yr ' },
-                          { value: 50, name: '50yr ' },
-                          { value: 100, name: '100yr ' },
-                          { value: 200, name: '200yr ' },
-                          { value: 0.5, name: '50% ' },
-                          { value: 0.67, name: '67% ' },
+        dropdownOptions: [
+                          { value: false, name: 'None' },
+                          { value: 5, name: '5yr' },
+                          { value: 10, name: '10yr' },
+                          { value: 20, name: '20yr' },
+                          { value: 30, name: '30yr' },
+                          { value: 50, name: '50yr' },
+                          { value: 100, name: '100yr' },
+                          { value: 200, name: '200yr' },
+                          { value: 0.5, name: '50%' },
+                          { value: 0.67, name: '67%' },
                         ],
       }
     },
@@ -44,31 +45,21 @@
           {
             id: this.id,
             left: -20,
+            top: -30,
             width: 20,
             component: 'Toggle',
-            info: ['Toggle raw data appearance in plot.'],
+            info: ['Toggle appearance of raw data.'],
             toggleProp: 'rawPointsActive',
           }, // raw points toggle
           {
             id: this.id,
             left: 0,
-            width: 146,
-            component: 'Dropdown',
-            info: ['Select visualization spline wavelength for raw data.'],
-            options: this.splineOptions,
-            optionModifer: 'visualization spline',
-            mainProp: 'rawSplineFreq',
-            actions: ['rawSplineFreq', 'indexPointsFreq'],
-            disableProp: false,
-          }, // raw spline dropdown
-          {
-            id: this.id,
-            left: 0,
-            width: 96,
+            top: -30,
+            width: 93,
             component: 'Dropdown',
             info: ['Select plot for raw data appearance.'],
             options: this.store.cache.plots,
-            optionModifer: ': raw data',
+            optionModifer: 'Raw data: ',
             mainProp: 'rawPlotLocation',
             actions: ['rawPlotLocation'],
             disableProp: false,
@@ -76,36 +67,25 @@
           {
             id: this.id,
             left: 0,
-            width: 109,
+            top: -30,
+            width: 149,
             component: 'Dropdown',
-            info: ['Select detrending spline wavelength for indexing raw data.'],
-            options: this.splineOptions,
-            optionModifer: 'spline index',
-            mainProp: 'indexPointsFreq',
-            actions: ['indexPointsFreq'],
+            info: ['Select wavelength of visualization spline for raw data.'],
+            options: this.dropdownOptions,
+            optionModifer: 'Raw data viz spline: ',
+            mainProp: 'rawSplineFreq',
+            actions: ['rawSplineFreq', 'indexPointsFreq'],
             disableProp: false,
-          }, // index points dropdown
+          }, // raw spline dropdown
           {
             id: this.id,
             left: 0,
-            width: 146,
-            component: 'Dropdown',
-            info: ['Select visualization spline wavelength for indexed data.',
-                   'Index points must be selected to enable this.'],
-            options: this.splineOptions,
-            optionModifer: 'visualization spline',
-            mainProp: 'indexSplineFreq',
-            actions: ['indexSplineFreq'],
-            disableProp: 'indexPointsFreq',
-          }, // index spline dropdown
-          {
-            id: this.id,
-            left: 0,
-            width: 105,
+            top: -30,
+            width: 98,
             component: 'Dropdown',
             info: ['Select plot for indexed data appearance.'],
             options: this.store.cache.plots,
-            optionModifer: ': index data',
+            optionModifer: 'Index data: ',
             mainProp: 'indexPlotLocation',
             actions: ['indexPlotLocation'],
             disableProp: false,
@@ -113,24 +93,54 @@
           {
             id: this.id,
             left: 0,
+            top: -30,
+            width: 159,
+            component: 'Dropdown',
+            info: ['Select spline wavelength for raw data detrending.'],
+            options: this.dropdownOptions,
+            optionModifer: 'Spline detrended index: ',
+            mainProp: 'indexPointsFreq',
+            actions: ['indexPointsFreq'],
+            disableProp: false,
+          }, // index points dropdown
+          {
+            id: this.id,
+            left: 0,
+            top: -44,
+            width: 154,
+            component: 'Dropdown',
+            info: ['Select wavelength of visualization spline for detrended index.',
+                   '[Must enable detrended index]'],
+            options: this.dropdownOptions,
+            optionModifer: 'Index data viz spline: ',
+            mainProp: 'indexSplineFreq',
+            actions: ['indexSplineFreq'],
+            disableProp: 'indexPointsFreq',
+          }, // index spline dropdown
+          {
+            id: this.id,
+            left: 0,
+            top: -30,
             width: 16,
             component: 'ColorSwatch',
-            info: ['Select color for this time series.'],
+            info: ['Select color for this data.'],
           }, // color
           {
             id: this.id,
             left: -20,
+            top: -30,
             width: 20,
             component: 'Toggle',
-            info: ['Toggle color/gray between time series and spline.'],
+            info: ['Toggle color/gray between data/spline.'],
             toggleProp: 'applyColorToRaw',
           }, // color toggle
           {
             id: this.id,
             left: 0,
-            width: 124,
+            top: -30,
+            width: 84,
             component: 'Dropdown',
-            info: ['Select shape of marker for data values.'],
+            info: ['Select marker shape for data.'],
             options: this.store.cache.shapes,
             optionModifer: '',
             mainProp: 'shape',
@@ -154,10 +164,10 @@
     left: 140px;
     height: 20px;
     background: #f6f6f6;
-    border: 1.5px solid #bdbdbd;
+    border: 1.5px solid #f6f6f6;
     border-left: none;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
-    width: 790px;
+    width: 804px;
   }
 </style>

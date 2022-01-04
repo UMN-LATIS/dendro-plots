@@ -38,3 +38,7 @@
   opacity: 1;
   display: inline;
 }
+
+.dropdown-content:hover {
+  display: none !important;
+}
