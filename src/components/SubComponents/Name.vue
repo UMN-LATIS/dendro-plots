@@ -88,8 +88,8 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-top: -4px;
-    margin-left: 20px;
+    margin-top: -30px;
+    margin-left: -96px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;

@@ -3,14 +3,6 @@ const createMedian = function (dataArray) {
     return { x: [], y: [] }
   }
 
-  var longestDataLength = 0;
-  for (let set of dataArray) {
-    var setLength = set.y.length;
-    if (setLength > longestDataLength) {
-      longestDataLength = setLength;
-    }
-  }
-
   var medianYears = []
   var medianWidths = []
   var year_to_find_median_width_for = Number.MAX_SAFE_INTEGER
