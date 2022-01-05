@@ -28,13 +28,12 @@ export default {
   components: { FileManager, DataHeader, DataManager, PlotManager },
   data() {
     return {
-      //parentSite: 'http://localhost:4000',
-      parentSite: "https://umn-latis.github.io",
+      parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000'],
     };
   },
   methods: {
     onMessage: function(e) {
-      if (e.origin != this.parentSite) {
+      if (!this.parentSites.includes(e.origin)) {
         return;
       }
       let data = [];
@@ -52,7 +51,7 @@ export default {
       if (!window.opener) {
         return
       }
-      window.opener.postMessage('open', this.parentSite)
+      window.opener.postMessage('open', "*")
       window.addEventListener('message', this.onMessage, false)
     },
     beforeUnmount() {
