@@ -1,45 +1,70 @@
-const createMedian = function (dataArray) {
-  if (!dataArray.find(e => e)) {
+function binarySearch(arr, val) {
+  let hi = arr.length - 1
+  let lo = 0
+  let mid
+  let found
+
+  while (lo <= hi) {
+    mid = Math.floor((hi + lo) / 2)
+    found = arr[mid]
+
+    if (val == found) {
+      return mid
+    }
+
+    if (val < found) {
+      hi = mid - 1
+    } else {
+      lo = mid + 1
+    }
+  }
+
+  return null
+}
+
+const createMedian = function (d) {
+  let data = JSON.parse(JSON.stringify(d));
+
+  if (!data.find(e => e)) {
     return { x: [], y: [] }
   }
 
   var medianYears = []
   var medianWidths = []
-  var year_to_find_median_width_for = Number.MAX_SAFE_INTEGER
-  var last_year_to_account_for = -Number.MAX_SAFE_INTEGER
+  var earliestYear = Number.MAX_SAFE_INTEGER
+  var lastYear = -Number.MAX_SAFE_INTEGER
 
-  for (let set of dataArray) {
+  for (let set of data) {
     let years = set.x.filter(Boolean);
     // find oldest (smallest) year in all sets of data
-    year_to_find_median_width_for = (Math.min(...years) < year_to_find_median_width_for) ? Math.min(...years) : year_to_find_median_width_for
+    earliestYear = (years[0] < earliestYear) ? years[0] : earliestYear;
     // find most recent (largest) year in all sets of data
-    last_year_to_account_for = (Math.max(...years) > last_year_to_account_for) ? Math.max(...years) : last_year_to_account_for
+    lastYear = (years[years.length - 1] > lastYear) ? years[years.length - 1] : lastYear;
   }
 
-  while (year_to_find_median_width_for <= last_year_to_account_for) {
-    var single_year_widths = []
-    for (let set of dataArray) { // loop through data sets
-      for (let i = 0; i < set.x.length; i++) { // loop through years & widths of each data set
-        if ((set.x.length > 0) && (set.x[i] == year_to_find_median_width_for)) {
-          single_year_widths.push(set.y[i]);
-        }
-      }
+  for (let year = earliestYear; year <= lastYear; year++) {
+    // find all widths for a given year
+    var yearWidths = [];
+    let i
+    for (let set of data) {
+      i = binarySearch(set.x, year)
+      if (i) yearWidths.push(set.y[i])
     }
 
-    single_year_widths.sort( (a, b) => { return a - b} ); // sort into asscending order
-    if (single_year_widths.length == 0) {
+    // find median width of that year
+    yearWidths.sort( (a, b) => { return a - b} ); // sort into asscending order
+    if (yearWidths.length == 0) {
       medianWidths.push(0);
-    } else if (single_year_widths.length % 2 == 0) { // if even length, need to take average of middle values
-      var midUpper = (single_year_widths.length / 2);
-      var midLower = (single_year_widths.length / 2) - 1;
-      var value = (single_year_widths[midUpper] + single_year_widths[midLower]) / 2;
-      medianWidths.push(value);
+    } else if (yearWidths.length % 2 == 0) { // if even length, need to take average of middle values
+      var midUpper = (yearWidths.length / 2);
+      var midLower = (yearWidths.length / 2) - 1;
+      medianWidths.push((yearWidths[midUpper] + yearWidths[midLower]) / 2);
     } else {
-      var mid = Math.floor(single_year_widths.length / 2);
-      medianWidths.push(single_year_widths[mid]);
+      var mid = Math.floor(yearWidths.length / 2);
+      medianWidths.push(yearWidths[mid]);
     }
-    medianYears.push(year_to_find_median_width_for);
-    year_to_find_median_width_for++;
+
+    medianYears.push(year);
   }
 
   // 2) add to data
