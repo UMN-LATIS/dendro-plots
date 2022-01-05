@@ -1,8 +1,11 @@
 <template>
-  <p class="header">Data </p>
+  <p class="header"> {{ text }} </p>
 </template>
 
 <script>
+  export default {
+    props: ['text']
+  }
 </script>
 
 <style scoped>

@@ -1,12 +1,10 @@
 <template>
-  <div class="dropdown"
-       :style="{ width: width + 'px', height: + 'px' }"
-  >
-    <img src="../../assets/info-icon.png"
-         :style="{ width: width + 'px', height: + 'px' }"
-    >
+  <div class="dropdown">
+    <img src="../../assets/dendro.png">
     <div class="dropdown-content">
-      <p v-for="blurb in info" :key="blurb"> {{ blurb }} </p>
+      <p>Data visualization tools</p>
+      <p>developed for <a href="http://dendro.elevator.umn.edu/" target="_blank">DendroElevator</a></p>
+      <p>at the <a href="http://umn.edu/" target="_blank">University of Minnesota</a></p>
     </div>
   </div>
 </template>
@@ -18,8 +16,15 @@
 </script>
 
 <style scoped>
+  a {
+    color: #03b5fc;
+  }
+
   img {
     cursor: help;
+    display: inline;
+    height: 38px;
+    width: 16px;
   }
 
   p {
@@ -33,8 +38,10 @@
   }
 
   .dropdown {
-    display: inline-block;
+    display: inline !important;
     border: none;
+    height: 38px;
+    width: 16px;
   }
 
   .dropdown-content {
@@ -42,8 +49,8 @@
     padding: 6px;
     margin: 0;
     position: absolute;
-    margin-left: -10px;
-    margin-top: 20px;
+    margin-left: -15px;
+    margin-top: 38px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;

@@ -1,65 +1,80 @@
 <template>
-  <div>
-    <HoverWrapper :isMarginLeft="-40"
-                  :isMarginTop="22"
-                  :isWidth="40"
-                  :isData="{}"
-                  :isComponent="'Text'"
-                  :info="['Click on time series name to show/hide data plotting options.']"
-    />
+  <div class="control-panel">
+    <div class="next-to-icon">
+      <div>
+        <HoverWrapper :isMarginLeft="-40"
+                      :isMarginTop="22"
+                      :isWidth="40"
+                      :isData="{ text: 'Data' }"
+                      :isComponent="'Text'"
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        />
 
-    <HoverWrapper :isMarginLeft="0"
-                  :isMarginTop="22"
-                  :isWidth="20"
-                  :isData="{}"
-                  :isComponent="'FileUpload'"
-                  :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-                          'Accepts multiple files with multiple series in upload sequence.']"
-    />
+        <HoverWrapper :isMarginLeft="0"
+                      :isMarginTop="22"
+                      :isWidth="20"
+                      :isData="{}"
+                      :isComponent="'FileUpload'"
+                      :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
+                              'Accepts multiple files with multiple series in upload sequence.']"
+        />
 
-    <div v-if="store.cache.loadSequence.length"
-         style="display: inline;"
-    >
-      <HoverWrapper :isMarginLeft="-20"
-                    :isMarginTop="22"
-                    :isWidth="20"
-                    :isData="{
-                        imageName: 'bullet-points',
-                        callback: modalToggle,
-                      }"
-                    :isComponent="'ClickIcon'"
-                    :info="['Toggle appearance of all data menus.']"
-      />
+        <div v-if="store.cache.loadSequence.length"
+             style="display: inline;"
+        >
+          <HoverWrapper :isMarginLeft="-20"
+                        :isMarginTop="22"
+                        :isWidth="20"
+                        :isData="{
+                            imageName: 'bullet-points',
+                            callback: modalToggle,
+                          }"
+                        :isComponent="'ClickIcon'"
+                        :info="['Toggle appearance of all data menus.']"
+          />
 
-      <Sort />
+          <Sort />
+        </div>
+      </div>
+
+      <div v-if="store.cache.loadSequence.length" style="display: block;">
+        <HoverWrapper :isMarginLeft="-40"
+                      :isMarginTop="22"
+                      :isWidth="40"
+                      :isData="{ text: 'Plot' }"
+                      :isComponent="'Text'"
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        />
+
+        <HoverWrapper :isMarginLeft="-20"
+                      :isMarginTop="22"
+                      :isWidth="20"
+                      :isData="{
+                          imageName: 'spaghetti-plot',
+                          callback: spagToggle,
+                        }"
+                      :isComponent="'ClickIcon'"
+                      :info="['Toggle spaghetti plot appearance behavior.']"
+        />
+
+        <UndoRedoButtons />
+      </div>
+    </div>
+
+    <div class="icon">
+      <Info />
     </div>
   </div>
 
   <div v-if="store.cache.loadSequence.length">
-    <div id="additional-buttons">
-      <HoverWrapper :isMarginLeft="-20"
-                    :isMarginTop="22"
-                    :isWidth="20"
-                    :isData="{
-                        imageName: 'spaghetti-plot',
-                        callback: spagToggle,
-                      }"
-                    :isComponent="'ClickIcon'"
-                    :info="['Toggle spaghetti plot appearance behavior.']"
-      />
-
-      <UndoRedoButtons />
-    </div>
-
-    <div>
-      <DataManager :useCache="true" />
-    </div>
+    <DataManager :useCache="true" />
   </div>
 </template>
 
 <script>
   import formatFileData from '../modules/formatFileData.js'
 
+  import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
   import Toggle from './SubComponents/Toggle.vue'
@@ -69,7 +84,7 @@
 
   export default {
     inject: ['store'],
-    components: { Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
+    components: { Info, Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -126,33 +141,18 @@
     display: inline;
   }
 
-  img {
-    width: 20px;
-    height: 20px;
-  }
-
-  input {
-    margin: 0;
-    padding: 0;
-  }
-
-  label {
-    padding: 0;
-    cursor: pointer;
-    margin: 0;
-    margin-left: 2px;
-    display: inline-block;
-  }
-
-  .header {
-    font-family: Sans-serif;
-    font-weight: bold;
-    font-size: 18px;
-    color: black;
-    height: 18px;
+  .next-to-icon {
     display: inline;
+    width: max-content;
+    height: max-content;
+    float: left;
+  }
+
+  .icon {
+    float: right;
+    width: max-content;
     margin: 0;
-    margin-right: 8px;
+    margin-right: 4px;
   }
 
   .info {
