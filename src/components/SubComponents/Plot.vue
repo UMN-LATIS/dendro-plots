@@ -16,6 +16,7 @@
       return {
         medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
         medianB: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[1]),
+        plot: null,
       }
     },
     computed: {
@@ -60,6 +61,8 @@
           l: 60,
           r: 60,
         }
+        obj.shapes = []
+
         return obj
       },
       config: function() {
@@ -84,13 +87,44 @@
       },
       createPlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
-        if (this.$refs[this.divID]) Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
+        if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
         let traces = await Promise.all(formatTraces(this.value))
         if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
+      },
+      relayoutPlot: async function() {
+        let plot = await this.plot
+        let range = plot.layout.xaxis.range
+        let boundary = 0.0015 * Math.abs(range[1] - range[0])
+        let tw = this.store.states.current.find(o => o.id == 0)
+        let color = tw.color
+        let highlights
+        if (this.store.cache.hightlightYear || this.store.cache.hightlightYear === 0) {
+          highlights = [
+                        {
+                            type: 'rect',
+                            xref: 'x',
+                            yref: 'paper',
+                            x0: this.store.cache.hightlightYear - boundary,
+                            y0: 0,
+                            x1: this.store.cache.hightlightYear + boundary,
+                            y1: 1,
+                            fillcolor: color,
+                            opacity: 0.5,
+                            line: {
+                                  width: 0,
+                                  color: '#b2182b'
+                              }
+                          },
+                      ]
+        }
+
+        (highlights) ? (this.layout.shapes = highlights) : (this.layout.shapes = [])
+
+        if (this.$refs[this.divID]) Plotly.relayout(this.$refs[this.divID], this.layout)
       }
     },
     watch: {
@@ -103,6 +137,12 @@
       'store.states.current': {
         handler: function() {
           this.updatePlot()
+        },
+        deep: true
+      },
+      'store.cache.hightlightYear': {
+        handler: function() {
+          this.relayoutPlot()
         },
         deep: true
       },

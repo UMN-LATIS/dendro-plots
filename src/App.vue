@@ -36,14 +36,20 @@ export default {
       if (!this.parentSites.includes(e.origin)) {
         return;
       }
-      let data = [];
-      let pointsObj = e.data.points;
-      data.push(pointsObj.tw);
-      if (pointsObj.ew && pointsObj.lw) {
-        data.push(pointsObj.ew);
-        data.push(pointsObj.lw);
+
+      // possible data types: new points or year to highlight
+      if (typeof e.data == 'object') {
+        let data = [];
+        let pointsObj = e.data.points;
+        data.push(pointsObj.tw);
+        if (pointsObj.ew && pointsObj.lw) {
+          data.push(pointsObj.ew);
+          data.push(pointsObj.lw);
+        }
+        store.methods.processSentData(data);
+      } else {
+        store.cache.hightlightYear = e.data;
       }
-      store.methods.processSentData(data);
     },
 },
     mounted() {
