@@ -101,8 +101,8 @@ h2 {
 }
 
 #management-wrapper {
-  width: 140px;
-  min-width: 140px;
+  width: 200px;
+  min-width: 200px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@ h2 {
 }
 
 #plot-management {
-  width: calc(100% - 140px);
+  width: calc(100% - 200px);
   height: 100%;
   display: flex;
   flex-direction: column;

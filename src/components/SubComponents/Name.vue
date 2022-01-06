@@ -39,14 +39,14 @@
 
 <style scoped>
   div {
-    width: 96px;
+    width: max-content;
     height: 16px;
     display: inline;
   }
 
   .name {
     display: inline-block;
-    width: 94px;
+    width: 160px;
     height: 18px;
     margin: 0;
     margin-top: 3px;
@@ -89,7 +89,7 @@
     margin: 0;
     position: absolute;
     margin-top: -30px;
-    margin-left: -98px;
+    margin-left: -164px;
     background-color: #f6f6f6;
     border: 1px solid black;
     border-radius: 2px;

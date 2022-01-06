@@ -25,16 +25,16 @@
     data: function() {
       return {
         dropdownOptions: [
-                          { value: false, name: 'None' },
-                          { value: 5, name: '5yr' },
-                          { value: 10, name: '10yr' },
-                          { value: 20, name: '20yr' },
-                          { value: 30, name: '30yr' },
-                          { value: 50, name: '50yr' },
-                          { value: 100, name: '100yr' },
-                          { value: 200, name: '200yr' },
-                          { value: 0.5, name: '50%' },
-                          { value: 0.67, name: '67%' },
+                          { id: false, name: 'None' },
+                          { id: 5, name: '5yr' },
+                          { id: 10, name: '10yr' },
+                          { id: 20, name: '20yr' },
+                          { id: 30, name: '30yr' },
+                          { id: 50, name: '50yr' },
+                          { id: 100, name: '100yr' },
+                          { id: 200, name: '200yr' },
+                          { id: 0.5, name: '50%' },
+                          { id: 0.67, name: '67%' },
                         ],
       }
     },
@@ -161,7 +161,7 @@
 
   .modal-wrapper {
     position: absolute;
-    left: 140px;
+    left: 200px;
     height: 20px;
     background: #f6f6f6;
     border: 1.5px solid #f6f6f6;

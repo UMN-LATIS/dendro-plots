@@ -1,11 +1,12 @@
 <template>
   <div v-if="store.states.current.length">
     <div v-for="obj in activePlots"
-         :key="obj.value"
+         :key="obj.id"
     >
-      <Plot :value="obj.value"
+      <Plot :id="obj.id"
             :name="obj.name"
             :count="activePlots.length"
+            :legend="obj.legend"
       />
     </div>
     <h1 v-if="!activePlots.length"> Modify options to activate plots. </h1>
@@ -23,10 +24,10 @@
     computed: {
       activePlots: function() {
         return this.store.cache.plots.filter(obj => {
-          let statePlotActive = this.store.states.current.some(o => (o.rawPlotLocation == obj.value && (o.rawPointsActive || o.rawSplineFreq))
-                                                                 || (o.indexPlotLocation == obj.value && (o.indexPointsFreq || o.indexSplineFreq)))
-          let cachePlotActive = this.store.cache.states.some(o => (o.rawPlotLocation == obj.value && o.rawPointsActive)
-                                                               || (o.indexPlotLocation == obj.value && o.rawPointsActive && o.indexPointsFreq))
+          let statePlotActive = this.store.states.current.some(o => (o.rawPlotLocation == obj.id && (o.rawPointsActive || o.rawSplineFreq))
+                                                                 || (o.indexPlotLocation == obj.id && (o.indexPointsFreq || o.indexSplineFreq)))
+          let cachePlotActive = this.store.cache.states.some(o => (o.rawPlotLocation == obj.id && o.rawPointsActive)
+                                                               || (o.indexPlotLocation == obj.id && o.rawPointsActive && o.indexPointsFreq))
 
           return statePlotActive || cachePlotActive
         })

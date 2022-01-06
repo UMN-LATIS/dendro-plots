@@ -2,7 +2,8 @@
   <div class="dropdown">
     <img src="../../assets/sort-button.png"
          v-if="store.cache.loadSequence.length > 1"
-         @click="onClick">
+         @click="onClick"
+    >
     <div class="dropdown-content">
       <p class="info"> {{ sortText[sortType] }} </p>
     </div>
@@ -34,28 +35,32 @@
       onClick: function() {
         /*
           Sorting type code:
-            1 = A -> Z
-            2 = Z -> A
-            3 = load order
+            0 = A -> Z
+            1 = Z -> A
+            2 = load order
         */
         let currentCopy = JSON.parse(JSON.stringify(this.store.states.current))
-        if (this.sortType == 0) {
-          this.alphaNumeric(currentCopy, -1, 1)
-        } else if (this.sortType == 1) {
-          this.alphaNumeric(currentCopy, 1, -1)
-        } else if (this.sortType == 2) {
-          let arr = new Array()
-          for (const id of this.store.cache.loadSequence) {
-            const obj = currentCopy.find(o => o.id == id)
-            if (obj) {
-              arr.push(obj)
+        switch (this.sortType) {
+          case 0:
+            this.alphaNumeric(currentCopy, -1, 1)
+            break;
+          case 1:
+            this.alphaNumeric(currentCopy, 1, -1)
+            break;
+          case 2:
+            let arr = new Array()
+            for (const id of this.store.cache.loadSequence) {
+              const obj = currentCopy.find(o => o.id == id)
+              if (obj) {
+                arr.push(obj)
+              }
             }
-          }
-          currentCopy = arr
+            currentCopy = arr
+            break;
         }
         this.store.methods.newCurrent(currentCopy)
 
-        this.sortType ++
+        this.sortType++
         if (this.sortType > 2) {
           this.sortType = 0
         }
@@ -69,6 +74,7 @@
     width: 18px;
     height: 18px;
     margin-bottom: -2px;
+    cursor: pointer;
   }
 
   .info {

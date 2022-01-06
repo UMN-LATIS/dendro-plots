@@ -11,7 +11,7 @@
 
   export default {
     inject: ['store'],
-    props: ['value', 'name', 'count'],
+    props: ['id', 'name', 'count', 'legend'],
     data() {
       return {
         medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
@@ -33,12 +33,12 @@
             l: 20,
           }
         }
-        obj.showlegend = false
+        obj.showlegend = (this.legend) ? true : false;
         obj.legend = {
           title: {
             text: 'Legend',
           },
-          orientation: 'h'
+          orientation: this.legend
         }
         obj.xaxis = {
           title: {
@@ -86,12 +86,12 @@
         if (this.$refs[this.divID]) Plotly.relayout(this.$refs[this.divID], { width: w, height: h })
       },
       createPlot: async function() {
-        let traces = await Promise.all(formatTraces(this.value))
+        let traces = await Promise.all(formatTraces(this.id))
         if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
-        let traces = await Promise.all(formatTraces(this.value))
+        let traces = await Promise.all(formatTraces(this.id))
         if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },

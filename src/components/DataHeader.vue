@@ -57,6 +57,11 @@
                       :info="['Toggle spaghetti plot appearance behavior.']"
         />
 
+        <Legend v-for="plot in store.cache.plots"
+                :key="plot.id"
+                :id="plot.id"
+        />
+
         <UndoRedoButtons />
       </div>
     </div>
@@ -76,6 +81,7 @@
 
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
+  import Legend from './SubComponents/Legend.vue'
   import UndoRedoButtons from './SubComponents/UndoRedoButtons.vue'
   import Toggle from './SubComponents/Toggle.vue'
   import ClickIcon from './SubComponents/ClickIcon.vue'
@@ -84,7 +90,7 @@
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
+    components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],

@@ -1,10 +1,10 @@
 <template>
   <select @change="onChange">
     <DropdownOptions v-for="obj in options"
-                     :key="obj.value"
+                     :key="obj.id"
                      :id="id"
                      :name="optionModifer + obj.name"
-                     :value="obj.value"
+                     :value="obj.id"
                      :mainProp="mainProp"
                      :disabled="isDisabled"
     />

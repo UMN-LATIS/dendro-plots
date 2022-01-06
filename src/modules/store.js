@@ -14,8 +14,8 @@ const cache = reactive({
               index: [],
            },
   index: [],
-  plots: [{ value: 1, name: 'Plot 1' },
-          { value: 2, name: 'Plot 2' }],
+  plots: [{ id: 1, name: 'Plot 1', legend: false },
+          { id: 2, name: 'Plot 2', legend: false }],
   loadSequence: [],
   dendroColors: [
                  '#b2182b', // dark red (tw)
@@ -35,16 +35,16 @@ const cache = reactive({
             '#e31a1c', // dark red
           ],
   colorIndex: 0,
-  shapes: [{value: false, name: 'No markers'},
-           { value: 'circle', name: 'Circles' },
-           { value: 'triangle-up', name: 'Triangles' },
-           { value: 'triangle-down', name: 'Inverse Triangles' },
-           { value: 'square', name: 'Squares' },
-           { value: 'diamond', name: 'Diamonds' },
-           { value: 'circle-open', name: 'Open Circles' },
-           { value: 'triangle-up-open', name: 'Open Triangles' },
-           { value: 'square-open', name: 'Open Squares' },
-           { value: 'diamond-open', name: 'Open Diamonds' }],
+  shapes: [{id: false, name: 'No markers'},
+           { id: 'circle', name: 'Circles' },
+           { id: 'triangle-up', name: 'Triangles' },
+           { id: 'triangle-down', name: 'Inverse Triangles' },
+           { id: 'square', name: 'Squares' },
+           { id: 'diamond', name: 'Diamonds' },
+           { id: 'circle-open', name: 'Open Circles' },
+           { id: 'triangle-up-open', name: 'Open Triangles' },
+           { id: 'square-open', name: 'Open Squares' },
+           { id: 'diamond-open', name: 'Open Diamonds' }],
   allID: 111,
   medianIDs: [220, 221],
   dataIDS_forMedian: [],
@@ -217,7 +217,7 @@ const methods = {
       newState.file = set.fileName
       newState.color = cache.colors[cache.colorIndex]
       cache.colorIndex++
-      newState.shape = cache.shapes[0].value
+      newState.shape = cache.shapes[0].id
       newState.applyColorToRaw = true
 
       newState.rawPointsActive = true
