@@ -7,7 +7,7 @@
                       :isWidth="40"
                       :isData="{ text: 'Data' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options.']"
+                      :info="['Click on time series name to show/hide data plotting options']"
         />
 
         <HoverWrapper :isMarginLeft="0"
@@ -15,8 +15,8 @@
                       :isWidth="20"
                       :isData="{}"
                       :isComponent="'FileUpload'"
-                      :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-                              'Accepts multiple files with multiple series in upload sequence.']"
+                      :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json',
+                              'Accepts multiple files with multiple series in upload sequence']"
         />
 
         <div v-if="store.cache.loadSequence.length"
@@ -30,7 +30,7 @@
                             callback: modalToggle,
                           }"
                         :isComponent="'ClickIcon'"
-                        :info="['Toggle appearance of all data menus.']"
+                        :info="['Toggle appearance of all data menus']"
           />
 
           <Sort />
@@ -43,7 +43,7 @@
                       :isWidth="40"
                       :isData="{ text: 'Plot' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options.']"
+                      :info="['Click on time series name to show/hide data plotting options']"
         />
 
         <HoverWrapper :isMarginLeft="-20"
@@ -54,7 +54,7 @@
                           callback: spagToggle,
                         }"
                       :isComponent="'ClickIcon'"
-                      :info="['Toggle spaghetti plot appearance behavior.']"
+                      :info="['Toggle spaghetti plot appearance behavior']"
         />
 
         <Legend v-for="plot in store.cache.plots"

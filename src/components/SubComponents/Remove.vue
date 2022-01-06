@@ -18,7 +18,7 @@
     props: ['id'],
     data: function () {
       return {
-        info: ['Remove series.'],
+        info: ['Remove series'],
       }
     },
     methods: {

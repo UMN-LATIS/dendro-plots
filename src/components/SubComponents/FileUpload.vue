@@ -14,8 +14,8 @@
     inject: ['store'],
     data: function() {
       return {
-        info: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json.',
-               'Accepts multiple files with multiple series in upload sequence.']
+        info: ['Accepts: comma-, tab-, space-demlimited, .rwl, .json',
+               'Accepts multiple files with multiple series in upload sequence']
       }
     },
     methods: {

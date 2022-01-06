@@ -16,7 +16,7 @@
     data() {
       return {
         sortType: 0,
-        sortText: ['Sorting by load sequence.', 'Sorting A to Z.', 'Sorting Z to A.'],
+        sortText: ['Sorting by load sequence', 'Sorting A to Z', 'Sorting Z to A'],
       }
     },
     methods: {
