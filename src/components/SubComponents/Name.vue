@@ -1,8 +1,26 @@
+<!--
+  Purpose:
+    Creates name block and related hovertext for each loaded dataset.
+
+  Props:
+    name:
+      Name of dataset to be shown.
+    file:
+      Name of file where dataset located.
+    id:
+      ID of dataset. Allows for deciding color of name block.
+
+  Computed:
+    ofColor:
+      Returns hex code for name block color. Decides HTML p-tag color. 
+
+  Methods:
+-->
+
 <template>
   <div class="dropdown">
     <p class="name"
-       :style="{ color: ofColor }"
-    >
+       :style="{ color: ofColor }">
       {{ name }}
     </p>
     <div class="dropdown-content">
@@ -17,14 +35,16 @@
     props: ['name', 'file', 'id'],
     computed: {
       ofColor: function() {
-        if (this.store.cache.spagActive && this.id > 9999) { // exclude all & medians
+        // If spaghetti plot option active, all names (except medians) given
+        // same color.
+        if (this.store.cache.spagActive && this.id > 9999) {
           return this.store.cache.spagColor
         }
 
-        if (this.store.cache.medianIDs.includes(this.id)) {
-          return '#000000'
-        }
-
+        // ID dictates where to search for information. IDs within [99, 9999]
+        // are found in undo/redo save states (store.states.current) while
+        // IDs out of that bound (medians and base datasets from DE) are found
+        // in cache save states (store.cache.states).
         let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
         let set = states.find(o => o.id == this.id)
         if (set) {

@@ -3,7 +3,7 @@
     <div id="management-wrapper">
       <DataHeader />
       <div id="data-management">
-        <DataManager :useCache="false" />
+        <DataManager :useCache="false"/>
       </div>
     </div>
 
@@ -37,7 +37,7 @@ export default {
         return;
       }
 
-      // possible data types: new points or year to highlight
+      // Possible inputs: New data points (array) or a year to highlight (integer)
       if (typeof e.data == 'object') {
         let data = [];
         let pointsObj = e.data.points;
@@ -51,19 +51,20 @@ export default {
         store.cache.hightlightYear = e.data;
       }
     },
-},
-    mounted() {
-      store.methods.initializeData();
-      if (!window.opener) {
-        return
-      }
-      window.opener.postMessage('open', "*")
-      window.addEventListener('message', this.onMessage, false)
-    },
-    beforeUnmount() {
-      window.removeEventListener('message', this.onMessage, false)
+  },
+  mounted() {
+    // Need to send message back to DendroElevator parent window to recieve data.
+    store.methods.initializeData();
+    if (!window.opener) {
+      return
     }
+    window.opener.postMessage('open', "*")
+    window.addEventListener('message', this.onMessage, false)
+  },
+  beforeUnmount() {
+    window.removeEventListener('message', this.onMessage, false)
   }
+}
 
 </script>
 

@@ -1,5 +1,26 @@
+<!--
+  Purpose:
+    Creates toggle button to activate or deactivate given dataset properties.
+
+  Props:
+    id:
+      ID of dataset. Allows for getting and setting of dataset properties.
+    toggleProp:
+      String of property key to be modifed.
+
+  Computed:
+    isChecked:
+      
+
+  Methods:
+    onToggle:
+
+-->
+
 <template>
-  <input type="checkbox" :checked="isChecked" @change="onToggle">
+  <input type="checkbox"
+         :checked="isChecked"
+         @change="onToggle">
 </template>
 
 <script>

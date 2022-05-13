@@ -1,3 +1,15 @@
+<!--
+  Purpose:
+    Creates two icons for undoing and redoing certain changes performed by other
+    components in the table of contents.
+
+  Props:
+
+  Computed:
+
+  Methods:
+-->
+
 <template>
   <img src="../../assets/undo-button.png" class="hide"
        :class="{ show: store.states.past.length }"

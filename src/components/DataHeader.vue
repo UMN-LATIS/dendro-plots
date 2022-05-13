@@ -1,3 +1,13 @@
+<!--
+  Purpose:
+    
+  Props:
+
+  Computed:
+
+  Methods:
+-->
+
 <template>
   <div class="control-panel">
     <div class="next-to-icon">
@@ -102,7 +112,7 @@
         if (this.store.cache.spagActive) {
           let activeStates = this.store.states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
-          // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
+          // Find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
           let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
                                                 || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
           let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))

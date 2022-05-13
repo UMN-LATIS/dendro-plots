@@ -1,13 +1,34 @@
+<!--
+  Purpose:
+    Creates wrapper which when hovered over, activaes custom hover text/tool tips.
+
+  Props:
+    isMarginLeft:
+      Integer value to decide left margin of hover text.
+    isMarginTop:
+      Integer value to decide top margin of hover text.
+    isWidth:
+      Integer value to decide width of wrapper div. Hover area.
+    isData:
+      Object of Vue props to input into dynamicly given Vue components.
+    isComponent:
+      String of component name without Vue file extension.
+    info:
+      Array of strings. Each string element is a new line in hover text.
+
+  Computed:
+
+  Methods:
+-->
+
 <template>
   <div class="dropdown"
-       :style="{ 'width': isWidth + 'px' }"
-  >
+       :style="{ 'width': isWidth + 'px' }">
 
-    <component :is="isComponent" v-bind="isData" />
+    <component :is="isComponent" v-bind="isData"/>
 
     <div class="dropdown-content"
-         :style="{ 'margin-left': isMarginLeft + 'px', 'margin-top': isMarginTop + 'px' }"
-    >
+         :style="{ 'margin-left': isMarginLeft + 'px', 'margin-top': isMarginTop + 'px' }">
       <p class="info"
          v-for="blurb in info"
          :key="blurb"> {{ blurb }}

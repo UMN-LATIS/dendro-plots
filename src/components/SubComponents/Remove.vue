@@ -1,8 +1,23 @@
+<!--
+  Purpose:
+    Creates icon which when clicked removes dataset from use.
+
+  Props:
+    id:
+      ID of dataset. Allows removal of all datatset traces.
+
+  Computed:
+
+  Methods:
+    onClick:
+      Removes dataset from current save state (can be undone.) Specical case
+      when activating this on "all data" or medians.
+-->
+
 <template>
   <div class="dropdown">
     <img src="../../assets/delete-button.png"
-         @click="onClick"
-    >
+         @click="onClick">
     <div class="dropdown-content">
       <p class="info"
          v-for="blurb in info"
@@ -24,13 +39,14 @@
     methods: {
       onClick: function() {
         if (this.id === this.store.cache.allID) {
-          // do not remove base set
+          // Do not remove base sets when all datasets removed.
           let baseSets = this.store.states.current.filter(o => o.id < 99)
           this.store.methods.newCurrent(baseSets)
         } else if (this.store.cache.medianIDs.includes(this.id)) {
+          // Do not remove median. Simply turn it off.
           this.store.methods.updateCache('states', this.id, 'rawPointsActive', false)
         } else {
-          // base core or uploaded sets
+          // Remove item from table of contents.
           this.store.methods.removeCurrent(this.id)
         }
       }

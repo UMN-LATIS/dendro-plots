@@ -1,3 +1,14 @@
+<!--
+  Purpose:
+    Creates icon which when hovered over shows specific text.
+    
+  Props:
+
+  Computed:
+
+  Methods:
+-->
+
 <template>
   <div class="dropdown">
     <img src="../../assets/dendro.png">

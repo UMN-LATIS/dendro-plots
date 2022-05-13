@@ -1,7 +1,35 @@
+<!--
+  Purpose:
+    Creates a horizontal popout which hosts interactive plotting tools.
+
+  Props:
+    id:
+      ID of dataset. Allows for getting and setting of dataset properties.
+    top:
+      Pixel position from top of window. Dynamic changes when user scrolls.
+
+  Computed:
+    modalTools:
+      Returns an array of tool objects. Each object has specific information
+      for the HoverWrapper component. Currently 10 tools:
+        (1) Toggle raw data points.
+        (2) Raw points plot location.
+        (3) Raw points spline selection.
+        (4) Raw points index selection.
+        (5) Index points plot location.
+        (6) Index point frequency selection.
+        (7) Index points spline selection.
+        (8) Color of points.
+        (9) Toggle which points colored.
+        (10) Shape selection.
+
+  Methods:
+-->
+
+
 <template>
   <div class="modal-wrapper"
-       :style=" { top: top + 'px' } "
-  >
+       :style=" { top: top + 'px' } ">
 
     <HoverWrapper v-for="(data, i) in modalTools" :key="i"
                   :isMarginLeft="data.left"
@@ -9,8 +37,7 @@
                   :isWidth="data.width"
                   :isData="data"
                   :isComponent="data.component"
-                  :info="data.info"
-    />
+                  :info="data.info"/>
 
   </div>
 </template>

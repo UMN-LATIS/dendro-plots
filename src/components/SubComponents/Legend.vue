@@ -1,3 +1,26 @@
+<!--
+  Purpose:
+    Creates icon which when clicked cycles through actions dictating a
+    specified plots legend.
+
+  Props:
+    id:
+      ID of plot. Clicking icon will only change legend of plot with given ID.
+
+  Computed:
+    srcPath:
+      Returns image file directory path. Function require() needed since the
+      directory path is concatenated strings.
+    legendText:
+      Returns custom hover text/tooltip of icon based on generic phrases.
+      Specific to given ID.
+
+  Methods:
+    onClick:
+      Cycles through 3 legend types (none, vertical, horizontal) then applies
+      the selected option to its designated plot.
+-->
+
 <template>
   <div class="dropdown">
     <img :src="srcPath"

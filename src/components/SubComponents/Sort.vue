@@ -1,9 +1,25 @@
+<!--
+  Purpose:
+    Creates icon which when clicked cycles through actions sorting the
+    table of contents.
+
+  Props:
+
+  Computed:
+
+  Methods:
+    alphaNumeric:
+      Returns sorted array based on which return values are sought. 
+    onClick:
+      Cycles through 3 sorting types (load sequence, A to Z, Z to A) then sorts
+      the table of contents.
+-->
+
 <template>
   <div class="dropdown">
     <img src="../../assets/sort-button.png"
          v-if="store.cache.loadSequence.length > 1"
-         @click="onClick"
-    >
+         @click="onClick">
     <div class="dropdown-content">
       <p class="info"> {{ sortText[sortType] }} </p>
     </div>

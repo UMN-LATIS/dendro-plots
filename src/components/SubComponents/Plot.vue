@@ -1,7 +1,42 @@
+<!--
+  Purpose:
+    Creates Plotly plot to display user slected data.
+
+  Props:
+    id:
+      ID of dataset. Allows for getting and setting of dataset properties.
+    name:
+      Plot title displayed.
+    count:
+      Total number of plots present in app. Important for height calculation.
+    legend:
+      String or null value which determines legend presence and orientation.
+
+  Computed:
+    divID:
+      Returns random 5 digit number to use as an ID for div hosting Plotly plot.
+    layout:
+      Returns object with Plotly layout attributes. Used to correctly generate
+      plot.
+    config:
+    Returns object with Plotly config attributes. Used to correctly generate
+    plot.
+
+  Methods:
+    resizePlot:
+      Re-renders plot with correct width and height. Width and height found by
+      window size and accounting for given plto count.
+    createPlot:
+      Initialzies Plotly plot.
+    updatePlot:
+      Similar to createPlot(), but it uses a faster Plotly function to render plot.
+    highlightPlot:
+      Highlights a year corresponding to a point hovered over in DendroElevator.
+-->
+
 <template>
   <div class="plotly-div"
-       :ref="divID"
-  >
+       :ref="divID">
   </div>
 </template>
 
@@ -95,7 +130,7 @@
         if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
-      relayoutPlot: async function() {
+      highlightPlot: async function() {
         let plot = await this.plot
         let range = plot.layout.xaxis.range
         let boundary = 0.0015 * Math.abs(range[1] - range[0])
@@ -142,7 +177,7 @@
       },
       'store.cache.hightlightYear': {
         handler: function() {
-          this.relayoutPlot()
+          this.highlightPlot()
         },
         deep: true
       },

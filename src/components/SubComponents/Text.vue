@@ -1,3 +1,14 @@
+<!--
+  Purpose:
+    Creates text block. To be used in HoverWrapper component. 
+
+  Props:
+
+  Computed:
+
+  Methods:
+-->
+
 <template>
   <p class="header"> {{ text }} </p>
 </template>

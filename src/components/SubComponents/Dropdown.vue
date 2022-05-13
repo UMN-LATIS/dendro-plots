@@ -1,3 +1,32 @@
+<!--
+  Purpose:
+    Creates HTML dropdown menu for selecting given dataset properties.
+
+  Props:
+    id:
+      ID of dataset. Allows for getting and setting of dataset properties.
+    options:
+      Array of options (strings) user may select from for a given property.
+    optionModifer:
+      Additional string to be concatenated onto the front of all options.
+    mainProp:
+      Property to get or set by the dropdown value. Property to be modified.
+    actions:
+      Array of strings which represents dataset property keys. Allows chaining
+      of actions to occer from a single selection.
+    disableProp:
+      Property which disables the dropdown when it is false.
+
+  Computed:
+    isDisabled:
+      Returns if dropdown is disabled based on the given disable property.
+
+  Methods:
+    onChange:
+    Saves new user selected property to correct save spot in store.js.
+    Save location based on given ID.
+-->
+
 <template>
   <select @change="onChange">
     <DropdownOptions v-for="obj in options"
@@ -6,8 +35,7 @@
                      :name="optionModifer + obj.name"
                      :value="obj.id"
                      :mainProp="mainProp"
-                     :disabled="isDisabled"
-    />
+                     :disabled="isDisabled"/>
   </select>
 </template>
 
@@ -18,8 +46,28 @@
     inject: ['store'],
     props: ['id', 'options', 'optionModifer', 'mainProp', 'actions', 'disableProp'],
     components: { DropdownOptions },
+    computed: {
+      isDisabled: function() {
+        if (!this.disableProp) {
+          return this.disableProp
+        }
+
+        // ID dictates where to search for information. IDs within [99, 9999]
+        // are found in undo/redo save states (store.states.current) while
+        // IDs out of that bound (medians and base datasets from DE) are found
+        // in cache save states (store.cache.states).
+        if (this.id === this.store.cache.allID) {
+          return !this.store.methods.checkAll(this.disableProp)
+        } else {
+          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.id == this.id)
+          if (set) return !set[this.disableProp]
+        }
+      }
+    },
     methods: {
       onChange: function(e) {
+        // Dropdown returns string values. Need to save integers or booleans.
         let val = e.target.value
         let boolCheck = (val === 'false')
         if (boolCheck) {
@@ -28,6 +76,11 @@
           val = parseInt(val)
         }
 
+        // ID reponsible for how new color saved.
+        // 3 possibilities:
+        //  1) ID of all data -> perform color change on all datasets.
+        //  2) ID of median -> perform color change on median in cache.states.
+        //  3) Other -> perform color change on dataset in state.current.
         for (let prop of this.actions) {
           if (this.id === this.store.cache.allID) {
             this.store.methods.allAction(prop, val)
@@ -39,21 +92,6 @@
         }
       }
     },
-    computed: {
-      isDisabled: function() {
-        if (!this.disableProp) {
-          return this.disableProp
-        }
-
-        if (this.id === this.store.cache.allID) {
-          return !this.store.methods.checkAll(this.disableProp)
-        } else {
-          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
-          let set = states.find(o => o.id == this.id)
-          if (set) return !set[this.disableProp]
-        }
-      }
-    }
   }
 </script>
 

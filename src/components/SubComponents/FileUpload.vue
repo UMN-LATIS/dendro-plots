@@ -1,10 +1,35 @@
-<template>
+<!--
+  Purpose:
+    Create HTML file input represented by an icon for user to upload datasets.
 
-  <input type="file" id="file-upload" accept=".json, .txt, .csv, .rwl, .ewr, .lwr, .raw" multiple hidden ref="fileInput" @change="uploadFiles">
+  Props:
+
+  Computed:
+
+  Methods:
+    uploadFiles:
+      Formats inputted file data into object formatted as:
+        {
+          "name": name of dataset,
+          "fileName": file name including extension,
+          "x": array containing year data,
+          "y": array containing width data,
+        }
+      Then loads those objects into store.js where each datasets default
+      properties are decided.
+-->
+
+<template>
+  <input type="file"
+         id="file-upload"
+         accept=".json, .txt, .csv, .rwl, .ewr, .lwr, .raw"
+         multiple hidden
+         ref="fileInput"
+         @change="uploadFiles">
+
   <label for="file-upload">
     <img src="../../assets/upload.png" />
   </label>
-
 </template>
 
 <script>
