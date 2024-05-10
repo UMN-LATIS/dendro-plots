@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <DataHeader @selectOption="receiveOption"/>
+      <DataHeader/>
       <div id="data-management">
         <DataManager :useCache="false"  @selectOption="receiveOption"/>
       </div>
@@ -59,6 +59,14 @@ export default {
         store.cache.hightlightYear = e.data;
       }
     },
+    receiveOption(id) {
+    if (this.optionID == id) {
+      this.optionID = null
+    }
+    else {
+      this.optionID = id
+    }
+  }
   },
   mounted() {
     // Need to send message back to DendroElevator parent window to recieve data.
@@ -71,7 +79,7 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('message', this.onMessage, false)
-  }
+  },
 }
 
 </script>

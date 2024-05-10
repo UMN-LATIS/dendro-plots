@@ -55,6 +55,7 @@ const cache = reactive({
   spagColor: '#006994',
   updatePlotSwitch: false,
   hightlightYear: false,
+  rawPlotActive: true,
 })
 
 const methods = {

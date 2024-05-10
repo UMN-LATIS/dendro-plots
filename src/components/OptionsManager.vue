@@ -39,8 +39,13 @@
         <div class="name-div">
             <p class="name" v-if="this.optionID == modal.id">{{ this.name }}</p>
         </div>
-        <OptionsModal :id="modal.id"
-                      v-if="this.optionID == modal.id"
+
+        <RawOptionsModal :id="modal.id"
+                      v-if="this.optionID == modal.id && rawActive"
+        />
+
+        <IndexOptionsModal :id="modal.id"
+                      v-if="this.optionID == modal.id && !rawActive"
         />
     </div>
 </template>
@@ -49,16 +54,17 @@
 
 <script>
 import HoverWrapper from './SubComponents/HoverWrapper.vue'
-import OptionsModal from './SubComponents/OptionsModal.vue'
+import RawOptionsModal from './SubComponents/RawOptionsModal.vue'
+import IndexOptionsModal from './SubComponents/IndexOptionsModal.vue'
 
 
 export default {
     inject: ['store'],
-    components: { HoverWrapper, OptionsModal },
+    components: { HoverWrapper, RawOptionsModal, IndexOptionsModal },
     props: ['optionID'],
     data () {
         return {
-            modals: this.store.cache.modals
+            modals: this.store.cache.modals,
         }
     },
     computed: {
@@ -68,7 +74,8 @@ export default {
             }
             else { optionName = this.store.cache.states.find(o => o.id == this.optionID).name }
             return optionName
-        }
+        },
+        rawActive: function() { return this.store.cache.rawPlotActive }
     },
     methods: {
         spagToggle: function() {
