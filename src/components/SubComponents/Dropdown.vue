@@ -118,7 +118,7 @@
     border-radius: 4px;
     padding-left: 4px;
     padding-right: 4px;
-    position: absolute;
+    position: relative;
     margin-top: 2px;
     margin-bottom: 2px;
     cursor: pointer;

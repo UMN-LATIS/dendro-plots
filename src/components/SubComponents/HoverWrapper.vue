@@ -22,6 +22,7 @@
 -->
 
 <template>
+  
   <div class="dropdown"
        :style="{ 'width': isWidth + 'px' }">
 
@@ -43,13 +44,14 @@
   import Dropdown from './Dropdown.vue'
   import ColorSwatch from './ColorSwatch.vue'
   import FileUpload from './FileUpload.vue'
+  import FileDownload from './FileDownload.vue'
   import Text from './Text.vue'
   import ClickIcon from './ClickIcon.vue'
 
   export default {
     inject: ['store'],
     props: ['isMarginLeft', 'isMarginTop', 'isWidth', 'isData', 'isComponent', 'info'],
-    components: { Toggle, Dropdown, ColorSwatch, FileUpload, Text, ClickIcon },
+    components: { Toggle, Dropdown, ColorSwatch, FileUpload, FileDownload, Text, ClickIcon },
   }
 </script>
 
@@ -88,7 +90,7 @@
     z-index: 999999;
   }
 
-  .dropdown:hover .dropdown-content {
+  /* .dropdown:hover .dropdown-content {
     visibility: visible;
     opacity: 1;
     display: inline;
@@ -96,5 +98,5 @@
 
   .dropdown-content:hover {
     display: none !important;
-  }
+  } */
 </style>

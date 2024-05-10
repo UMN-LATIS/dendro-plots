@@ -1,15 +1,21 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <DataHeader />
+      <DataHeader @selectOption="receiveOption"/>
       <div id="data-management">
-        <DataManager :useCache="false"/>
+        <DataManager :useCache="false"  @selectOption="receiveOption"/>
+      </div>
+
+      
+      <div id="options-management">
+        <OptionsManager :optionID="this.optionID"/>
       </div>
     </div>
 
     <div id="plot-management">
       <PlotManager />
     </div>
+
   </div>
 </template>
 
@@ -19,23 +25,25 @@ import FileManager from "./components/FileManager.vue";
 import DataHeader from "./components/DataHeader.vue";
 import DataManager from "./components/DataManager.vue";
 import PlotManager from "./components/PlotManager.vue";
+import OptionsManager from "./components/OptionsManager.vue";
 
 import store from "./modules/store.js";
 
 export default {
   name: "App",
   provide: { store },
-  components: { FileManager, DataHeader, DataManager, PlotManager },
+  components: { FileManager, DataHeader, DataManager, PlotManager, OptionsManager },
   data() {
     return {
-      parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000'],
+      parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000', 'http://127.0.0.1:4000/'],
+      optionID: null
     };
   },
   methods: {
     onMessage: function(e) {
-      if (!this.parentSites.includes(e.origin)) {
-        return;
-      }
+      // if (!this.parentSites.includes(e.origin)) {
+      //   return;
+      // }
 
       // Possible inputs: New data points (array) or a year to highlight (integer)
       if (typeof e.data == 'object') {
@@ -108,13 +116,15 @@ h2 {
   display: flex;
   flex-direction: column;
   z-index: 999;
+  background-color: lightgreen;
 }
 
 #data-management {
   width: inherit;
-  height: 100%;
+  height: 42.5%;
   overflow-y: visible;
   overflow-x: hidden;
+  background-color: white;
 }
 
 #plot-management {
@@ -123,4 +133,17 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+
+#options-management {
+  width: inherit;
+  height: 57.5%;
+  position: relative;
+  border: 2px solid black;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#options-management::-webkit-scrollbar { width: 0 !important }
+#options-management { overflow: -moz-scrollbars-none; }
 </style>

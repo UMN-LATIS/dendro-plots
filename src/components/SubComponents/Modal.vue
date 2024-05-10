@@ -37,7 +37,9 @@
                   :isWidth="data.width"
                   :isData="data"
                   :isComponent="data.component"
-                  :info="data.info"/>
+                  :info="data.info"
+                  title="words"
+    />
 
   </div>
 </template>

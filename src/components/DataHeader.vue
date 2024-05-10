@@ -11,14 +11,13 @@
 <template>
   <div class="control-panel">
     <div class="next-to-icon">
-      <div>
-        <HoverWrapper :isMarginLeft="-40"
+        <!-- <HoverWrapper :isMarginLeft="-40"
                       :isMarginTop="22"
                       :isWidth="40"
                       :isData="{ text: 'Data' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options']"
-        />
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        /> -->
 
         <HoverWrapper :isMarginLeft="0"
                       :isMarginTop="22"
@@ -29,7 +28,29 @@
                               'Accepts multiple files with multiple series in upload sequence']"
         />
 
-        <div v-if="store.cache.loadSequence.length"
+        <HoverWrapper :isMarginLeft="0"
+                      :isMarginTop="22"
+                      :isWidth="20"
+                      :isData="{}"
+                      :isComponent="'FileDownload'"
+                      :info="['download button']"
+        />
+
+        <HoverWrapper :isMarginLeft="-0"
+                      :isMarginTop="-30"
+                      :isWidth="70"
+                      :isData="
+                        {
+                          options: [{ value: 1, name: 'CSV' },
+                                    { value: 2, name: 'TSV' },
+                                    { value: 3, name: 'RWL'}],
+                          optionModifer: '1234567',
+                        }"
+                      :isComponent="'Dropdown'"
+                      :info="['Select plot for raw data appearance.']"
+        />
+
+        <!-- <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
         >
           <HoverWrapper :isMarginLeft="-20"
@@ -40,21 +61,20 @@
                             callback: modalToggle,
                           }"
                         :isComponent="'ClickIcon'"
-                        :info="['Toggle appearance of all data menus']"
-          />
+                        :info="['Toggle appearance of all data menus.']"
+          /> -->
 
-          <Sort />
-        </div>
-      </div>
+          <!-- <Sort /> -->
+        <!-- </div> -->
 
       <div v-if="store.cache.loadSequence.length" style="display: block;">
-        <HoverWrapper :isMarginLeft="-40"
+        <!-- <HoverWrapper :isMarginLeft="-40"
                       :isMarginTop="22"
                       :isWidth="40"
                       :isData="{ text: 'Plot' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options']"
-        />
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        /> -->
 
         <HoverWrapper :isMarginLeft="-20"
                       :isMarginTop="22"
@@ -71,7 +91,6 @@
                 :key="plot.id"
                 :id="plot.id"
         />
-
         <UndoRedoButtons />
       </div>
     </div>
@@ -82,12 +101,12 @@
   </div>
 
   <div v-if="store.cache.loadSequence.length">
-    <DataManager :useCache="true" />
+    <DataManager :useCache="true" @selectOption="receiveOption"/>
   </div>
 </template>
 
 <script>
-  import formatFileData from '../modules/formatFileData.js'
+  import downloadData from "../modules/downloadData.js";
 
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
@@ -97,10 +116,12 @@
   import ClickIcon from './SubComponents/ClickIcon.vue'
   import DataManager from './DataManager.vue'
   import HoverWrapper from './SubComponents/HoverWrapper.vue'
+  import Dropdown from './SubComponents/Dropdown.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
+    emits: ['selectOption'],
+    components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper, Dropdown },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -133,19 +154,25 @@
         this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
       },
       modalToggle: function() {
-        let allOff = true
-        for (let obj of this.store.cache.modals) {
-          if (obj.active) {
-            allOff = false
-            obj.active = false
-          }
-        }
-        if (allOff) {
-          for (let obj of this.store.cache.modals) {
-            obj.active = true
-          }
-        }
+        //use temporarilly for mass download
+        downloadData(this.store.cache.raw)
+
+        // let allOff = true
+        // for (let obj of this.store.cache.modals) {
+        //   if (obj.active) {
+        //     allOff = false
+        //     obj.active = false
+        //   }
+        // }
+        // if (allOff) {
+        //   for (let obj of this.store.cache.modals) {
+        //     obj.active = true
+        //   }
+        // }
       },
+      receiveOption(id) {
+        this.$emit('selectOption', id)
+      }
     }
   }
 </script>
@@ -155,6 +182,11 @@
     margin: 0;
     margin-left: 2px;
     display: inline;
+  }
+
+  .control-panel {
+    background-color: white;
+    margin-left: 0;
   }
 
   .next-to-icon {

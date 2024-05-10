@@ -29,9 +29,11 @@
   import Remove from './SubComponents/Remove.vue'
   import Modal from './SubComponents/Modal.vue'
 
+
   export default {
     inject: ['store'],
     props: ['useCache'],
+    emits: ['selectOption'],
     components: { Name, Remove, Modal },
     computed: {
       pairs: function() {
@@ -56,6 +58,8 @@
           return
         }
         this.store.methods.updateCache('modals', id, 'active', !active)
+        
+        this.$emit('selectOption', id)
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
