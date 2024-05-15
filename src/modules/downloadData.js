@@ -15,7 +15,7 @@ function seperateDataCombined(data, sep) {
     // }
     // return outstr
 
-    //Organize data by year first, then put in string
+    // Organize data by year first, then put in string
     // let startYear = Infinity
     // let endYear = 0
     // for (let dataSet of data.slice(2)) {
@@ -42,6 +42,19 @@ function seperateDataCombined(data, sep) {
             }
         }
     }
-    return yearDataPairs
+    // return yearDataPairs
+
+    let outStr = ''
+    let startYear = Object.keys(yearDataPairs)[0]
+    let endYear = Object.keys(yearDataPairs)[Object.keys(yearDataPairs).length - 1]
+    let fileCount = yearDataPairs[startYear].length - 1
+    for (let year = startYear; year < endYear; year++) {
+        outStr += year.toString() + sep
+        for (let i = 0; i < (fileCount); i++) {
+            outStr += yearDataPairs[year][i].toString() + sep
+        }
+        outStr += yearDataPairs[year][fileCount] + '\n'
+    }
+    return outStr
 }
 export default downloadData

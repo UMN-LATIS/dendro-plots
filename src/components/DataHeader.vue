@@ -34,6 +34,7 @@
                       :isData="{}"
                       :isComponent="'FileDownload'"
                       :info="['download button']"
+                      @click="modalToggle"
         />
 
         <HoverWrapper :isMarginLeft="-0"

@@ -1,8 +1,18 @@
 <template>
-    <p class="header">Raw Data Options</p>
-    <div class="option-div" v-for="(data, i) in options" :key="i">
-        <p class="option-name" title="words">{{ data.optionName }}</p>
-        <component :is="data.component" v-bind="data" :title="data.info" />
+    <div v-if="showRawOptions">
+        <p class="header">Raw Data Options</p>
+        <div class="option-div" v-for="(data, i) in rawOptions" :key="i">
+            <p class="option-name" title="words">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
+    </div>
+
+    <div v-if="!this.showRawOptions">
+        <p class="header">Index Data Options</p>
+        <div class="option-div" v-for="(data, i) in indexOptions" :key="i">
+            <p class="option-name" title="words">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
     </div>
 </template>
 
@@ -15,7 +25,7 @@ import ColorSwatch from './ColorSwatch.vue'
 export default {
     inject: ['store'],
     components: { HoverWrapper, Toggle, Dropdown, ColorSwatch },
-    props: ['id'],
+    props: ['id', 'showRawOptions'],
     data: function() {
       return {
         dropdownOptions: [
@@ -33,7 +43,7 @@ export default {
       }
     },
     computed: {
-        options: function() {
+        rawOptions: function() {
             return [
                 {
                     id: this.id,
@@ -92,6 +102,57 @@ export default {
                     disableProp: false,
                     optionName: 'Visual Spline:'
                 }, // raw spline dropdown
+            ]
+        },
+        indexOptions: function() {
+            return [
+                {
+                    id: this.id,
+                    left: -20,
+                    top: -30,
+                    width: 20,
+                    component: 'Toggle',
+                    info: ['Toggle appearance of raw data.'],
+                    toggleProp: 'rawPointsActive',
+                    optionName: 'Show/Hide:',
+                }, // raw points toggle
+                {
+                    id: this.id,
+                    left: 0,
+                    top: -30,
+                    width: 16,
+                    component: 'ColorSwatch',
+                    info: ['Select color for this data.'],
+                    optionName: 'Line Color:'
+                }, // color
+                {
+                    id: this.id,
+                    left: 0,
+                    top: -30,
+                    width: 85,
+                    component: 'Dropdown',
+                    info: ['Select marker shape for data.'],
+                    options: this.store.cache.shapes,
+                    optionModifer: '',
+                    mainProp: 'shape',
+                    actions: ['shape'],
+                    disableProp: false,
+                    optionName: 'Marker:'
+                }, // shapes dropdown
+                {
+                    id: this.id,
+                    left: 0,
+                    top: -30,
+                    width: 159,
+                    component: 'Dropdown',
+                    info: ['Select spline wavelength for raw data detrending'],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'indexPointsFreq',
+                    actions: ['indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline Detrended Inxed:'
+                }, // index points dropdown
             ]
         },
     }
