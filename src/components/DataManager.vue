@@ -16,11 +16,11 @@
             :id="obj.id"
     />
 
-    <Modal class="modal"
+    <!-- <Modal class="modal"
            :id="obj.id"
            :top="obj.top"
            v-if="obj.active && !obj.outOfBounds"
-    />
+    /> -->
   </div>
 </template>
 

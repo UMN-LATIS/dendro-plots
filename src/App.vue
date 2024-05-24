@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <DataHeader/>
+      <DataHeader @selectOption="receiveOption"/>
       <div id="data-management">
         <DataManager :useCache="false"  @selectOption="receiveOption"/>
       </div>
@@ -49,10 +49,12 @@ export default {
       if (typeof e.data == 'object') {
         let data = [];
         let pointsObj = e.data.points;
-        data.push(pointsObj.tw);
-        if (pointsObj.ew && pointsObj.lw) {
-          data.push(pointsObj.ew);
-          data.push(pointsObj.lw);
+        if (pointsObj) {
+          data.push(pointsObj.tw);
+          if (pointsObj.ew && pointsObj.lw) {
+            data.push(pointsObj.ew);
+            data.push(pointsObj.lw);
+          }
         }
         store.methods.processSentData(data);
       } else {

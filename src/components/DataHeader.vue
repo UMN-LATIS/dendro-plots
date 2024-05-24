@@ -37,7 +37,13 @@
                       @click="modalToggle"
         />
 
-        <HoverWrapper :isMarginLeft="-0"
+        <select name="download" id="download" @change="onChange">
+          <option value="CSV">Download as: CSV</option>
+          <option value="TSV">Download as: TSV</option>
+          <option value="RWL">Download as: RWL</option>
+        </select>
+
+        <!-- <HoverWrapper :isMarginLeft="-0"
                       :isMarginTop="-30"
                       :isWidth="70"
                       :isData="
@@ -45,11 +51,11 @@
                           options: [{ value: 1, name: 'CSV' },
                                     { value: 2, name: 'TSV' },
                                     { value: 3, name: 'RWL'}],
-                          optionModifer: '1234567',
+                          optionModifer: 'Download as: ',
                         }"
                       :isComponent="'Dropdown'"
-                      :info="['Select plot for raw data appearance.']"
-        />
+                      :info="['Select a file type for downloading data.']"
+        /> -->
 
         <!-- <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
@@ -77,7 +83,7 @@
                       :info="['Click on time series name to show/hide data plotting options.']"
         /> -->
 
-        <HoverWrapper :isMarginLeft="-20"
+        <!-- <HoverWrapper :isMarginLeft="-20"
                       :isMarginTop="22"
                       :isWidth="20"
                       :isData="{
@@ -86,12 +92,12 @@
                         }"
                       :isComponent="'ClickIcon'"
                       :info="['Toggle spaghetti plot appearance behavior']"
-        />
+        /> -->
 
-        <Legend v-for="plot in store.cache.plots"
+        <!-- <Legend v-for="plot in store.cache.plots"
                 :key="plot.id"
                 :id="plot.id"
-        />
+        /> -->
         <UndoRedoButtons />
       </div>
     </div>
@@ -173,6 +179,9 @@
       },
       receiveOption(id) {
         this.$emit('selectOption', id)
+      },
+      onChange(e) {
+        this.store.cache.downloadFileType = e.target.value
       }
     }
   }
@@ -249,4 +258,25 @@
     display: block;
   }
 
+  #download {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -ms-appearance: none;
+
+    font-family: Sans-serif;
+    font-weight: normal;
+    font-size: 11px;
+    color: black;
+    height: 16px;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    position: relative;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    z-index: 0;
+  }
 </style>

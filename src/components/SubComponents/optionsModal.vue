@@ -29,16 +29,16 @@ export default {
     data: function() {
       return {
         dropdownOptions: [
-                          { value: false, name: 'None' },
-                          { value: 5, name: '5yr' },
-                          { value: 10, name: '10yr' },
-                          { value: 20, name: '20yr' },
-                          { value: 30, name: '30yr' },
-                          { value: 50, name: '50yr' },
-                          { value: 100, name: '100yr' },
-                          { value: 200, name: '200yr' },
-                          { value: 0.5, name: '50%' },
-                          { value: 0.67, name: '67%' },
+                          { id: false, name: 'None' },
+                          { id: 5, name: '5yr' },
+                          { id: 10, name: '10yr' },
+                          { id: 20, name: '20yr' },
+                          { id: 30, name: '30yr' },
+                          { id: 50, name: '50yr' },
+                          { id: 100, name: '100yr' },
+                          { id: 200, name: '200yr' },
+                          { id: 0.5, name: '50%' },
+                          { id: 0.67, name: '67%' },
                         ],
       }
     },
@@ -105,17 +105,21 @@ export default {
             ]
         },
         indexOptions: function() {
-            return [
+            return [                
                 {
                     id: this.id,
-                    left: -20,
+                    left: 0,
                     top: -30,
-                    width: 20,
-                    component: 'Toggle',
-                    info: ['Toggle appearance of raw data.'],
-                    toggleProp: 'rawPointsActive',
-                    optionName: 'Show/Hide:',
-                }, // raw points toggle
+                    width: 159,
+                    component: 'Dropdown',
+                    info: ['Select spline wavelength for raw data detrending'],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'indexPointsFreq',
+                    actions: ['indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline Detrended Inxed:'
+                }, // index points dropdown
                 {
                     id: this.id,
                     left: 0,
@@ -141,18 +145,15 @@ export default {
                 }, // shapes dropdown
                 {
                     id: this.id,
-                    left: 0,
+                    left: -20,
                     top: -30,
-                    width: 159,
-                    component: 'Dropdown',
-                    info: ['Select spline wavelength for raw data detrending'],
-                    options: this.dropdownOptions,
-                    optionModifer: ' ',
-                    mainProp: 'indexPointsFreq',
-                    actions: ['indexPointsFreq'],
-                    disableProp: false,
-                    optionName: 'Spline Detrended Inxed:'
-                }, // index points dropdown
+                    width: 20,
+                    component: 'Toggle',
+                    info: ['Toggle color/gray between data/spline.'],
+                    toggleProp: 'applyColorToRaw',
+                    optionName: 'Grayscale Toggle:'
+                }, // color toggle
+
             ]
         },
     }

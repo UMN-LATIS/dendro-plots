@@ -1,7 +1,7 @@
 <template>    
-    <div class="toptions">
+    <div class="constantOptions">
         <div style="display: flex;">
-            <p @click="logg">Spaghetti Plot</p>
+            <p>Spaghetti Plot</p>
             <HoverWrapper :isMarginLeft="-20"
                         :isMarginTop="22"
                         :isWidth="20"
@@ -15,12 +15,15 @@
         </div>
         <div style="display: flex;">
             <p>Legend</p>
-            <HoverWrapper :isMarginLeft="-20"
-                        :isMarginTop="22"
-                        :isWidth="20"
+            <Legend v-if="rawActive" :id="1"></Legend>
+            <Legend v-if="!rawActive" :id="2"></Legend>
+        </div>
+        <div style="display: flex;">
+            <p>Toggle Raw/Index</p>
+            <HoverWrapper 
                         :isData="{
                             imageName: 'toggle-icon',
-                            callback: spagToggle,
+                            callback: toggleData,
                             }"
                         :isComponent="'ClickIcon'"
                         :info="['Legendary.']"
@@ -51,13 +54,14 @@
 
 
 <script>
+import ClickIcon from './SubComponents/ClickIcon.vue'
 import HoverWrapper from './SubComponents/HoverWrapper.vue'
-import optionsModal from './SubComponents/optionsModal.vue'
-
+import Legend from './SubComponents/Legend.vue'
+import OptionsModal from './SubComponents/OptionsModal.vue'
 
 export default {
     inject: ['store'],
-    components: { HoverWrapper, optionsModal },
+    components: { HoverWrapper, OptionsModal, ClickIcon, Legend },
     props: ['optionID'],
     data () {
         return {
@@ -100,9 +104,8 @@ export default {
 
             this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
         },
-        logg: function() {
+        toggleData: function() {
             this.store.cache.rawPlotActive = !this.store.cache.rawPlotActive
-            console.log(this.store.cache.rawPlotActive)
         }
     }
 }
@@ -115,9 +118,10 @@ p {
     margin: 0 5px;
 }
 
-.toptions {
+.constantOptions {
     background-color: lightgreen;
     display: block;
+    height: 65px;
 }
 
 .no-option-text {
