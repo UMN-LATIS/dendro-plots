@@ -64,15 +64,15 @@
 <style scoped>
   input[type="color"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 16px;
     height: 16px;
     padding: 0;
     border: none;
-    margin-top: 2px;
-    margin-bottom: 2px;
+    margin: 2px;
     box-sizing: border-box;
     cursor: pointer;
-    position: absolute;
+    position: relative;
   }
 
   input[type="color"]::-webkit-color-swatch-wrapper {

@@ -14,8 +14,8 @@ const cache = reactive({
               index: [],
            },
   index: [],
-  plots: [{ id: 1, name: 'Plot 1', legend: false },
-          { id: 2, name: 'Plot 2', legend: false }],
+  plots: [{ id: 1, name: 'Raw Data', legend: false, legendType: 0 },
+          { id: 2, name: 'Index Data', legend: false, legendType: 0 }],
   loadSequence: [],
   dendroColors: [
                  '#b2182b', // dark red (tw)
@@ -55,6 +55,8 @@ const cache = reactive({
   spagColor: '#006994',
   updatePlotSwitch: false,
   hightlightYear: false,
+  rawPlotActive: true,
+  downloadFileType: "CSV"
 })
 
 const methods = {

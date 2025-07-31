@@ -1,14 +1,30 @@
 <template>
   <div v-if="store.states.current.length">
-    <div v-for="obj in activePlots"
+    <Plot 
+      :id="1"
+      :name="'Raw Data'"
+      :count="1"
+      :legend="plotLegend[0]"
+      v-if="rawActive"
+    />
+
+    <Plot 
+      :id="2"
+      :name="'Index Data'"
+      :count="1"
+      :legend="plotLegend[1]"
+      v-if="!rawActive"
+    />
+    <!-- <div v-for="obj in activePlots"
          :key="obj.id"
     >
       <Plot :id="obj.id"
             :name="obj.name"
-            :count="activePlots.length"
+            :count="1"
             :legend="obj.legend"
+            
       />
-    </div>
+    </div> -->
     <h1 v-if="!activePlots.length"> Modify options to activate plots. </h1>
   </div>
   <h1 v-else-if="store.states.past.length || store.states.future.length"> Upload data to activate plots. </h1>
@@ -31,6 +47,14 @@
 
           return statePlotActive || cachePlotActive
         })
+      },
+      rawActive: function() { return this.store.cache.rawPlotActive },
+      plotLegend: function() {
+        let legends = []
+        for (let obj of this.store.cache.plots) {
+          legends.push(obj.legend)
+        }
+        return legends
       }
     },
   }

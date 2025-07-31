@@ -58,6 +58,7 @@
 <style>
    input[type="checkbox"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 16px;
     height: 16px;
     padding: 0;
