@@ -43,10 +43,11 @@
 <script>
   import Plotly from 'plotly.js'
   import formatTraces from '../../modules/traces.js'
+  import formatBars from '../../modules/skeletonBars.js'
 
   export default {
     inject: ['store'],
-    props: ['id', 'name', 'count', 'legend'],
+    props: ['id', 'name', 'count', 'legend', 'dataID'],
     data() {
       return {
         medianA: this.store.cache.states.find(o => o.id === this.store.cache.medianIDs[0]),
@@ -122,12 +123,20 @@
       },
       createPlot: async function() {
         let traces = await Promise.all(formatTraces(this.id))
+
+        if (this.id == 3 && this.dataID != null) {
+          traces = await Promise.all(formatBars(this.dataID))
+        }
         if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
         let traces = await Promise.all(formatTraces(this.id))
-        if (this.$refs[this.divID]) Plotly.react(this.$refs[this.divID], traces, this.layout, this.config)
+
+        if (this.id == 3 && this.dataID != null) {
+          traces = await Promise.all(formatBars(this.dataID))
+        }
+        if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       highlightPlot: async function() {
@@ -198,6 +207,12 @@
           this.resizePlot()
         },
       },
+      'store.cache.activePlotOptions': {
+        handler: function () {
+          this.updatePlot()
+        },
+        deep: true
+      }
     },
     mounted() {
       this.createPlot()

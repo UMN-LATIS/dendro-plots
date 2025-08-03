@@ -18,6 +18,7 @@
 
     <Plot
       :id="3"
+      :dataID="this.dataID"
       :name="'Skeleton Plot'"
       :count="1"
       :legend="plotLegend[2]"
@@ -44,6 +45,7 @@
 
   export default {
     inject: ['store'],
+    props: ['dataID'],
     components: { Plot },
     computed: {
       activePlots: function() {

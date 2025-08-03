@@ -58,8 +58,10 @@
           return
         }
         this.store.methods.updateCache('modals', id, 'active', !active)
+
         
         this.$emit('selectOption', id)
+        this.store.cache.activePlotOptions = id
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')

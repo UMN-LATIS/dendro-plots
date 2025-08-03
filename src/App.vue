@@ -13,7 +13,7 @@
     </div>
 
     <div id="plot-management">
-      <PlotManager />
+      <PlotManager :dataID="this.optionID"/>
     </div>
 
   </div>
