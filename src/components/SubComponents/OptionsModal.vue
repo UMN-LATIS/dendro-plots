@@ -1,5 +1,5 @@
 <template>
-    <div v-if="showRawOptions">
+    <div v-if="this.optionSet == 0">
         <p class="header">Raw Data Options</p>
         <div class="option-div" v-for="(data, i) in rawOptions" :key="i">
             <p class="option-name" title="words">{{ data.optionName }}</p>
@@ -7,7 +7,7 @@
         </div>
     </div>
 
-    <div v-if="!this.showRawOptions">
+    <div v-if="this.optionSet == 1">
         <p class="header">Index Data Options</p>
         <div class="option-div" v-for="(data, i) in indexOptions" :key="i">
             <p class="option-name" title="words">{{ data.optionName }}</p>
@@ -25,7 +25,7 @@ import ColorSwatch from './ColorSwatch.vue'
 export default {
     inject: ['store'],
     components: { HoverWrapper, Toggle, Dropdown, ColorSwatch },
-    props: ['id', 'showRawOptions'],
+    props: ['id', 'optionSet'],
     data: function() {
       return {
         dropdownOptions: [

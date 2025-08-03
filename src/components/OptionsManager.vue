@@ -15,8 +15,9 @@
         </div>
         <div style="display: flex;">
             <p>Legend</p>
-            <Legend v-if="rawActive" :id="1"></Legend>
-            <Legend v-if="!rawActive" :id="2"></Legend>
+            <Legend v-if="plotType == 0" :id="1"></Legend>
+            <Legend v-if="plotType == 1" :id="2"></Legend>
+            <Legend v-if="plotType == 2" :id="3"></Legend>
         </div>
         <div style="display: flex;">
             <p>Toggle Raw/Index</p>
@@ -45,7 +46,7 @@
 
         <OptionsModal 
                         :id="modal.id"
-                        :showRawOptions="rawActive"
+                        :optionSet="plotType"
                         v-if="this.optionID == modal.id"
         />
     </div>
@@ -76,36 +77,49 @@ export default {
             else { optionName = this.store.cache.states.find(o => o.id == this.optionID).name }
             return optionName
         },
-        rawActive: function() { return this.store.cache.rawPlotActive }
+        rawActive: function() { return this.store.cache.plotStates[0] },
+        plotType: function() { 
+            return this.store.cache.plotStates.findIndex(e => e)
+        },
     },
     methods: {
         spagToggle: function() {
-            this.store.cache.spagActive = !this.store.cache.spagActive
-            if (this.store.cache.spagActive) {
-                let activeStates = this.store.states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
+            // this.store.cache.spagActive = !this.store.cache.spagActive
+            // if (this.store.cache.spagActive) {
+            //     let activeStates = this.store.states.current.filter(o => (o.rawPointsActive || o.rawSplineFreq || o.indexPointsFreq || o.indexSplineFreq))
 
-                // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
-                let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
-                                                        || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
-                let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))
-                                                        || (o.indexPlotLocation == 2 && (o.indexPointsFreq || o.indexSplineFreq)))
+            //     // find which plots are active. Apply medianA to plot 1, medianB to plot 2 (if active).
+            //     let plot1Active = activeStates.some(o => (o.rawPlotLocation == 1 && (o.rawPointsActive || o.rawSplineFreq))
+            //                                             || (o.indexPlotLocation == 1 && (o.indexPointsFreq || o.indexSplineFreq)))
+            //     let plot2Active = activeStates.some(o => (o.rawPlotLocation == 2 && (o.rawPointsActive || o.rawSplineFreq))
+            //                                             || (o.indexPlotLocation == 2 && (o.indexPointsFreq || o.indexSplineFreq)))
 
-                if (plot1Active) {
-                    this.store.methods.updateCache('states', 220, 'rawPointsActive', true)
-                }
-                if (plot2Active) {
-                    this.store.methods.updateCache('states', 221, 'rawPlotLocation', 2)
-                    this.store.methods.updateCache('states', 221, 'rawPointsActive', true)
-                }
-            } else {
-                this.store.methods.updateCache('states', 220, 'rawPointsActive', false)
-                this.store.methods.updateCache('states', 221, 'rawPointsActive', false)
+            //     if (plot1Active) {
+            //         this.store.methods.updateCache('states', 220, 'rawPointsActive', true)
+            //     }
+            //     if (plot2Active) {
+            //         this.store.methods.updateCache('states', 221, 'rawPlotLocation', 2)
+            //         this.store.methods.updateCache('states', 221, 'rawPointsActive', true)
+            //     }
+            // } else {
+            //     this.store.methods.updateCache('states', 220, 'rawPointsActive', false)
+            //     this.store.methods.updateCache('states', 221, 'rawPointsActive', false)
+            // }
+
+            // this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
+            if (this.store.cache.plotStates[2]) {
+                this.store.cache.plotStates = [true, false, false]
             }
-
-            this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
+            else {
+                this.store.cache.plotStates = [false, false, true] 
+            }
         },
         toggleData: function() {
-            this.store.cache.rawPlotActive = !this.store.cache.rawPlotActive
+            if (this.store.cache.plotStates[0]) {
+                this.store.cache.plotStates = [false, true, false]
+            } else {
+                this.store.cache.plotStates = [true, false, false]
+            }
         }
     }
 }

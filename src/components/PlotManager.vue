@@ -5,7 +5,7 @@
       :name="'Raw Data'"
       :count="1"
       :legend="plotLegend[0]"
-      v-if="rawActive"
+      v-if="plotStates[0]"
     />
 
     <Plot 
@@ -13,7 +13,15 @@
       :name="'Index Data'"
       :count="1"
       :legend="plotLegend[1]"
-      v-if="!rawActive"
+      v-if="plotStates[1]"
+    />
+
+    <Plot
+      :id="3"
+      :name="'Skeleton Plot'"
+      :count="1"
+      :legend="plotLegend[2]"
+      v-if="plotStates[2]"
     />
     <!-- <div v-for="obj in activePlots"
          :key="obj.id"
@@ -48,7 +56,9 @@
           return statePlotActive || cachePlotActive
         })
       },
-      rawActive: function() { return this.store.cache.rawPlotActive },
+      plotStates: function() { 
+        return this.store.cache.plotStates
+      },
       plotLegend: function() {
         let legends = []
         for (let obj of this.store.cache.plots) {
