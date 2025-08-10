@@ -16,14 +16,6 @@
       v-if="plotStates[1]"
     />
 
-    <Plot
-      :id="3"
-      :dataID="this.dataID"
-      :name="'Skeleton Plot'"
-      :count="1"
-      :legend="plotLegend[2]"
-      v-if="plotStates[2]"
-    />
     <!-- <div v-for="obj in activePlots"
          :key="obj.id"
     >

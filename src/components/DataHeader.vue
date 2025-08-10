@@ -57,7 +57,7 @@
                       :info="['Select a file type for downloading data.']"
         /> -->
 
-        <!-- <div v-if="store.cache.loadSequence.length"
+        <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
         >
           <HoverWrapper :isMarginLeft="-20"
@@ -69,10 +69,10 @@
                           }"
                         :isComponent="'ClickIcon'"
                         :info="['Toggle appearance of all data menus.']"
-          /> -->
+          />
 
           <!-- <Sort /> -->
-        <!-- </div> -->
+        </div>
 
       <div v-if="store.cache.loadSequence.length" style="display: block;">
         <!-- <HoverWrapper :isMarginLeft="-40"
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-  // import downloadData from "../modules/downloadData.js";
+  import downloadData from "../modules/downloadData.js";
 
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
@@ -163,20 +163,21 @@
       modalToggle: function() {
         
         //use temporarilly for mass download
-        // downloadData(this.store.cache.raw)
+        downloadData(this.store.cache.raw)
+        console.log(this.store)
 
-        let allOff = true
-        for (let obj of this.store.cache.modals) {
-          if (obj.active) {
-            allOff = false
-            obj.active = false
-          }
-        }
-        if (allOff) {
-          for (let obj of this.store.cache.modals) {
-            obj.active = true
-          }
-        }
+        // let allOff = true
+        // for (let obj of this.store.cache.modals) {
+        //   if (obj.active) {
+        //     allOff = false
+        //     obj.active = false
+        //   }
+        // }
+        // if (allOff) {
+        //   for (let obj of this.store.cache.modals) {
+        //     obj.active = true
+        //   }
+        // }
       },
       receiveOption(id) {
         this.$emit('selectOption', id)

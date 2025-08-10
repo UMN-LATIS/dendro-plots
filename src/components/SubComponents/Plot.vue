@@ -43,7 +43,6 @@
 <script>
   import Plotly from 'plotly.js'
   import formatTraces from '../../modules/traces.js'
-  import formatBars from '../../modules/skeletonBars.js'
 
   export default {
     inject: ['store'],
@@ -124,18 +123,12 @@
       createPlot: async function() {
         let traces = await Promise.all(formatTraces(this.id))
 
-        if (this.id == 3 && this.dataID != null) {
-          traces = await Promise.all(formatBars(this.dataID))
-        }
         if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },
       updatePlot: async function() {
         let traces = await Promise.all(formatTraces(this.id))
 
-        if (this.id == 3 && this.dataID != null) {
-          traces = await Promise.all(formatBars(this.dataID))
-        }
         if (this.$refs[this.divID]) this.plot = Plotly.newPlot(this.$refs[this.divID], traces, this.layout, this.config)
         this.resizePlot()
       },

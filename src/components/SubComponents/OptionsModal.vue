@@ -102,6 +102,22 @@ export default {
                     disableProp: false,
                     optionName: 'Visual Spline:'
                 }, // raw spline dropdown
+                {
+                    id: this.id,
+                    component: 'Dropdown',
+                    info: ['Select wood type?'],
+                    options: [
+                          { id: 'tw', name: 'Total Width' },
+                          { id: 'ew', name: 'Early Wood' },
+                          { id: 'lw', name: 'Late Wood' },
+                          { id: 'ex', name: 'Exclude' },
+                        ],
+                    optionModifer: ' ',
+                    mainProp: 'filler',
+                    actions: ['filler'],
+                    disableProp: false,
+                    optionName: 'filler'
+                }
             ]
         },
         indexOptions: function() {

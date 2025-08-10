@@ -5,6 +5,8 @@ function formatBars(dataID) {
     let obj = store.states.current.find(o => o.id == dataID)
     let raw = store.cache.raw.find(o => o.id == dataID)
 
+    
+
     let trace = {}
     trace.name = obj.name
     trace.color = obj.color

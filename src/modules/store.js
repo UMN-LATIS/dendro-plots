@@ -15,8 +15,7 @@ const cache = reactive({
            },
   index: [],
   plots: [{ id: 1, name: 'Raw Data', legend: false, legendType: 0 },
-          { id: 2, name: 'Index Data', legend: false, legendType: 0 },
-          { id: 3, name: 'Skeleton Plot', legend: false, legendType: 0}],
+          { id: 2, name: 'Index Data', legend: false, legendType: 0 }],
   loadSequence: [],
   dendroColors: [
                  '#b2182b', // dark red (tw)
@@ -56,7 +55,7 @@ const cache = reactive({
   spagColor: '#006994',
   updatePlotSwitch: false,
   hightlightYear: false,
-  plotStates: [true, false, false],
+  plotStates: [true, false],
   downloadFileType: "CSV",
   activePlotOptions: null,
 })
@@ -73,6 +72,7 @@ const methods = {
       indexPointsFreq: false,
       indexSplineFreq: false,
       indexPlotLocation: 2,
+      filler: 'tw'
     }
 
     let modalDEFAULT = {
@@ -171,6 +171,7 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
+      newState.filler = 'tw'
 
       states.current.push(newState)
 
@@ -231,6 +232,7 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
+      newState.filler = 'tw'
 
       states.current.push(newState)
 
