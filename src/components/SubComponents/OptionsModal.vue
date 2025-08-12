@@ -113,10 +113,10 @@ export default {
                           { id: 'ex', name: 'Exclude' },
                         ],
                     optionModifer: ' ',
-                    mainProp: 'filler',
-                    actions: ['filler'],
+                    mainProp: 'woodType',
+                    actions: ['woodType'],
                     disableProp: false,
-                    optionName: 'filler'
+                    optionName: 'woodType'
                 }
             ]
         },

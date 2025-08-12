@@ -1,4 +1,5 @@
 import { reactive } from 'vue'
+import downloadData from './downloadData'
 
 const states = reactive({
   past: [],
@@ -72,7 +73,7 @@ const methods = {
       indexPointsFreq: false,
       indexSplineFreq: false,
       indexPlotLocation: 2,
-      filler: 'tw'
+      woodType: 'ex'
     }
 
     let modalDEFAULT = {
@@ -171,7 +172,7 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
-      newState.filler = 'tw'
+      newState.woodType = set.name.slice(-2).toLowerCase()
 
       states.current.push(newState)
 
@@ -232,7 +233,7 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
-      newState.filler = 'tw'
+      newState.woodType = set.name.slice(-2).toLowerCase()
 
       states.current.push(newState)
 

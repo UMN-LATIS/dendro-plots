@@ -163,8 +163,8 @@
       modalToggle: function() {
         
         //use temporarilly for mass download
-        downloadData(this.store.cache.raw)
-        console.log(this.store)
+        downloadData()
+        // console.log(this.store)
 
         // let allOff = true
         // for (let obj of this.store.cache.modals) {

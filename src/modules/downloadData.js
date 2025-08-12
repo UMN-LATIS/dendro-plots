@@ -1,21 +1,56 @@
 import store from './store.js'
 
-function downloadData(data) {
-    //for each file type: call specific function
-    if (store.cache.downloadFileType == "CSV") {
-        console.log(constructSeperatedString(data, ","))
-    } else if (store.cache.downloadFileType == "TSV") {
-        console.log(constructSeperatedString(data, "\t"))
-    } else {
-        console.log(constructRWLString(data))
+function downloadData() {
+    let raw = store.cache.raw.slice(2);
+    let states = store.states.current;
+
+    let downloadFunction = function (data) {
+        if (store.cache.downloadFileType == "CSV") {
+            return constructSeperatedString(data, ",")
+        } else if (store.cache.downloadFileType == "TSV") {
+            return constructSeperatedString(data, "\t")
+        } else {
+            return constructRWLString(data)
+        }
     }
+
+    let woodTypeObj = {
+        'tw': {
+            data: [],
+            names: []
+        },
+        'ew': {
+            data: [],
+            names: []
+        },
+        'lw': {
+            data: [],
+            names: []
+        },
+    }
+
+    for (let i = 0; i < states.length; i++) {
+        woodTypeObj[states[i].woodType].data.push(raw[i]);
+        woodTypeObj[states[i].woodType].names.push(states[i].name.slice(0, -3))
+    }
+
+
+    // console.log(woodTypeObj)
+    console.log('tw')
+    console.log(downloadFunction(woodTypeObj['tw']))
+    console.log('ew')
+    console.log(downloadFunction(woodTypeObj['ew']))
+    console.log('lw')
+    console.log(downloadFunction(woodTypeObj['lw']))
 }
 
 function constructSeperatedString(data, sep) {
+    let names = data.names;
+    data = data.data
     // Find earliest and latest year in all data sets
     let startYear = Infinity;
     let endYear = 0;
-    for (let dataSet of data.slice(2)) {
+    for (let dataSet of data) {
         let dataStart = dataSet.x[0];
         let dataEnd = dataSet.x[dataSet.x.length - 1]
         if (dataStart < startYear) {
@@ -31,7 +66,7 @@ function constructSeperatedString(data, sep) {
     let yearDataPairs = {};
     for (let year = startYear; year <= endYear; year++) {
         yearDataPairs[year] = [];
-        for (let dataSet of data.slice(2)) {
+        for (let dataSet of data) {
             let dataYears = dataSet.x;
             let dataAreas = dataSet.y;
             if (dataYears.find((element) => element == year)) {
@@ -44,7 +79,7 @@ function constructSeperatedString(data, sep) {
     }
 
     //Construct String from object
-    let outStr = seperatedHeader(sep);
+    let outStr = seperatedHeader(sep, names);
     let fileCount = yearDataPairs[startYear].length - 1;
     for (let year = startYear; year <= endYear; year++) {
         let emptyYear = true;
@@ -65,21 +100,24 @@ function constructSeperatedString(data, sep) {
     return outStr
 }
 
-function seperatedHeader(sep) {
+function seperatedHeader(sep, names) {
     let header = "Year" + sep;
-    for (let obj of store.states.current.slice(0, -1)) {
-        header += obj.name + sep;
+    for (let name of names.slice(0, -1)) {
+        header += name + sep;
     }
-    header += store.states.current[store.states.current.length-1].name + '\n';
+    header += names.slice(-1) + "\n"
     return header
 }
 
 function constructRWLString(data) {
+    console.log(data)
+    let names = data.names;
+    data = data.data
+
     let outStr = ""
-    for (let i = 0; i < data.length - 2; i++) {
-        let dataSet = data[i+2]
-        // console.log(store.states.current[0])
-        let name = constructNameRWL(store.states.current[i].name);
+    for (let i = 0; i < data.length; i++) {
+        let dataSet = data[i]
+        let name = constructNameRWL(names[i]);
         let year = dataSet.x[0];
         let stopMarker = " -9999";
 
