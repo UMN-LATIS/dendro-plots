@@ -4,6 +4,24 @@ function downloadData() {
     let raw = store.cache.raw.slice(2);
     let states = store.states.current;
 
+    //Sort states by names and use ids to put raw data in sorted order
+    let sortedStates = states.toSorted((objA, objB) => {
+        let nameA = objA.name.toUpperCase();
+        let nameB = objB.name.toUpperCase();
+        if (nameA < nameB) {
+            return -1
+        } else if (nameA > nameB) {
+            return 1
+        } else {
+            return 0
+        }
+    })
+
+    let sortedRaw = []
+    for (let state of sortedStates) {
+        sortedRaw.push(raw.find(o => o.id == state.id))
+    }
+
     let downloadFunction = function (data) {
         if (store.cache.downloadFileType == "CSV") {
             return constructSeperatedString(data, ",")
@@ -30,23 +48,24 @@ function downloadData() {
     }
 
     for (let i = 0; i < states.length; i++) {
-        woodTypeObj[states[i].woodType].data.push(raw[i]);
-        woodTypeObj[states[i].woodType].names.push(states[i].name.slice(0, -3))
+        if (sortedStates[i].woodType != "ex") {
+            woodTypeObj[sortedStates[i].woodType].data.push(sortedRaw[i]);
+            woodTypeObj[sortedStates[i].woodType].names.push(sortedStates[i].name.slice(0,-3))
+        }
     }
 
 
-    // console.log(woodTypeObj)
-    console.log('tw')
+    console.log('separate file: tw')
     console.log(downloadFunction(woodTypeObj['tw']))
-    console.log('ew')
+    console.log('separate file: ew')
     console.log(downloadFunction(woodTypeObj['ew']))
-    console.log('lw')
+    console.log('separate file: lw')
     console.log(downloadFunction(woodTypeObj['lw']))
 }
 
-function constructSeperatedString(data, sep) {
-    let names = data.names;
-    data = data.data
+function constructSeperatedString(dataObj, sep) {
+    let names = dataObj.names;
+    let data = dataObj.data
     // Find earliest and latest year in all data sets
     let startYear = Infinity;
     let endYear = 0;
@@ -109,10 +128,9 @@ function seperatedHeader(sep, names) {
     return header
 }
 
-function constructRWLString(data) {
-    console.log(data)
-    let names = data.names;
-    data = data.data
+function constructRWLString(dataObj) {
+    let names = dataObj.names;
+    let data = dataObj.data
 
     let outStr = ""
     for (let i = 0; i < data.length; i++) {
