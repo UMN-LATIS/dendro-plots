@@ -4,7 +4,8 @@
        :key="obj.id"
        :class="{ active: obj.active }"
        :id="obj.id"
-       @click="click($event, obj.id, obj.active)"
+       @click.exact="click($event, obj.id, obj.active)"
+       @click.ctrl="ctrlClick($event, obj.id, obj.active)"
   >
 
     <Name :name="obj.name"
@@ -54,6 +55,16 @@
     },
     methods: {
       click: function(e, id, active) {
+        if (e.target.closest('.remove') || e.target.closest('.modal')) {
+          return
+        }
+        this.store.methods.updateCache('modals', id, 'active', !active)
+
+        
+        this.$emit('selectOption', id)
+        this.store.cache.activePlotOptions = id
+      },
+      ctrlClick: function(e, id, active) {
         if (e.target.closest('.remove') || e.target.closest('.modal')) {
           return
         }

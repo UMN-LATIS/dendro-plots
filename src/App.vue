@@ -8,12 +8,12 @@
 
       
       <div id="options-management">
-        <OptionsManager :optionID="this.optionID"/>
+        <OptionsManager :optionIDs="this.optionIDs"/>
       </div>
     </div>
 
     <div id="plot-management">
-      <PlotManager :dataID="this.optionID"/>
+      <PlotManager :dataID="this.optionIDs"/>
     </div>
 
   </div>
@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000', 'http://127.0.0.1:4000/'],
-      optionID: null
+      optionIDs: []
     };
   },
   methods: {
@@ -62,12 +62,14 @@ export default {
       }
     },
     receiveOption(id) {
-    if (this.optionID == id) {
-      this.optionID = null
+    if (this.optionIDs.includes(id)) {
+      console.log(this.optionIDs.findIndex(o => o == id))
+      this.optionIDs.splice(this.optionIDs.findIndex(o => o == id), 1)
     }
     else {
-      this.optionID = id
+      this.optionIDs.push(id)
     }
+    console.log(this.optionIDs)
   }
   },
   mounted() {
