@@ -1,4 +1,6 @@
 import store from './store.js'
+import JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 function downloadData() {
     let raw = store.cache.raw.slice(2);
@@ -55,12 +57,24 @@ function downloadData() {
     }
 
 
-    console.log('separate file: tw')
-    console.log(downloadFunction(woodTypeObj['tw']))
-    console.log('separate file: ew')
-    console.log(downloadFunction(woodTypeObj['ew']))
-    console.log('separate file: lw')
-    console.log(downloadFunction(woodTypeObj['lw']))
+    // console.log('separate file: tw')
+    // console.log(downloadFunction(woodTypeObj['tw']))
+    // console.log('separate file: ew')
+    // console.log(downloadFunction(woodTypeObj['ew']))
+    // console.log('separate file: lw')
+    // console.log(downloadFunction(woodTypeObj['lw']))
+    
+    
+    let zip = new JSZip();
+    let fileSuffix = store.cache.downloadFileType.toLowerCase()
+    zip.file("mass_download_tw_" + fileSuffix, downloadFunction(woodTypeObj['tw']))
+    zip.file("mass_download_ew_" + fileSuffix, downloadFunction(woodTypeObj['ew']))
+    zip.file("mass_download_lw_" + fileSuffix, downloadFunction(woodTypeObj['lw']))
+    zip.generateAsync({type: 'blob'})
+        .then((blob) => {
+            saveAs(blob, ("mass_download_" + fileSuffix + ".zip"))
+        })
+
 }
 
 function constructSeperatedString(dataObj, sep) {
@@ -172,7 +186,8 @@ function formatDataPointRWL(dataPoint) {
 }
 
 function constructNameRWL(str) {
-    let nameSpaces = 11 - str.length;
+    str = str.slice(0,8)
+    let nameSpaces = 8 - str.length;
     let name = str + " ".repeat(nameSpaces);
 
     return name;
