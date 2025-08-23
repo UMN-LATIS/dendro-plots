@@ -1,5 +1,5 @@
 <template>
-  <div class="data-entry-wrapper"
+  <div class="data-entry-wrapper not-selected"
        v-for="obj in pairs"
        :key="obj.id"
        :class="{ active: obj.active }"
@@ -34,7 +34,7 @@
   export default {
     inject: ['store'],
     props: ['useCache'],
-    emits: ['selectOption'],
+    emits: ['showSingleOptionPage', 'showMultiOptionPage'],
     components: { Name, Remove, Modal },
     computed: {
       pairs: function() {
@@ -54,25 +54,11 @@
       }
     },
     methods: {
-      click: function(e, id, active) {
-        if (e.target.closest('.remove') || e.target.closest('.modal')) {
-          return
-        }
-        this.store.methods.updateCache('modals', id, 'active', !active)
-
-        
-        this.$emit('selectOption', id)
-        this.store.cache.activePlotOptions = id
+      click: function(e, id) {        
+        this.$emit('showSingleOptionPage', id)
       },
-      ctrlClick: function(e, id, active) {
-        if (e.target.closest('.remove') || e.target.closest('.modal')) {
-          return
-        }
-        this.store.methods.updateCache('modals', id, 'active', !active)
-
-        
-        this.$emit('selectOption', id)
-        this.store.cache.activePlotOptions = id
+      ctrlClick: function(e, id) {        
+        this.$emit('showMultiOptionPage', id)
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
@@ -108,8 +94,20 @@
     margin: 0;
   }
 
-  .data-entry-wrapper:hover {
+  .not-selected:hover {
     background-color: #ffffff;
+  }
+
+  .not-selected {
+    background-color: transparent;
+  }
+
+  .selected {
+    background-color: cornflowerblue;
+  }
+
+  .selected:hover {
+    background-color: lightblue;
   }
 
   .remove {

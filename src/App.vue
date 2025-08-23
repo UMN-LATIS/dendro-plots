@@ -1,9 +1,9 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <DataHeader @selectOption="receiveOption"/>
+      <DataHeader @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultiOption"/>
       <div id="data-management">
-        <DataManager :useCache="false"  @selectOption="receiveOption"/>
+        <DataManager :useCache="false"  @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultiOption"/>
       </div>
 
       
@@ -62,15 +62,43 @@ export default {
       }
     },
     receiveOption(id) {
-    if (this.optionIDs.includes(id)) {
-      console.log(this.optionIDs.findIndex(o => o == id))
-      this.optionIDs.splice(this.optionIDs.findIndex(o => o == id), 1)
-    }
-    else {
-      this.optionIDs.push(id)
-    }
-    console.log(this.optionIDs)
-  }
+      for (let pastID of this.optionIDs) {
+        let setDiv = document.getElementById(pastID)
+        setDiv.classList.remove("selected", "not-selected")
+        setDiv.classList.add("not-selected")
+      }
+
+      if (this.optionIDs.includes(id) && this.optionIDs.length === 1) {
+        this.optionIDs = []
+      }
+      else {
+        let setDiv = document.getElementById(id)
+        this.optionIDs = [id]
+        setDiv.classList.add("selected")
+      }
+    },
+    receiveMultiOption(id) {
+      for (let pastID of this.optionIDs) {
+        let setDiv = document.getElementById(pastID)
+        setDiv.classList.remove("selected", "not-selected")
+        setDiv.classList.add("not-selected")
+      }
+
+      if (this.optionIDs.includes(store.cache.allID) || this.optionIDs.some(medID => store.cache.medianIDs.includes(medID))) {
+        this.optionIDs = [id]
+      } else if (id === store.cache.allID || store.cache.medianIDs.includes(id)) {
+        this.optionIDs = [id]
+      } else if (this.optionIDs.includes(id)) {
+        this.optionIDs.splice(this.optionIDs.findIndex(o => o == id), 1)
+      } else {
+        this.optionIDs.push(id)
+      }
+
+      for (let currentID of this.optionIDs) {
+        let setDiv = document.getElementById(currentID)
+        setDiv.classList.add("selected")
+      }
+    },
   },
   mounted() {
     // Need to send message back to DendroElevator parent window to recieve data.

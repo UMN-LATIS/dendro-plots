@@ -17,7 +17,6 @@
             <p>Legend</p>
             <Legend v-if="plotType == 0" :id="1"></Legend>
             <Legend v-if="plotType == 1" :id="2"></Legend>
-            <Legend v-if="plotType == 2" :id="3"></Legend>
         </div>
         <div style="display: flex;">
             <p>Toggle Raw/Index</p>
@@ -39,7 +38,7 @@
         <p class="no-option-text">Select specimen from loaded-data list to show plotting options.</p>
     </div>
     
-    <div class="options-div" v-for="modal in this.modals">
+    <!-- <div class="options-div" v-for="modal in this.modals">
         <div class="name-div">
             <p class="name" v-if="this.optionIDs.includes(modal.id)">{{ getName(modal.id) }}</p>
         </div>
@@ -48,6 +47,17 @@
                         :id="modal.id"
                         :optionSet="plotType"
                         v-if="this.optionIDs.includes(modal.id)"
+        />
+    </div> -->
+
+    <div class="options-div" v-if="this.optionIDs.length > 0">
+        <div class="name-div">
+            <p class="name">{{ getName(this.optionIDs) }}</p>
+        </div>
+
+        <OptionsModal
+        :ids="this.optionIDs"
+        :optionSet="plotType"
         />
     </div>
 </template>
@@ -115,12 +125,26 @@ export default {
                 this.store.cache.plotStates = [true, false, false]
             }
         },
-        getName: function(id) {
-            if (this.store.states.current.find(o => o.id == id)) {
-                var optionName = this.store.states.current.find(o => o.id == id).name
+        getName: function(ids) {
+            let optionName = ""
+            if (ids.length === 1) {
+                let id = ids[0]
+                if (this.store.states.current.find(o => o.id == id)) {
+                    optionName = this.store.states.current.find(o => o.id == id).name
+                }
+                else { optionName = this.store.cache.states.find(o => o.id == id).name }
+            } else {
+                optionName = "Multiple Sets Selected"
             }
-            else { optionName = this.store.cache.states.find(o => o.id == id).name }
+
             return optionName
+        }
+    },
+    watch: {
+        optionIDs: {
+            handler: function () {
+                console.log('updated')
+            }
         }
     }
 }

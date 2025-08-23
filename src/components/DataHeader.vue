@@ -108,7 +108,7 @@
   </div>
 
   <div v-if="store.cache.loadSequence.length">
-    <DataManager :useCache="true" @selectOption="receiveOption"/>
+    <DataManager :useCache="true" @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultOptions"/>
   </div>
 </template>
 
@@ -127,7 +127,7 @@
 
   export default {
     inject: ['store'],
-    emits: ['selectOption'],
+    emits: ['showSingleOptionPage', 'showMultiOptionPage'],
     components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper, Dropdown },
     data() {
       return {
@@ -180,7 +180,10 @@
         // }
       },
       receiveOption(id) {
-        this.$emit('selectOption', id)
+        this.$emit('showSingleOptionPage', id)
+      },
+      receiveMultOptions(id) {
+        this.$emit('showMultiOptionPage', id)
       },
       onChange(e) {
         this.store.cache.downloadFileType = e.target.value

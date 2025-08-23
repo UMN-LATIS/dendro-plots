@@ -25,7 +25,7 @@ import ColorSwatch from './ColorSwatch.vue'
 export default {
     inject: ['store'],
     components: { HoverWrapper, Toggle, Dropdown, ColorSwatch },
-    props: ['id', 'optionSet'],
+    props: ['ids', 'optionSet'],
     data: function() {
       return {
         dropdownOptions: [
@@ -46,7 +46,7 @@ export default {
         rawOptions: function() {
             return [
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: -20,
                     top: -30,
                     width: 20,
@@ -56,7 +56,7 @@ export default {
                     optionName: 'Show/Hide:',
                 }, // raw points toggle
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 16,
@@ -65,7 +65,7 @@ export default {
                     optionName: 'Line Color:'
                 }, // color
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 85,
@@ -79,7 +79,7 @@ export default {
                     optionName: 'Marker:'
                 }, // shapes dropdown
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: -20,
                     top: -30,
                     width: 20,
@@ -89,7 +89,7 @@ export default {
                     optionName: 'Grayscale Toggle:'
                 }, // color toggle
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 149,
@@ -103,7 +103,7 @@ export default {
                     optionName: 'Visual Spline:'
                 }, // raw spline dropdown
                 {
-                    id: this.id,
+                    ids: this.ids,
                     component: 'Dropdown',
                     info: ['Select wood type?'],
                     options: [
@@ -123,7 +123,7 @@ export default {
         indexOptions: function() {
             return [                
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 159,
@@ -137,7 +137,7 @@ export default {
                     optionName: 'Spline Detrended Inxed:'
                 }, // index points dropdown
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 16,
@@ -146,7 +146,7 @@ export default {
                     optionName: 'Line Color:'
                 }, // color
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: 0,
                     top: -30,
                     width: 85,
@@ -160,7 +160,7 @@ export default {
                     optionName: 'Marker:'
                 }, // shapes dropdown
                 {
-                    id: this.id,
+                    ids: this.ids,
                     left: -20,
                     top: -30,
                     width: 20,

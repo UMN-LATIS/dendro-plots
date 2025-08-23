@@ -27,15 +27,15 @@
 <script>
   export default {
     inject: ['store'],
-    props: ['id'],
+    props: ['ids'],
     computed: {
       colorValue: function() {
         // ID dictates where to search for information. IDs within [99, 9999]
         // are found in undo/redo save states (store.states.current) while
         // IDs out of that bound (medians and base datasets from DE) are found
         // in cache save states (store.cache.states).
-        let states = (this.id > 99 && this.id < 9999) ? this.store.cache.states : this.store.states.current
-        let set = states.find(o => o.id == this.id)
+        let states = (this.ids[0] > 99 && this.ids[0] < 9999) ? this.store.cache.states : this.store.states.current
+        let set = states.find(o => o.id == this.ids[0])
         if (set) {
           return set.color
         }
@@ -49,13 +49,22 @@
         //  1) ID of all data -> perform color change on all datasets.
         //  2) ID of median -> perform color change on median in cache.states.
         //  3) Other -> perform color change on dataset in state.current.
-        if (this.id === this.store.cache.allID) {
-          this.store.methods.allAction('color', e.target.value)
-        } else if (this.store.cache.medianIDs.includes(this.id)) {
-          this.store.methods.updateCache('states', this.id, 'color', e.target.value)
-        } else {
-          this.store.methods.newCurrent(e.target.value, this.id, 'color')
+        for (let id of this.ids) {
+          if (id === this.store.cache.allID) {
+            this.store.methods.allAction('color', e.target.value)
+          } else if (this.store.cache.medianIDs.includes(id)) {
+            this.store.methods.updateCache('states', id, 'color', e.target.value)
+          } else {
+            this.store.methods.newCurrent(e.target.value, id, 'color')
+          }
         }
+        // if (this.id === this.store.cache.allID) {
+        //   this.store.methods.allAction('color', e.target.value)
+        // } else if (this.store.cache.medianIDs.includes(this.id)) {
+        //   this.store.methods.updateCache('states', this.id, 'color', e.target.value)
+        // } else {
+        //   this.store.methods.newCurrent(e.target.value, this.id, 'color')
+        // }
       }
     },
   }

@@ -31,7 +31,7 @@
   <select @change="onChange">
     <DropdownOptions v-for="obj in options"
                      :key="obj.id"
-                     :id="id"
+                     :id="obj.id"
                      :name="optionModifer + obj.name"
                      :value="obj.id"
                      :mainProp="mainProp"
@@ -44,7 +44,7 @@
 
   export default {
     inject: ['store'],
-    props: ['id', 'options', 'optionModifer', 'mainProp', 'actions', 'disableProp'],
+    props: ['ids', 'options', 'optionModifer', 'mainProp', 'actions', 'disableProp'],
     components: { DropdownOptions },
     computed: {
       isDisabled: function() {
@@ -56,11 +56,11 @@
         // are found in undo/redo save states (store.states.current) while
         // IDs out of that bound (medians and base datasets from DE) are found
         // in cache save states (store.cache.states).
-        if (this.id === this.store.cache.allID) {
+        if (this.ids[0] === this.store.cache.allID) {
           return !this.store.methods.checkAll(this.disableProp)
         } else {
-          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
-          let set = states.find(o => o.id == this.id)
+          let states = (this.store.cache.medianIDs.includes(this.ids[0])) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.ids == this.ids[0])
           if (set) return !set[this.disableProp]
         }
       }
@@ -81,15 +81,26 @@
         //  1) ID of all data -> perform color change on all datasets.
         //  2) ID of median -> perform color change on median in cache.states.
         //  3) Other -> perform color change on dataset in state.current.
-        for (let prop of this.actions) {
-          if (this.id === this.store.cache.allID) {
-            this.store.methods.allAction(prop, val)
-          } else if (this.store.cache.medianIDs.includes(this.id)) {
-            this.store.methods.updateCache('states', this.id, prop, val)
-          } else {
-            this.store.methods.newCurrent(val, this.id, prop)
+        for (let id of this.ids) {
+          for (let prop of this.actions) {
+            if (id === this.store.cache.allID) {
+              this.store.methods.allAction(prop, val)
+            } else if (this.store.cache.medianIDs.includes(id)) {
+              this.store.methods.updateCache('states', id, prop, val)
+            } else {
+              this.store.methods.newCurrent(val, id, prop)
+            }
           }
         }
+        // for (let prop of this.actions) {
+        //   if (this.id === this.store.cache.allID) {
+        //     this.store.methods.allAction(prop, val)
+        //   } else if (this.store.cache.medianIDs.includes(this.id)) {
+        //     this.store.methods.updateCache('states', this.id, prop, val)
+        //   } else {
+        //     this.store.methods.newCurrent(val, this.id, prop)
+        //   }
+        // }
       }
     },
   }
