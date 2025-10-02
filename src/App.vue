@@ -3,7 +3,10 @@
     <div id="management-wrapper">
       <DataHeader @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultiOption"/>
       <div id="data-management">
-        <DataManager :useCache="false"  @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultiOption"/>
+        <DataManager :useCache="false"  
+        @showSingleOptionPage="receiveOption" 
+        @showMultiOptionPage="receiveMultiOption"
+        @removeFromOptionIDs="removeID"/>
       </div>
 
       
@@ -62,6 +65,7 @@ export default {
       }
     },
     receiveOption(id) {
+      console.log('called single')
       for (let pastID of this.optionIDs) {
         let setDiv = document.getElementById(pastID)
         setDiv.classList.remove("selected", "not-selected")
@@ -71,6 +75,7 @@ export default {
       if (this.optionIDs.includes(id) && this.optionIDs.length === 1) {
         this.optionIDs = []
       }
+
       else {
         let setDiv = document.getElementById(id)
         this.optionIDs = [id]
@@ -99,6 +104,11 @@ export default {
         setDiv.classList.add("selected")
       }
     },
+    removeID(id) {
+      if (this.optionIDs.includes(id)) {
+        this.optionIDs = this.optionIDs.filter(item => item !== id)
+      }
+    }
   },
   mounted() {
     // Need to send message back to DendroElevator parent window to recieve data.

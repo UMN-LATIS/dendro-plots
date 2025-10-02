@@ -4,17 +4,18 @@
        :key="obj.id"
        :class="{ active: obj.active }"
        :id="obj.id"
-       @click.exact="click($event, obj.id, obj.active)"
-       @click.ctrl="ctrlClick($event, obj.id, obj.active)"
   >
 
     <Name :name="obj.name"
           :file="obj.file"
           :id="obj.id"
+          @click.exact="click($event, obj.id, obj.active)"
+          @click.alt="ctrlClick($event, obj.id, obj.active)"
     />
 
     <Remove class="remove"
             :id="obj.id"
+            @click="removeOption(obj.id)"
     />
 
     <!-- <Modal class="modal"
@@ -34,7 +35,7 @@
   export default {
     inject: ['store'],
     props: ['useCache'],
-    emits: ['showSingleOptionPage', 'showMultiOptionPage'],
+    emits: ['showSingleOptionPage', 'showMultiOptionPage', 'removeFromOptionIDs'],
     components: { Name, Remove, Modal },
     computed: {
       pairs: function() {
@@ -57,8 +58,11 @@
       click: function(e, id) {        
         this.$emit('showSingleOptionPage', id)
       },
-      ctrlClick: function(e, id) {        
+      ctrlClick: function(e, id) {      
         this.$emit('showMultiOptionPage', id)
+      },
+      removeOption: function(id) {
+        this.$emit('removeFromOptionIDs', id)
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')

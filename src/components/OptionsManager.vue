@@ -132,7 +132,9 @@ export default {
                 if (this.store.states.current.find(o => o.id == id)) {
                     optionName = this.store.states.current.find(o => o.id == id).name
                 }
-                else { optionName = this.store.cache.states.find(o => o.id == id).name }
+                else if (optionName = this.store.cache.states.find(o => o.id == id)) {
+                    optionName = this.store.cache.states.find(o => o.id == id).name
+                }
             } else {
                 optionName = "Multiple Sets Selected"
             }

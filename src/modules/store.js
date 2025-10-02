@@ -58,7 +58,6 @@ const cache = reactive({
   hightlightYear: false,
   plotStates: [true, false],
   downloadFileType: "CSV",
-  activePlotOptions: [],
 })
 
 const methods = {
