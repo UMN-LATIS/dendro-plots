@@ -1,5 +1,5 @@
 <template>
-    <div v-if="this.optionSet == 0">
+    <!-- <div v-if="this.optionSet == 0">
         <p class="header">Raw Data Options</p>
         <div class="option-div" v-for="(data, i) in rawOptions" :key="i">
             <p class="option-name" title="words">{{ data.optionName }}</p>
@@ -11,6 +11,14 @@
         <p class="header">Index Data Options</p>
         <div class="option-div" v-for="(data, i) in indexOptions" :key="i">
             <p class="option-name" title="words">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
+    </div> -->
+
+    <div>
+        <p class="header">Data Options</p>
+        <div class="option-div" v-for="(data, i) in options" :key="i">
+            <p class="option-name">{{ data.optionName }}</p>
             <component :is="data.component" v-bind="data" :title="data.info" />
         </div>
     </div>
@@ -37,13 +45,15 @@ export default {
                           { id: 50, name: '50yr' },
                           { id: 100, name: '100yr' },
                           { id: 200, name: '200yr' },
+                          { id: 500, name: '500yr'},
                           { id: 0.5, name: '50%' },
                           { id: 0.67, name: '67%' },
+                          { id: 1, name: "100%"}
                         ],
       }
     },
     computed: {
-        rawOptions: function() {
+        options: function() {
             return [
                 {
                     ids: this.ids,
@@ -100,8 +110,22 @@ export default {
                     mainProp: 'rawSplineFreq',
                     actions: ['rawSplineFreq', 'indexPointsFreq'],
                     disableProp: false,
-                    optionName: 'Visual Spline:'
+                    optionName: 'Spline:'
                 }, // raw spline dropdown
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 159,
+                    component: 'Dropdown',
+                    info: ['Select spline wavelength for raw data detrending. Note: '],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'indexPointsFreq',
+                    actions: ['indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline Detrended Index:'
+                }, // index points dropdown
                 {
                     ids: this.ids,
                     component: 'Dropdown',
@@ -116,7 +140,7 @@ export default {
                     mainProp: 'woodType',
                     actions: ['woodType'],
                     disableProp: false,
-                    optionName: 'woodType'
+                    optionName: 'Download As:'
                 }
             ]
         },
@@ -169,7 +193,6 @@ export default {
                     toggleProp: 'applyColorToRaw',
                     optionName: 'Grayscale Toggle:'
                 }, // color toggle
-
             ]
         },
     }

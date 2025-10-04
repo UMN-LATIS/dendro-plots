@@ -65,7 +65,6 @@ export default {
       }
     },
     receiveOption(id) {
-      console.log('called single')
       for (let pastID of this.optionIDs) {
         let setDiv = document.getElementById(pastID)
         setDiv.classList.remove("selected", "not-selected")

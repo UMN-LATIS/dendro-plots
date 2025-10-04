@@ -31,7 +31,7 @@
   <select @change="onChange">
     <DropdownOptions v-for="obj in options"
                      :key="obj.id"
-                     :id="obj.id"
+                     :id="this.ids[0]"
                      :name="optionModifer + obj.name"
                      :value="obj.id"
                      :mainProp="mainProp"
@@ -60,7 +60,7 @@
           return !this.store.methods.checkAll(this.disableProp)
         } else {
           let states = (this.store.cache.medianIDs.includes(this.ids[0])) ? this.store.cache.states : this.store.states.current
-          let set = states.find(o => o.ids == this.ids[0])
+          let set = states.find(o => o.id == this.ids[0])
           if (set) return !set[this.disableProp]
         }
       }

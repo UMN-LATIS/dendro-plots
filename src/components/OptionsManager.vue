@@ -19,7 +19,7 @@
             <Legend v-if="plotType == 1" :id="2"></Legend>
         </div>
         <div style="display: flex;">
-            <p>Toggle Raw/Index</p>
+            <p>Toggle Raw/Index Plot</p>
             <HoverWrapper 
                         :isData="{
                             imageName: 'toggle-icon',
@@ -142,13 +142,13 @@ export default {
             return optionName
         }
     },
-    watch: {
-        optionIDs: {
-            handler: function () {
-                console.log('updated')
-            }
-        }
-    }
+    // watch: {
+    //     optionIDs: {
+    //         handler: function () {
+    //             console.log('updated')
+    //         }
+    //     }
+    // }
 }
 
 

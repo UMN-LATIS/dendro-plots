@@ -60,7 +60,7 @@
         <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
         >
-          <HoverWrapper :isMarginLeft="-20"
+          <!-- <HoverWrapper :isMarginLeft="-20"
                         :isMarginTop="22"
                         :isWidth="20"
                         :isData="{
@@ -69,9 +69,9 @@
                           }"
                         :isComponent="'ClickIcon'"
                         :info="['Toggle appearance of all data menus.']"
-          />
+          /> -->
 
-          <!-- <Sort /> -->
+          <Sort />
         </div>
 
       <div v-if="store.cache.loadSequence.length" style="display: block;">
