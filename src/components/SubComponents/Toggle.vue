@@ -26,14 +26,14 @@
 <script>
   export default {
     inject: ['store'],
-    props: ['id', 'toggleProp'],
+    props: ['ids', 'toggleProp'],
     computed: {
       isChecked: function() {
-        if (this.id === this.store.cache.allID) {
+        if (this.ids[0] === this.store.cache.allID) {
           return this.store.methods.checkAll(this.toggleProp)
         } else {
-          let states = (this.store.cache.medianIDs.includes(this.id)) ? this.store.cache.states : this.store.states.current
-          let set = states.find(o => o.id == this.id)
+          let states = (this.store.cache.medianIDs.includes(this.ids[0])) ? this.store.cache.states : this.store.states.current
+          let set = states.find(o => o.id == this.ids[0])
           if (set) {
             return set[this.toggleProp]
           }
@@ -43,13 +43,22 @@
     },
     methods: {
       onToggle: function(e) {
-        if (this.id === this.store.cache.allID) {
-          this.store.methods.allAction(this.toggleProp, e.target.checked)
-        } else if (this.store.cache.medianIDs.includes(this.id)) {
-          this.store.methods.updateCache('states', this.id, this.toggleProp, e.target.checked)
-        } else {
-          this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
+        for (let id of this.ids) {
+          if (id === this.store.cache.allID) {
+            this.store.methods.allAction(this.toggleProp, e.target.checked)
+          } else if (this.store.cache.medianIDs.includes(id)) {
+            this.store.methods.updateCache('states', id, this.toggleProp, e.target.checked)
+          } else {
+            this.store.methods.newCurrent(e.target.checked, id, this.toggleProp)
+          }
         }
+        // if (this.id === this.store.cache.allID) {
+        //   this.store.methods.allAction(this.toggleProp, e.target.checked)
+        // } else if (this.store.cache.medianIDs.includes(this.id)) {
+        //   this.store.methods.updateCache('states', this.id, this.toggleProp, e.target.checked)
+        // } else {
+        //   this.store.methods.newCurrent(e.target.checked, this.id, this.toggleProp)
+        // }
       },
     }
   }
@@ -58,6 +67,7 @@
 <style>
    input[type="checkbox"] {
     -webkit-appearance: none;
+    appearance: none;
     width: 16px;
     height: 16px;
     padding: 0;

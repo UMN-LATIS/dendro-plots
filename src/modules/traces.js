@@ -256,16 +256,16 @@ const formatTraces = function(locVal) {
   activeData.forEach(obj => {
     let arr = (obj.id < 99) ? last : gen
 
-    if (obj.rawSplineFreq) {
+    if (obj.rawSplineFreq && store.cache.plotStates[0]) {
       arr.push(splineTrace(obj, 'raw', obj.rawSplineFreq))
     }
-    if (obj.rawPointsActive) {
+    if (obj.rawPointsActive && store.cache.plotStates[0]) {
       arr.push(simpleTrace(obj, 'raw'))
     }
-    if (obj.indexSplineFreq) {
+    if (obj.indexSplineFreq && store.cache.plotStates[1]) {
       arr.push(splineTrace(obj, 'index', obj.indexSplineFreq, true))
     }
-    if (obj.indexPointsFreq) {
+    if (obj.indexPointsFreq && store.cache.plotStates[1]) {
       arr.push(indexTrace(obj, 'index', obj.indexPointsFreq))
     }
   })

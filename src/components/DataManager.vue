@@ -1,26 +1,28 @@
 <template>
-  <div class="data-entry-wrapper"
+  <div class="data-entry-wrapper not-selected"
        v-for="obj in pairs"
        :key="obj.id"
        :class="{ active: obj.active }"
        :id="obj.id"
-       @click="click($event, obj.id, obj.active)"
   >
 
     <Name :name="obj.name"
           :file="obj.file"
           :id="obj.id"
+          @click.exact="click($event, obj.id, obj.active)"
+          @click.alt="ctrlClick($event, obj.id, obj.active)"
     />
 
     <Remove class="remove"
             :id="obj.id"
+            @click="removeOption(obj.id)"
     />
 
-    <Modal class="modal"
+    <!-- <Modal class="modal"
            :id="obj.id"
            :top="obj.top"
            v-if="obj.active && !obj.outOfBounds"
-    />
+    /> -->
   </div>
 </template>
 
@@ -29,9 +31,11 @@
   import Remove from './SubComponents/Remove.vue'
   import Modal from './SubComponents/Modal.vue'
 
+
   export default {
     inject: ['store'],
     props: ['useCache'],
+    emits: ['showSingleOptionPage', 'showMultiOptionPage', 'removeFromOptionIDs'],
     components: { Name, Remove, Modal },
     computed: {
       pairs: function() {
@@ -51,11 +55,14 @@
       }
     },
     methods: {
-      click: function(e, id, active) {
-        if (e.target.closest('.remove') || e.target.closest('.modal')) {
-          return
-        }
-        this.store.methods.updateCache('modals', id, 'active', !active)
+      click: function(e, id) {        
+        this.$emit('showSingleOptionPage', id)
+      },
+      ctrlClick: function(e, id) {      
+        this.$emit('showMultiOptionPage', id)
+      },
+      removeOption: function(id) {
+        this.$emit('removeFromOptionIDs', id)
       },
       onScroll: function() {
         let dataEntries = document.getElementsByClassName('data-entry-wrapper')
@@ -91,8 +98,20 @@
     margin: 0;
   }
 
-  .data-entry-wrapper:hover {
+  .not-selected:hover {
     background-color: #ffffff;
+  }
+
+  .not-selected {
+    background-color: transparent;
+  }
+
+  .selected {
+    background-color: cornflowerblue;
+  }
+
+  .selected:hover {
+    background-color: lightblue;
   }
 
   .remove {

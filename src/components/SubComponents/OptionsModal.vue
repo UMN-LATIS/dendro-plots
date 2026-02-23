@@ -1,0 +1,222 @@
+<template>
+    <!-- <div v-if="this.optionSet == 0">
+        <p class="header">Raw Data Options</p>
+        <div class="option-div" v-for="(data, i) in rawOptions" :key="i">
+            <p class="option-name" title="words">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
+    </div>
+
+    <div v-if="this.optionSet == 1">
+        <p class="header">Index Data Options</p>
+        <div class="option-div" v-for="(data, i) in indexOptions" :key="i">
+            <p class="option-name" title="words">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
+    </div> -->
+
+    <div>
+        <p class="header">Data Options</p>
+        <div class="option-div" v-for="(data, i) in options" :key="i">
+            <p class="option-name">{{ data.optionName }}</p>
+            <component :is="data.component" v-bind="data" :title="data.info" />
+        </div>
+    </div>
+</template>
+
+<script>
+import HoverWrapper from './HoverWrapper.vue'
+import Toggle from './Toggle.vue'
+import Dropdown from './Dropdown.vue'
+import ColorSwatch from './ColorSwatch.vue'
+
+export default {
+    inject: ['store'],
+    components: { HoverWrapper, Toggle, Dropdown, ColorSwatch },
+    props: ['ids', 'optionSet'],
+    data: function() {
+      return {
+        dropdownOptions: [
+                          { id: false, name: 'None' },
+                          { id: 5, name: '5yr' },
+                          { id: 10, name: '10yr' },
+                          { id: 20, name: '20yr' },
+                          { id: 30, name: '30yr' },
+                          { id: 50, name: '50yr' },
+                          { id: 100, name: '100yr' },
+                          { id: 200, name: '200yr' },
+                          { id: 500, name: '500yr'},
+                          { id: 0.5, name: '50%' },
+                          { id: 0.67, name: '67%' },
+                          { id: 1, name: "100%"}
+                        ],
+      }
+    },
+    computed: {
+        options: function() {
+            return [
+                {
+                    ids: this.ids,
+                    left: -20,
+                    top: -30,
+                    width: 20,
+                    component: 'Toggle',
+                    info: ['Toggle appearance of raw data.'],
+                    toggleProp: 'rawPointsActive',
+                    optionName: 'Show/Hide:',
+                }, // raw points toggle
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 16,
+                    component: 'ColorSwatch',
+                    info: ['Select color for this data.'],
+                    optionName: 'Line Color:'
+                }, // color
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 85,
+                    component: 'Dropdown',
+                    info: ['Select marker shape for data.'],
+                    options: this.store.cache.shapes,
+                    optionModifer: '',
+                    mainProp: 'shape',
+                    actions: ['shape'],
+                    disableProp: false,
+                    optionName: 'Marker:'
+                }, // shapes dropdown
+                {
+                    ids: this.ids,
+                    left: -20,
+                    top: -30,
+                    width: 20,
+                    component: 'Toggle',
+                    info: ['Toggle color/gray between data/spline.'],
+                    toggleProp: 'applyColorToRaw',
+                    optionName: 'Grayscale Toggle:'
+                }, // color toggle
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 149,
+                    component: 'Dropdown',
+                    info: ['Select wavelength of visualization spline for raw data'],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'rawSplineFreq',
+                    actions: ['rawSplineFreq', 'indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline:'
+                }, // raw spline dropdown
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 159,
+                    component: 'Dropdown',
+                    info: ['Select spline wavelength for raw data detrending. Note: '],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'indexPointsFreq',
+                    actions: ['indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline Detrended Index:'
+                }, // index points dropdown
+                {
+                    ids: this.ids,
+                    component: 'Dropdown',
+                    info: ['Select wood type?'],
+                    options: [
+                          { id: 'tw', name: 'Total Width' },
+                          { id: 'ew', name: 'Early Wood' },
+                          { id: 'lw', name: 'Late Wood' },
+                          { id: 'ex', name: 'Exclude' },
+                        ],
+                    optionModifer: ' ',
+                    mainProp: 'woodType',
+                    actions: ['woodType'],
+                    disableProp: false,
+                    optionName: 'Download As:'
+                }
+            ]
+        },
+        indexOptions: function() {
+            return [                
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 159,
+                    component: 'Dropdown',
+                    info: ['Select spline wavelength for raw data detrending'],
+                    options: this.dropdownOptions,
+                    optionModifer: ' ',
+                    mainProp: 'indexPointsFreq',
+                    actions: ['indexPointsFreq'],
+                    disableProp: false,
+                    optionName: 'Spline Detrended Inxed:'
+                }, // index points dropdown
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 16,
+                    component: 'ColorSwatch',
+                    info: ['Select color for this data.'],
+                    optionName: 'Line Color:'
+                }, // color
+                {
+                    ids: this.ids,
+                    left: 0,
+                    top: -30,
+                    width: 85,
+                    component: 'Dropdown',
+                    info: ['Select marker shape for data.'],
+                    options: this.store.cache.shapes,
+                    optionModifer: '',
+                    mainProp: 'shape',
+                    actions: ['shape'],
+                    disableProp: false,
+                    optionName: 'Marker:'
+                }, // shapes dropdown
+                {
+                    ids: this.ids,
+                    left: -20,
+                    top: -30,
+                    width: 20,
+                    component: 'Toggle',
+                    info: ['Toggle color/gray between data/spline.'],
+                    toggleProp: 'applyColorToRaw',
+                    optionName: 'Grayscale Toggle:'
+                }, // color toggle
+            ]
+        },
+    }
+}
+</script>
+
+<style scoped>
+p {
+    margin: 0 5px 0 0;
+}
+
+.header {
+    font-style: italic;
+    text-decoration: underline;
+    font-size: 16px;
+}
+
+.option-div {
+    display: flex;
+    justify-content: space-between;
+    padding-right: 2px;
+}
+
+.option-name {
+    font-size: 15px;
+}
+</style>

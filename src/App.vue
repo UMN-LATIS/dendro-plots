@@ -1,15 +1,24 @@
 <template>
   <div id="wrapper">
     <div id="management-wrapper">
-      <DataHeader />
+      <DataHeader @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultiOption"/>
       <div id="data-management">
-        <DataManager :useCache="false"/>
+        <DataManager :useCache="false"  
+        @showSingleOptionPage="receiveOption" 
+        @showMultiOptionPage="receiveMultiOption"
+        @removeFromOptionIDs="removeID"/>
+      </div>
+
+      
+      <div id="options-management">
+        <OptionsManager :optionIDs="this.optionIDs"/>
       </div>
     </div>
 
     <div id="plot-management">
-      <PlotManager />
+      <PlotManager :dataID="this.optionIDs"/>
     </div>
+
   </div>
 </template>
 
@@ -19,38 +28,86 @@ import FileManager from "./components/FileManager.vue";
 import DataHeader from "./components/DataHeader.vue";
 import DataManager from "./components/DataManager.vue";
 import PlotManager from "./components/PlotManager.vue";
+import OptionsManager from "./components/OptionsManager.vue";
 
 import store from "./modules/store.js";
 
 export default {
   name: "App",
   provide: { store },
-  components: { FileManager, DataHeader, DataManager, PlotManager },
+  components: { FileManager, DataHeader, DataManager, PlotManager, OptionsManager },
   data() {
     return {
-      parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000'],
+      parentSites: ['https://dendro.elevator.umn.edu', 'https://umn-latis.github.io', 'http://localhost:4000', 'http://127.0.0.1:4000/'],
+      optionIDs: []
     };
   },
   methods: {
     onMessage: function(e) {
-      if (!this.parentSites.includes(e.origin)) {
-        return;
-      }
+      // if (!this.parentSites.includes(e.origin)) {
+      //   return;
+      // }
 
       // Possible inputs: New data points (array) or a year to highlight (integer)
       if (typeof e.data == 'object') {
         let data = [];
         let pointsObj = e.data.points;
-        data.push(pointsObj.tw);
-        if (pointsObj.ew && pointsObj.lw) {
-          data.push(pointsObj.ew);
-          data.push(pointsObj.lw);
+        if (pointsObj) {
+          data.push(pointsObj.tw);
+          if (pointsObj.ew && pointsObj.lw) {
+            data.push(pointsObj.ew);
+            data.push(pointsObj.lw);
+          }
         }
         store.methods.processSentData(data);
       } else {
         store.cache.hightlightYear = e.data;
       }
     },
+    receiveOption(id) {
+      for (let pastID of this.optionIDs) {
+        let setDiv = document.getElementById(pastID)
+        setDiv.classList.remove("selected", "not-selected")
+        setDiv.classList.add("not-selected")
+      }
+
+      if (this.optionIDs.includes(id) && this.optionIDs.length === 1) {
+        this.optionIDs = []
+      }
+
+      else {
+        let setDiv = document.getElementById(id)
+        this.optionIDs = [id]
+        setDiv.classList.add("selected")
+      }
+    },
+    receiveMultiOption(id) {
+      for (let pastID of this.optionIDs) {
+        let setDiv = document.getElementById(pastID)
+        setDiv.classList.remove("selected", "not-selected")
+        setDiv.classList.add("not-selected")
+      }
+
+      if (this.optionIDs.includes(store.cache.allID) || this.optionIDs.some(medID => store.cache.medianIDs.includes(medID))) {
+        this.optionIDs = [id]
+      } else if (id === store.cache.allID || store.cache.medianIDs.includes(id)) {
+        this.optionIDs = [id]
+      } else if (this.optionIDs.includes(id)) {
+        this.optionIDs.splice(this.optionIDs.findIndex(o => o == id), 1)
+      } else {
+        this.optionIDs.push(id)
+      }
+
+      for (let currentID of this.optionIDs) {
+        let setDiv = document.getElementById(currentID)
+        setDiv.classList.add("selected")
+      }
+    },
+    removeID(id) {
+      if (this.optionIDs.includes(id)) {
+        this.optionIDs = this.optionIDs.filter(item => item !== id)
+      }
+    }
   },
   mounted() {
     // Need to send message back to DendroElevator parent window to recieve data.
@@ -63,7 +120,7 @@ export default {
   },
   beforeUnmount() {
     window.removeEventListener('message', this.onMessage, false)
-  }
+  },
 }
 
 </script>
@@ -108,13 +165,15 @@ h2 {
   display: flex;
   flex-direction: column;
   z-index: 999;
+  background-color: lightgreen;
 }
 
 #data-management {
   width: inherit;
-  height: 100%;
+  height: 42.5%;
   overflow-y: visible;
   overflow-x: hidden;
+  background-color: white;
 }
 
 #plot-management {
@@ -123,4 +182,17 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+
+#options-management {
+  width: inherit;
+  height: 57.5%;
+  position: relative;
+  border: 2px solid black;
+  background-color: white;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+#options-management::-webkit-scrollbar { width: 0 !important }
+#options-management { overflow: -moz-scrollbars-none; }
 </style>

@@ -11,14 +11,13 @@
 <template>
   <div class="control-panel">
     <div class="next-to-icon">
-      <div>
-        <HoverWrapper :isMarginLeft="-40"
+        <!-- <HoverWrapper :isMarginLeft="-40"
                       :isMarginTop="22"
                       :isWidth="40"
                       :isData="{ text: 'Data' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options']"
-        />
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        /> -->
 
         <HoverWrapper :isMarginLeft="0"
                       :isMarginTop="22"
@@ -29,10 +28,39 @@
                               'Accepts multiple files with multiple series in upload sequence']"
         />
 
+        <HoverWrapper :isMarginLeft="0"
+                      :isMarginTop="22"
+                      :isWidth="20"
+                      :isData="{}"
+                      :isComponent="'FileDownload'"
+                      :info="['download button']"
+                      @click="modalToggle"
+        />
+
+        <select name="download" id="download" @change="onChange">
+          <option value="CSV">Download as: CSV</option>
+          <option value="TSV">Download as: TSV</option>
+          <option value="RWL">Download as: RWL</option>
+        </select>
+
+        <!-- <HoverWrapper :isMarginLeft="-0"
+                      :isMarginTop="-30"
+                      :isWidth="70"
+                      :isData="
+                        {
+                          options: [{ value: 1, name: 'CSV' },
+                                    { value: 2, name: 'TSV' },
+                                    { value: 3, name: 'RWL'}],
+                          optionModifer: 'Download as: ',
+                        }"
+                      :isComponent="'Dropdown'"
+                      :info="['Select a file type for downloading data.']"
+        /> -->
+
         <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
         >
-          <HoverWrapper :isMarginLeft="-20"
+          <!-- <HoverWrapper :isMarginLeft="-20"
                         :isMarginTop="22"
                         :isWidth="20"
                         :isData="{
@@ -40,23 +68,22 @@
                             callback: modalToggle,
                           }"
                         :isComponent="'ClickIcon'"
-                        :info="['Toggle appearance of all data menus']"
-          />
+                        :info="['Toggle appearance of all data menus.']"
+          /> -->
 
           <Sort />
         </div>
-      </div>
 
       <div v-if="store.cache.loadSequence.length" style="display: block;">
-        <HoverWrapper :isMarginLeft="-40"
+        <!-- <HoverWrapper :isMarginLeft="-40"
                       :isMarginTop="22"
                       :isWidth="40"
                       :isData="{ text: 'Plot' }"
                       :isComponent="'Text'"
-                      :info="['Click on time series name to show/hide data plotting options']"
-        />
+                      :info="['Click on time series name to show/hide data plotting options.']"
+        /> -->
 
-        <HoverWrapper :isMarginLeft="-20"
+        <!-- <HoverWrapper :isMarginLeft="-20"
                       :isMarginTop="22"
                       :isWidth="20"
                       :isData="{
@@ -65,13 +92,12 @@
                         }"
                       :isComponent="'ClickIcon'"
                       :info="['Toggle spaghetti plot appearance behavior']"
-        />
+        /> -->
 
-        <Legend v-for="plot in store.cache.plots"
+        <!-- <Legend v-for="plot in store.cache.plots"
                 :key="plot.id"
                 :id="plot.id"
-        />
-
+        /> -->
         <UndoRedoButtons />
       </div>
     </div>
@@ -82,12 +108,12 @@
   </div>
 
   <div v-if="store.cache.loadSequence.length">
-    <DataManager :useCache="true" />
+    <DataManager :useCache="true" @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultOptions"/>
   </div>
 </template>
 
 <script>
-  import formatFileData from '../modules/formatFileData.js'
+  import downloadData from "../modules/downloadData.js";
 
   import Info from './SubComponents/Info.vue'
   import Sort from './SubComponents/Sort.vue'
@@ -97,10 +123,12 @@
   import ClickIcon from './SubComponents/ClickIcon.vue'
   import DataManager from './DataManager.vue'
   import HoverWrapper from './SubComponents/HoverWrapper.vue'
+  import Dropdown from './SubComponents/Dropdown.vue'
 
   export default {
     inject: ['store'],
-    components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper },
+    emits: ['showSingleOptionPage', 'showMultiOptionPage'],
+    components: { Info, Sort, Legend, UndoRedoButtons, Toggle, ClickIcon, DataManager, HoverWrapper, Dropdown },
     data() {
       return {
         info: ['Click on time series name to show/hide data plotting options.'],
@@ -133,19 +161,33 @@
         this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
       },
       modalToggle: function() {
-        let allOff = true
-        for (let obj of this.store.cache.modals) {
-          if (obj.active) {
-            allOff = false
-            obj.active = false
-          }
-        }
-        if (allOff) {
-          for (let obj of this.store.cache.modals) {
-            obj.active = true
-          }
-        }
+        
+        //use temporarilly for mass download
+        downloadData()
+        // console.log(this.store)
+
+        // let allOff = true
+        // for (let obj of this.store.cache.modals) {
+        //   if (obj.active) {
+        //     allOff = false
+        //     obj.active = false
+        //   }
+        // }
+        // if (allOff) {
+        //   for (let obj of this.store.cache.modals) {
+        //     obj.active = true
+        //   }
+        // }
       },
+      receiveOption(id) {
+        this.$emit('showSingleOptionPage', id)
+      },
+      receiveMultOptions(id) {
+        this.$emit('showMultiOptionPage', id)
+      },
+      onChange(e) {
+        this.store.cache.downloadFileType = e.target.value
+      }
     }
   }
 </script>
@@ -155,6 +197,11 @@
     margin: 0;
     margin-left: 2px;
     display: inline;
+  }
+
+  .control-panel {
+    background-color: white;
+    margin-left: 0;
   }
 
   .next-to-icon {
@@ -216,4 +263,25 @@
     display: block;
   }
 
+  #download {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    -ms-appearance: none;
+
+    font-family: Sans-serif;
+    font-weight: normal;
+    font-size: 11px;
+    color: black;
+    height: 16px;
+    border: 1px solid black;
+    border-radius: 4px;
+    padding-left: 4px;
+    padding-right: 4px;
+    position: relative;
+    margin-top: 2px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    z-index: 0;
+  }
 </style>
