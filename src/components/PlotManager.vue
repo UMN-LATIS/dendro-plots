@@ -3,7 +3,7 @@
     <Plot 
       :id="1"
       :name="'Raw Data'"
-      :count="1"
+      :count="PlotCount"
       :legend="plotLegend[0]"
       v-if="plotStates[0]"
     />
@@ -11,7 +11,7 @@
     <Plot 
       :id="2"
       :name="'Index Data'"
-      :count="1"
+      :count="PlotCount"
       :legend="plotLegend[1]"
       v-if="plotStates[1]"
     />
@@ -59,6 +59,13 @@
           legends.push(obj.legend)
         }
         return legends
+      },
+      PlotCount: function() {
+        let count = 0;
+        for (let state of this.store.cache.plotStates) {
+          if (state) {count++}
+        }
+        return count
       }
     },
   }

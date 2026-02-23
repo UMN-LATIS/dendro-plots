@@ -19,7 +19,7 @@
             <Legend v-if="plotType == 1" :id="2"></Legend>
         </div>
         <div style="display: flex;">
-            <p>Toggle Raw/Index Plot</p>
+            <p> Cycle Plots</p>
             <HoverWrapper 
                         :isData="{
                             imageName: 'toggle-icon',
@@ -119,10 +119,13 @@ export default {
             this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
         },
         toggleData: function() {
-            if (this.store.cache.plotStates[0]) {
-                this.store.cache.plotStates = [false, true, false]
+        //Possible states: only raw (0), raw+index(0 & 1), or only index (1)
+            if (this.store.cache.plotStates[0] && !this.store.cache.plotStates[1]) { //if only raw, move to raw+index
+                this.store.cache.plotStates = [true, true]
+            } else if(this.store.cache.plotStates[0] && this.store.cache.plotStates[1]) { //if both, move to index
+                this.store.cache.plotStates = [false, true]
             } else {
-                this.store.cache.plotStates = [true, false, false]
+                this.store.cache.plotStates = [true, false]
             }
         },
         getName: function(ids) {
