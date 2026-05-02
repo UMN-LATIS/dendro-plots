@@ -171,7 +171,13 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
-      newState.woodType = set.name.slice(-2).toLowerCase()
+
+      let suffix = set.name.slice(-2).toLowerCase()
+      if (['tw', 'ew', 'lw'].includes(suffix)) {
+        newState.woodType = suffix
+      } else {
+        newState.woodType = 'tw'
+      }
 
       states.current.push(newState)
 
@@ -232,7 +238,13 @@ const methods = {
       newState.indexPointsFreq = false
       newState.indexSplineFreq = false
       newState.indexPlotLocation = 2
-      newState.woodType = set.name.slice(-2).toLowerCase()
+      
+      let suffix = set.name.slice(-2).toLowerCase()
+      if (['tw', 'ew', 'lw'].includes(suffix)) {
+        newState.woodType = suffix
+      } else {
+        newState.woodType = 'tw'
+      }
 
       states.current.push(newState)
 

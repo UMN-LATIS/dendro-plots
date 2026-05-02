@@ -52,7 +52,11 @@ function downloadData() {
     for (let i = 0; i < states.length; i++) {
         if (sortedStates[i].woodType != "ex") {
             woodTypeObj[sortedStates[i].woodType].data.push(sortedRaw[i]);
-            woodTypeObj[sortedStates[i].woodType].names.push(sortedStates[i].name.slice(0,-3))
+            if(sortedStates[i].name.slice(-3,-2) == "_") {
+                woodTypeObj[sortedStates[i].woodType].names.push(sortedStates[i].name.slice(0,-3)) //Trim tag from name
+            } else {
+                woodTypeObj[sortedStates[i].woodType].names.push(sortedStates[i].name) //Don't trim if tag aint there
+            }
         }
     }
 
@@ -67,9 +71,15 @@ function downloadData() {
     
     let zip = new JSZip();
     let fileSuffix = store.cache.downloadFileType.toLowerCase()
-    zip.file("mass_download_tw_" + fileSuffix, downloadFunction(woodTypeObj['tw']))
-    zip.file("mass_download_ew_" + fileSuffix, downloadFunction(woodTypeObj['ew']))
-    zip.file("mass_download_lw_" + fileSuffix, downloadFunction(woodTypeObj['lw']))
+    if (woodTypeObj['tw'].data.length > 0) {
+        zip.file("mass_download_tw_" + fileSuffix, downloadFunction(woodTypeObj['tw']))
+    }
+    if (woodTypeObj['ew'].data.length > 0) {
+        zip.file("mass_download_ew_" + fileSuffix, downloadFunction(woodTypeObj['ew']))
+    }
+    if (woodTypeObj['lw'].data.length > 0) {
+        zip.file("mass_download_lw_" + fileSuffix, downloadFunction(woodTypeObj['lw']))
+    }
     zip.generateAsync({type: 'blob'})
         .then((blob) => {
             saveAs(blob, ("mass_download_" + fileSuffix + ".zip"))

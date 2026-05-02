@@ -26,6 +26,7 @@
                       :isComponent="'FileUpload'"
                       :info="['Accepts: comma-, tab-, space-demlimited, .rwl, .json',
                               'Accepts multiple files with multiple series in upload sequence']"
+                      @mousedown="showMedianA"
         />
 
         <HoverWrapper :isMarginLeft="0"
@@ -34,7 +35,7 @@
                       :isData="{}"
                       :isComponent="'FileDownload'"
                       :info="['download button']"
-                      @click="modalToggle"
+                      @click="download"
         />
 
         <select name="download" id="download" @change="onChange">
@@ -42,20 +43,6 @@
           <option value="TSV">Download as: TSV</option>
           <option value="RWL">Download as: RWL</option>
         </select>
-
-        <!-- <HoverWrapper :isMarginLeft="-0"
-                      :isMarginTop="-30"
-                      :isWidth="70"
-                      :isData="
-                        {
-                          options: [{ value: 1, name: 'CSV' },
-                                    { value: 2, name: 'TSV' },
-                                    { value: 3, name: 'RWL'}],
-                          optionModifer: 'Download as: ',
-                        }"
-                      :isComponent="'Dropdown'"
-                      :info="['Select a file type for downloading data.']"
-        /> -->
 
         <div v-if="store.cache.loadSequence.length"
              style="display: inline;"
@@ -107,7 +94,7 @@
     </div>
   </div>
 
-  <div v-if="store.cache.loadSequence.length">
+  <div v-if="store.cache.loadSequence.length"> <!--Could Add "padding-right: 16px" to align X icons on chromium browsers-->
     <DataManager :useCache="true" @showSingleOptionPage="receiveOption" @showMultiOptionPage="receiveMultOptions"/>
   </div>
 </template>
@@ -160,24 +147,8 @@
 
         this.store.cache.updatePlotSwitch = !this.store.cache.updatePlotSwitch
       },
-      modalToggle: function() {
-        
-        //use temporarilly for mass download
+      download: function() {
         downloadData()
-        // console.log(this.store)
-
-        // let allOff = true
-        // for (let obj of this.store.cache.modals) {
-        //   if (obj.active) {
-        //     allOff = false
-        //     obj.active = false
-        //   }
-        // }
-        // if (allOff) {
-        //   for (let obj of this.store.cache.modals) {
-        //     obj.active = true
-        //   }
-        // }
       },
       receiveOption(id) {
         this.$emit('showSingleOptionPage', id)
@@ -187,6 +158,9 @@
       },
       onChange(e) {
         this.store.cache.downloadFileType = e.target.value
+      },
+      showMedianA: function() {
+        this.$emit('showSingleOptionPage', 220)
       }
     }
   }
@@ -195,7 +169,7 @@
 <style scoped>
   div {
     margin: 0;
-    margin-left: 2px;
+    margin-left: 0px;
     display: inline;
   }
 

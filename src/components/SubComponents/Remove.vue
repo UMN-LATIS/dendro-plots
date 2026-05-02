@@ -64,7 +64,7 @@
     width: 20px;
     height: 20px;
     margin: 0;
-    margin-right: 5px;
+    margin-right: 0px;
   }
 
   .info {

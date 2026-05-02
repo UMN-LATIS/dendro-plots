@@ -66,10 +66,11 @@
 
   .name {
     display: inline-block;
-    width: 160px;
+    width: 140px;
     height: 18px;
     margin: 0;
     margin-top: 3px;
+    padding-left: 5px;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;

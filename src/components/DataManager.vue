@@ -94,7 +94,7 @@
     width: 100%;
     height: 20px;
     padding: 0;
-    padding-left: 5px;
+    padding-left: 0px;
     margin: 0;
   }
 
